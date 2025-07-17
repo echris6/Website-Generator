@@ -1,0 +1,47 @@
+{
+  "name": "dutch-roofing-video-generator",
+  "version": "1.0.0",
+  "description": "Automated video generation system for Dutch roofing companies (dakdekkers) with n8n integration",
+  "main": "server-roofing-simple.js",
+  "scripts": {
+    "start": "node server-roofing-simple.js",
+    "dev": "nodemon server-roofing-simple.js",
+    "test": "node test-roofing-server.js",
+    "build": "npm install"
+  },
+  "keywords": [
+    "dutch",
+    "netherlands",
+    "roofing",
+    "dakdekker",
+    "dakbedekking",
+    "video",
+    "generator",
+    "puppeteer",
+    "ffmpeg",
+    "marketing",
+    "automation",
+    "n8n",
+    "github-actions"
+  ],
+  "author": "echris6",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "puppeteer": "^22.8.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/echris6/Dutch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/echris6/Dutch/issues"
+  },
+  "homepage": "https://github.com/echris6/Dutch#readme"
+}
