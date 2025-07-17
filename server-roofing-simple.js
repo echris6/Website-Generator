@@ -117,8 +117,8 @@ app.post('/generate-video', async (req, res) => {
         await page.evaluate(scrollY => window.scrollTo(0, scrollY), scrollY);
       }
       
-      // FIXED: Use page.waitForDelay() instead of page.waitForTimeout()
-      await page.waitForDelay(frameInterval);
+      // FIXED: Use standard JavaScript setTimeout for Puppeteer compatibility
+      await new Promise(resolve => setTimeout(resolve, frameInterval));
       
       // Take screenshot
       const screenshot = await page.screenshot({
