@@ -1,520 +1,227 @@
-name: Generate Dutch Roofing Video
+const express = require('express');
+const puppeteer = require('puppeteer');
+const fs = require('fs');
+const path = require('path');
 
-on:
-  repository_dispatch:
-    types: [generate-roofing-video]
-  workflow_dispatch:
-    inputs:
-      business_name:
-        description: 'Dutch roofing business name'
-        required: true
-        type: string
-      website_url:
-        description: 'Company website URL'
-        required: false
-        type: string
-      business_city:
-        description: 'Business city'
-        required: false
-        type: string
-      business_phone:
-        description: 'Business phone number'
-        required: false
-        type: string
-      business_email:
-        description: 'Business email'
-        required: false
-        type: string
+const app = express();
+app.use(express.json({ limit: '50mb' }));
 
-jobs:
-  generate-dutch-roofing-video:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
+const PORT = 3030;
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy', service: 'Dutch Roofing Video Generator' });
+});
+
+// Video generation endpoint
+app.post('/generate-video', async (req, res) => {
+  console.log('🎬 Starting Dutch roofing video generation...');
+  
+  try {
+    const { business_name, html_content } = req.body;
     
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-        
-      - name: Install dependencies
-        run: |
-          echo "📦 Installing dependencies..."
-          npm install
-          
-          # Install FFmpeg for video processing
-          echo "🎥 Installing FFmpeg..."
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
-          
-          # Install additional system packages for Puppeteer
-          sudo apt-get install -y \
-            libasound2t64 \
-            libatk-bridge2.0-0 \
-            libgtk-3-0 \
-            libx11-xcb1 \
-            xvfb
-          
-          # Verify installations
-          echo "🔍 Verifying installations..."
-          node --version
-          npm --version
-          ffmpeg -version
-          
-          # Verify critical dependencies
-          echo "🔍 Verifying critical dependencies..."
-          node -e "console.log('Puppeteer:', require('puppeteer').version || 'installed')"
-          node -e "console.log('Express:', require('express').version || 'installed')"
-          
-      - name: Extract business data
-        id: business_data
-        run: |
-          echo "📊 Extracting business data..."
-          
-          # Extract data from either workflow_dispatch or repository_dispatch
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            BUSINESS_NAME="${{ inputs.business_name }}"
-            WEBSITE_URL="${{ inputs.website_url }}"
-            BUSINESS_CITY="${{ inputs.business_city }}"
-            BUSINESS_PHONE="${{ inputs.business_phone }}"
-            BUSINESS_EMAIL="${{ inputs.business_email }}"
-            WEBSITE_HTML_BASE64=""
-          else
-            BUSINESS_NAME="${{ github.event.client_payload.business_name }}"
-            WEBSITE_URL="${{ github.event.client_payload.website_url }}"
-            BUSINESS_CITY="${{ github.event.client_payload.business_city }}"
-            BUSINESS_PHONE="${{ github.event.client_payload.business_phone }}"
-            BUSINESS_EMAIL="${{ github.event.client_payload.business_email }}"
-            WEBSITE_HTML_BASE64="${{ github.event.client_payload.website_html_base64 }}"
-          fi
-          
-          # Set safe defaults
-          BUSINESS_NAME="${BUSINESS_NAME:-dutch-roofing-company}"
-          WEBSITE_URL="${WEBSITE_URL:-}"
-          BUSINESS_CITY="${BUSINESS_CITY:-Netherlands}"
-          BUSINESS_PHONE="${BUSINESS_PHONE:-}"
-          BUSINESS_EMAIL="${BUSINESS_EMAIL:-}"
-          WEBSITE_HTML_BASE64="${WEBSITE_HTML_BASE64:-}"
-          
-          # Create safe artifact name
-          SANITIZED_NAME=$(echo "$BUSINESS_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
-          ARTIFACT_NAME="dutch-roofing-video-${SANITIZED_NAME}"
-          
-          # Limit length to 100 characters
-          if [ ${#ARTIFACT_NAME} -gt 100 ]; then
-            ARTIFACT_NAME="${ARTIFACT_NAME:0:100}"
-          fi
-          
-          # Set outputs
-          echo "business_name=$BUSINESS_NAME" >> $GITHUB_OUTPUT
-          echo "website_url=$WEBSITE_URL" >> $GITHUB_OUTPUT
-          echo "business_city=$BUSINESS_CITY" >> $GITHUB_OUTPUT
-          echo "business_phone=$BUSINESS_PHONE" >> $GITHUB_OUTPUT
-          echo "business_email=$BUSINESS_EMAIL" >> $GITHUB_OUTPUT
-          echo "website_html_base64=$WEBSITE_HTML_BASE64" >> $GITHUB_OUTPUT
-          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
-          
-          echo "✅ Business data extracted:"
-          echo "  🏢 Company: $BUSINESS_NAME"
-          echo "  🏙️ City: $BUSINESS_CITY"
-          echo "  📦 Artifact: $ARTIFACT_NAME"
-          
-      - name: Process website content
-        run: |
-          echo "📄 Processing website content..."
-          
-          BUSINESS_NAME="${{ steps.business_data.outputs.business_name }}"
-          WEBSITE_URL="${{ steps.business_data.outputs.website_url }}"
-          WEBSITE_HTML_BASE64="${{ steps.business_data.outputs.website_html_base64 }}"
-          
-          # Try to get HTML content
-          HTML_SUCCESS=false
-          
-          # Strategy 1: Use base64 HTML from n8n
-          if [ -n "$WEBSITE_HTML_BASE64" ] && [ "$WEBSITE_HTML_BASE64" != "null" ] && [ ${#WEBSITE_HTML_BASE64} -gt 100 ]; then
-            echo "📥 Using base64 HTML content from n8n..."
-            echo "$WEBSITE_HTML_BASE64" | base64 -d > website.html
-            
-            if [ -s website.html ]; then
-              HTML_SIZE=$(wc -c < website.html)
-              echo "✅ Decoded HTML content: $HTML_SIZE bytes"
-              HTML_SUCCESS=true
-            fi
-          fi
-          
-          # Strategy 2: Fetch from URL
-          if [ "$HTML_SUCCESS" = "false" ] && [ -n "$WEBSITE_URL" ] && [ "$WEBSITE_URL" != "null" ]; then
-            echo "🌐 Fetching content from URL: $WEBSITE_URL"
-            
-            if curl -s -L --max-time 30 "$WEBSITE_URL" > website.html; then
-              HTML_SIZE=$(wc -c < website.html)
-              if [ $HTML_SIZE -gt 500 ]; then
-                echo "✅ Fetched HTML content: $HTML_SIZE bytes"
-                HTML_SUCCESS=true
-              fi
-            fi
-          fi
-          
-          # Strategy 3: Use repository template
-          if [ "$HTML_SUCCESS" = "false" ]; then
-            echo "📄 Using repository template..."
-            
-            if [ -f "website.html" ]; then
-              echo "✅ Using existing website.html template"
-              HTML_SUCCESS=true
-            else
-              # Create basic template with business data
-              cat > website.html << EOF
-          <!DOCTYPE html>
-          <html lang="nl">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>$BUSINESS_NAME - Professionele Dakdekker</title>
-              <style>
-                  * { margin: 0; padding: 0; box-sizing: border-box; }
-                  body { 
-                      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-                      line-height: 1.6; 
-                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                      min-height: 100vh;
-                  }
-                  .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-                  .header { 
-                      background: rgba(255,255,255,0.95);
-                      padding: 80px 0; 
-                      text-align: center; 
-                      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                  }
-                  .header h1 { 
-                      font-size: 4em; 
-                      color: #2c3e50; 
-                      margin-bottom: 20px;
-                      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-                  }
-                  .tagline { 
-                      font-size: 1.8em; 
-                      color: #34495e; 
-                      font-weight: 300;
-                      margin-bottom: 30px;
-                  }
-                  .content { 
-                      background: white; 
-                      margin: 40px 0; 
-                      padding: 60px 40px;
-                      border-radius: 15px;
-                      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-                  }
-                  .services { 
-                      display: grid; 
-                      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-                      gap: 30px; 
-                      margin: 50px 0; 
-                  }
-                  .service { 
-                      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-                      color: white;
-                      padding: 40px 30px; 
-                      border-radius: 15px; 
-                      text-align: center;
-                      transition: transform 0.3s ease;
-                      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-                  }
-                  .service:hover { transform: translateY(-10px); }
-                  .service h3 { font-size: 1.5em; margin-bottom: 15px; }
-                  .service p { font-size: 1.1em; opacity: 0.9; }
-                  h2 { 
-                      color: #2c3e50; 
-                      font-size: 2.5em; 
-                      margin-bottom: 30px; 
-                      text-align: center;
-                  }
-                  .contact-section { 
-                      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-                      color: white;
-                      padding: 60px 40px;
-                      border-radius: 15px;
-                      text-align: center;
-                      margin: 40px 0;
-                  }
-                  .contact-info { 
-                      display: grid; 
-                      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-                      gap: 30px; 
-                      margin-top: 40px;
-                  }
-                  .contact-item { 
-                      background: rgba(255,255,255,0.1);
-                      padding: 30px;
-                      border-radius: 10px;
-                      backdrop-filter: blur(10px);
-                  }
-                  .contact-item h4 { font-size: 1.3em; margin-bottom: 10px; }
-                  .contact-item p { font-size: 1.1em; }
-                  .hero-stats {
-                      display: flex;
-                      justify-content: center;
-                      gap: 40px;
-                      margin-top: 40px;
-                      flex-wrap: wrap;
-                  }
-                  .stat {
-                      text-align: center;
-                      background: rgba(44, 62, 80, 0.1);
-                      padding: 20px;
-                      border-radius: 10px;
-                      min-width: 150px;
-                  }
-                  .stat-number {
-                      font-size: 2.5em;
-                      font-weight: bold;
-                      color: #e74c3c;
-                      display: block;
-                  }
-                  .stat-label {
-                      color: #7f8c8d;
-                      font-size: 1.1em;
-                      margin-top: 5px;
-                  }
-              </style>
-          </head>
-          <body>
-              <div class="header">
-                  <div class="container">
-                      <h1>$BUSINESS_NAME</h1>
-                      <p class="tagline">Professionele dakwerkzaamheden in Nederland</p>
-                      <div class="hero-stats">
-                          <div class="stat">
-                              <span class="stat-number">20+</span>
-                              <span class="stat-label">Jaar ervaring</span>
-                          </div>
-                          <div class="stat">
-                              <span class="stat-number">500+</span>
-                              <span class="stat-label">Tevreden klanten</span>
-                          </div>
-                          <div class="stat">
-                              <span class="stat-number">100%</span>
-                              <span class="stat-label">Kwaliteitsgarantie</span>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              
-              <div class="container">
-                  <div class="content">
-                      <h2>Onze Specialisaties</h2>
-                      <div class="services">
-                          <div class="service">
-                              <h3>🏠 Dakbedekking</h3>
-                              <p>Complete dakbedekkingssystemen met hoogwaardige materialen en jarenlange garantie voor optimale bescherming.</p>
-                          </div>
-                          <div class="service">
-                              <h3>🔧 Dakreparatie</h3>
-                              <p>Snelle en vakkundige reparatie van lekke daken, kapotte dakpannen en andere dakschade door ervaren specialisten.</p>
-                          </div>
-                          <div class="service">
-                              <h3>🛡️ Dakonderhoud</h3>
-                              <p>Preventief onderhoud om de levensduur van uw dak te verlengen en dure reparaties in de toekomst te voorkomen.</p>
-                          </div>
-                          <div class="service">
-                              <h3>🌧️ Gootreiniging</h3>
-                              <p>Professionele reiniging en onderhoud van dakgoten voor optimale waterafvoer en voorkoming van waterschade.</p>
-                          </div>
-                          <div class="service">
-                              <h3>🔥 Dakisolatie</h3>
-                              <p>Moderne isolatieoplossingen voor betere energieprestaties en lagere verwarmingskosten van uw woning.</p>
-                          </div>
-                          <div class="service">
-                              <h3>⚡ Noodreparaties</h3>
-                              <p>24/7 beschikbaar voor spoedgevallen. Snelle hulp bij storm- en waterschade om verdere problemen te voorkomen.</p>
-                          </div>
-                      </div>
-                  </div>
-                  
-                  <div class="contact-section">
-                      <h2 style="color: white;">Contact & Informatie</h2>
-                      <p style="font-size: 1.2em; margin-bottom: 30px;">Neem vandaag nog contact met ons op voor een vrijblijvende offerte</p>
-                      <div class="contact-info">
-                          <div class="contact-item">
-                              <h4>📞 Telefoon</h4>
-                              <p>${{ steps.business_data.outputs.business_phone || '+31 6 12345678' }}</p>
-                          </div>
-                          <div class="contact-item">
-                              <h4>📧 Email</h4>
-                              <p>${{ steps.business_data.outputs.business_email || 'info@dakdekker.nl' }}</p>
-                          </div>
-                          <div class="contact-item">
-                              <h4>📍 Locatie</h4>
-                              <p>${{ steps.business_data.outputs.business_city || 'Nederland' }}</p>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </body>
-          </html>
-          EOF
-              echo "✅ Created professional HTML template"
-              HTML_SUCCESS=true
-            fi
-          fi
-          
-          if [ "$HTML_SUCCESS" = "true" ]; then
-            HTML_SIZE=$(wc -c < website.html)
-            echo "📄 Final HTML ready: $HTML_SIZE bytes"
-          else
-            echo "❌ Failed to create HTML content"
-            exit 1
-          fi
-          
-      - name: Generate video
-        run: |
-          echo "🎬 Starting video generation..."
-          
-          BUSINESS_NAME="${{ steps.business_data.outputs.business_name }}"
-          
-          # Create videos directory
-          mkdir -p videos
-          
-          # Start the server
-          echo "🚀 Starting video generation server..."
-          node server-roofing-simple.js > server.log 2>&1 &
-          SERVER_PID=$!
-          
-          # Wait for server to start
-          echo "⏳ Waiting for server to start..."
-          for i in {1..30}; do
-            if curl -s http://localhost:3030/health > /dev/null 2>&1; then
-              echo "✅ Server started successfully!"
-              break
-            fi
-            echo "⏳ Attempt $i/30..."
-            sleep 2
-          done
-          
-          # Check if server is running
-          if ! curl -s http://localhost:3030/health > /dev/null 2>&1; then
-            echo "❌ Server failed to start"
-            echo "📋 Server logs:"
-            cat server.log || echo "No logs available"
-            exit 1
-          fi
-          
-          # Read HTML content
-          HTML_CONTENT=$(cat website.html)
-          
-          # Create JSON payload using jq for safe JSON encoding
-          echo "📋 Creating JSON payload..."
-          jq -n \
-            --arg business_name "$BUSINESS_NAME" \
-            --arg html_content "$HTML_CONTENT" \
-            '{
-              business_name: $business_name,
-              html_content: $html_content
-            }' > payload.json
-          
-          echo "📋 Sending request to video server..."
-          echo "📊 Business: $BUSINESS_NAME"
-          echo "📊 HTML Size: ${#HTML_CONTENT} characters"
-          
-          # Make API call with timeout
-          RESPONSE=$(curl -s -w "%{http_code}" -X POST http://localhost:3030/generate-video \
-            -H "Content-Type: application/json" \
-            -d @payload.json \
-            --max-time 300)
-          
-          HTTP_CODE="${RESPONSE: -3}"
-          RESPONSE_BODY="${RESPONSE%???}"
-          
-          echo "📊 HTTP Status: $HTTP_CODE"
-          echo "📊 Response: $RESPONSE_BODY"
-          
-          if [ "$HTTP_CODE" != "200" ]; then
-            echo "❌ API call failed with status $HTTP_CODE"
-            echo "📋 Server logs:"
-            cat server.log || echo "No logs available"
-            kill $SERVER_PID 2>/dev/null || true
-            exit 1
-          fi
-          
-          # Extract filename from response
-          FILENAME=$(echo "$RESPONSE_BODY" | jq -r '.file_name // empty')
-          if [ -z "$FILENAME" ]; then
-            echo "❌ No filename in response"
-            echo "Response: $RESPONSE_BODY"
-            kill $SERVER_PID 2>/dev/null || true
-            exit 1
-          fi
-          
-          echo "📁 Expected filename: $FILENAME"
-          
-          # Wait for video generation with progress monitoring
-          echo "⏳ Waiting for video generation to complete..."
-          for i in {1..12}; do  # 12 * 10 = 120 seconds max wait
-            if [ -f "videos/$FILENAME" ]; then
-              echo "✅ Video file detected after ${i}0 seconds!"
-              break
-            fi
-            echo "⏱️ Waiting... ${i}0 seconds elapsed"
-            sleep 10
-          done
-          
-          # Final verification
-          if [ -f "videos/$FILENAME" ]; then
-            VIDEO_SIZE=$(du -h "videos/$FILENAME" | cut -f1)
-            VIDEO_SIZE_BYTES=$(stat -c%s "videos/$FILENAME")
-            
-            echo "✅ Video generated successfully!"
-            echo "📁 File: $FILENAME"
-            echo "📊 Size: $VIDEO_SIZE ($VIDEO_SIZE_BYTES bytes)"
-            
-            # Verify it's a real video file (should be at least 1MB)
-            if [ $VIDEO_SIZE_BYTES -lt 1048576 ]; then
-              echo "⚠️ Warning: Video file seems small ($VIDEO_SIZE)"
-              echo "⚠️ This might indicate an issue with generation"
-            fi
-            
-            ls -la videos/
-          else
-            echo "❌ Video file not found: videos/$FILENAME"
-            echo "📋 Available files in videos directory:"
-            ls -la videos/ || echo "Videos directory empty or not found"
-            echo "📋 All MP4 files:"
-            find . -name "*.mp4" -type f || echo "No MP4 files found"
-            echo "📋 Final server logs:"
-            tail -50 server.log || echo "No server logs available"
-            kill $SERVER_PID 2>/dev/null || true
-            exit 1
-          fi
-          
-          # Cleanup
-          kill $SERVER_PID 2>/dev/null || true
-          rm -f payload.json website.html
-          
-      - name: Upload video artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.business_data.outputs.artifact_name }}
-          path: videos/
-          retention-days: 30
-          if-no-files-found: warn
-        continue-on-error: true
-        
-      - name: Workflow summary
-        run: |
-          echo "🎉 Dutch roofing video workflow completed!"
-          echo ""
-          echo "📊 FINAL SUMMARY:"
-          echo "  🏢 Company: ${{ steps.business_data.outputs.business_name }}"
-          echo "  🏙️ City: ${{ steps.business_data.outputs.business_city }}"
-          echo "  📞 Phone: ${{ steps.business_data.outputs.business_phone }}"
-          echo "  📧 Email: ${{ steps.business_data.outputs.business_email }}"
-          echo "  📦 Artifact: ${{ steps.business_data.outputs.artifact_name }}"
-          echo ""
-          echo "📁 Generated files:"
-          ls -la videos/ || echo "No files generated"
-          echo ""
-          echo "🎬 Video available in GitHub Actions Artifacts"
-          echo "✅ Workflow completed successfully!"
+    if (!business_name) {
+      return res.status(400).json({
+        success: false,
+        error: 'business_name is required'
+      });
+    }
+    
+    if (!html_content) {
+      return res.status(400).json({
+        success: false,
+        error: 'html_content is required'
+      });
+    }
+    
+    console.log(`🏢 Generating video for: ${business_name}`);
+    
+    // Create a safe filename
+    const sanitizedName = business_name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+    const timestamp = Date.now();
+    const filename = `roofing_${sanitizedName}_${timestamp}.mp4`;
+    
+    // Save HTML content to a temporary file
+    const htmlPath = path.join(__dirname, 'website.html');
+    fs.writeFileSync(htmlPath, html_content);
+    console.log('📄 HTML content saved to temporary file');
+    
+    // Launch browser
+    console.log('🚀 Launching browser...');
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--disable-web-security',
+        '--disable-features=VizDisplayCompositor'
+      ]
+    });
+    
+    const page = await browser.newPage();
+    
+    // Set viewport for video recording
+    await page.setViewport({
+      width: 1920,
+      height: 1080,
+      deviceScaleFactor: 1
+    });
+    
+    // Load the HTML content
+    const fileUrl = `file://${htmlPath}`;
+    console.log(`📄 Loading website: ${fileUrl}`);
+    
+    await page.goto(fileUrl, {
+      waitUntil: 'networkidle0',
+      timeout: 30000
+    });
+    
+    // Create videos directory
+    const videosDir = path.join(__dirname, 'videos');
+    if (!fs.existsSync(videosDir)) {
+      fs.mkdirSync(videosDir);
+    }
+    
+    // Start recording
+    console.log('🎥 Starting screen recording...');
+    
+    const videoPath = path.join(videosDir, filename);
+    const frames = [];
+    const totalDuration = 16000; // 16 seconds
+    const fps = 60;
+    const totalFrames = Math.floor((totalDuration / 1000) * fps);
+    const frameInterval = 1000 / fps; // ~16.67ms per frame
+    
+    console.log(`📊 Recording ${totalFrames} frames at ${fps} FPS`);
+    
+    // Get page height for scrolling
+    const pageHeight = await page.evaluate(() => document.body.scrollHeight);
+    const viewportHeight = 1080;
+    const maxScroll = Math.max(0, pageHeight - viewportHeight);
+    
+    console.log(`📏 Page height: ${pageHeight}px, Max scroll: ${maxScroll}px`);
+    
+    // Record frames
+    for (let frame = 0; frame < totalFrames; frame++) {
+      const progress = frame / totalFrames;
+      
+      // First 1 second: stay at top
+      if (progress < 0.0625) { // 1/16 = 0.0625
+        await page.evaluate(() => window.scrollTo(0, 0));
+      } else {
+        // Remaining 15 seconds: smooth scroll
+        const scrollProgress = (progress - 0.0625) / 0.9375; // Normalize to 0-1
+        const scrollY = Math.floor(scrollProgress * maxScroll);
+        await page.evaluate(scrollY => window.scrollTo(0, scrollY), scrollY);
+      }
+      
+      // FIXED: Use page.waitForDelay() instead of page.waitForTimeout()
+      await page.waitForDelay(frameInterval);
+      
+      // Take screenshot
+      const screenshot = await page.screenshot({
+        type: 'png',
+        fullPage: false
+      });
+      
+      frames.push(screenshot);
+      
+      // Log progress every 60 frames (1 second)
+      if (frame % 60 === 0) {
+        console.log(`📸 Frame ${frame}/${totalFrames} (${Math.round(progress * 100)}%)`);
+      }
+    }
+    
+    console.log('✅ Screen recording completed');
+    console.log(`📁 Converting ${frames.length} frames to MP4...`);
+    
+    // Convert frames to video using FFmpeg
+    const { spawn } = require('child_process');
+    
+    const ffmpegArgs = [
+      '-y', // Overwrite output file
+      '-f', 'image2pipe',
+      '-vcodec', 'png',
+      '-r', fps.toString(),
+      '-i', '-', // Input from stdin
+      '-vcodec', 'libx264',
+      '-pix_fmt', 'yuv420p',
+      '-crf', '23',
+      '-preset', 'medium',
+      videoPath
+    ];
+    
+    const ffmpeg = spawn('ffmpeg', ffmpegArgs);
+    
+    // Send frames to FFmpeg
+    for (let i = 0; i < frames.length; i++) {
+      ffmpeg.stdin.write(frames[i]);
+      if (i % 120 === 0) { // Log every 2 seconds worth of frames
+        console.log(`🎞️ Processing frame ${i}/${frames.length}`);
+      }
+    }
+    ffmpeg.stdin.end();
+    
+    // Wait for FFmpeg to complete
+    await new Promise((resolve, reject) => {
+      ffmpeg.on('close', (code) => {
+        if (code === 0) {
+          console.log('✅ Video conversion completed successfully');
+          resolve();
+        } else {
+          console.log(`❌ FFmpeg failed with code ${code}`);
+          reject(new Error(`FFmpeg failed with code ${code}`));
+        }
+      });
+      
+      ffmpeg.on('error', (err) => {
+        console.log(`❌ FFmpeg error: ${err.message}`);
+        reject(err);
+      });
+    });
+    
+    // Clean up
+    await browser.close();
+    fs.unlinkSync(htmlPath); // Remove temporary HTML file
+    
+    // Verify video file was created
+    if (fs.existsSync(videoPath)) {
+      const stats = fs.statSync(videoPath);
+      const fileSizeMB = (stats.size / (1024 * 1024)).toFixed(2);
+      
+      console.log(`✅ Video generated successfully!`);
+      console.log(`📁 File: ${filename}`);
+      console.log(`📊 Size: ${fileSizeMB} MB`);
+      
+      res.json({
+        success: true,
+        message: 'Dutch roofing video generated successfully',
+        file_name: filename,
+        file_size: stats.size,
+        file_size_readable: `${fileSizeMB} MB`,
+        duration_estimate: '16 seconds',
+        business_name: business_name
+      });
+    } else {
+      throw new Error('Video file was not created');
+    }
+    
+  } catch (error) {
+    console.log(`❌ Error generating video: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      message: 'Failed to generate Dutch roofing video'
+    });
+  }
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log('🌷 Dutch Roofing Video Server running on port', PORT);
+  console.log('📍 Health check: http://localhost:3030/health');
+  console.log('🎬 Video generation: POST http://localhost:3030/generate-video');
+  console.log('🏠 Ready to generate videos for Dutch dakdekker businesses!');
+});
