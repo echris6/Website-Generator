@@ -1,4 +1,4 @@
-name: Generate Dutch Roofing Video
+name: Generate Business Video (Dynamic)
 
 on:
   repository_dispatch:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       business_name:
-        description: 'Dutch roofing business name'
+        description: 'Business name'
         required: true
         type: string
       website_url:
@@ -25,9 +25,13 @@ on:
         description: 'Business email'
         required: false
         type: string
+      industry:
+        description: 'Business industry'
+        required: false
+        type: string
 
 jobs:
-  generate-dutch-roofing-video:
+  generate-business-video:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     
@@ -81,27 +85,30 @@ jobs:
             BUSINESS_CITY="${{ inputs.business_city }}"
             BUSINESS_PHONE="${{ inputs.business_phone }}"
             BUSINESS_EMAIL="${{ inputs.business_email }}"
+            INDUSTRY="${{ inputs.industry }}"
             WEBSITE_HTML_BASE64=""
           else
             BUSINESS_NAME="${{ github.event.client_payload.business_name }}"
-            WEBSITE_URL="${{ github.event.client_payload.website_url }}"
+            WEBSITE_URL="${{ github.event.client_payload.WEBSITE_URL }}"
             BUSINESS_CITY="${{ github.event.client_payload.business_city }}"
             BUSINESS_PHONE="${{ github.event.client_payload.business_phone }}"
             BUSINESS_EMAIL="${{ github.event.client_payload.business_email }}"
-            WEBSITE_HTML_BASE64="${{ github.event.client_payload.website_html_base64 }}"
+            INDUSTRY="${{ github.event.client_payload.industry }}"
+            WEBSITE_HTML_BASE64="${{ github.event.client_payload.WEBSITE_HTML_BASE64 }}"
           fi
           
-          # Set safe defaults
-          BUSINESS_NAME="${BUSINESS_NAME:-dutch-roofing-company}"
+          # Set dynamic defaults (no more hardcoded Dutch roofing!)
+          BUSINESS_NAME="${BUSINESS_NAME:-Business}"
           WEBSITE_URL="${WEBSITE_URL:-}"
-          BUSINESS_CITY="${BUSINESS_CITY:-Netherlands}"
+          BUSINESS_CITY="${BUSINESS_CITY:-City}"
           BUSINESS_PHONE="${BUSINESS_PHONE:-}"
           BUSINESS_EMAIL="${BUSINESS_EMAIL:-}"
+          INDUSTRY="${INDUSTRY:-general}"
           WEBSITE_HTML_BASE64="${WEBSITE_HTML_BASE64:-}"
           
-          # Create safe artifact name
+          # Create dynamic artifact name based on actual industry
           SANITIZED_NAME=$(echo "$BUSINESS_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
-          ARTIFACT_NAME="dutch-roofing-video-${SANITIZED_NAME}"
+          ARTIFACT_NAME="${INDUSTRY}-video-${SANITIZED_NAME}"
           
           # Limit length to 100 characters
           if [ ${#ARTIFACT_NAME} -gt 100 ]; then
@@ -114,12 +121,14 @@ jobs:
           echo "business_city=$BUSINESS_CITY" >> $GITHUB_OUTPUT
           echo "business_phone=$BUSINESS_PHONE" >> $GITHUB_OUTPUT
           echo "business_email=$BUSINESS_EMAIL" >> $GITHUB_OUTPUT
+          echo "industry=$INDUSTRY" >> $GITHUB_OUTPUT
           echo "website_html_base64=$WEBSITE_HTML_BASE64" >> $GITHUB_OUTPUT
           echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
           
           echo "✅ Business data extracted:"
           echo "  🏢 Company: $BUSINESS_NAME"
           echo "  🏙️ City: $BUSINESS_CITY"
+          echo "  🏭 Industry: $INDUSTRY"
           echo "  📦 Artifact: $ARTIFACT_NAME"
           
       - name: Process website content
@@ -127,25 +136,30 @@ jobs:
           echo "📄 Processing website content..."
           
           BUSINESS_NAME="${{ steps.business_data.outputs.business_name }}"
+          BUSINESS_CITY="${{ steps.business_data.outputs.business_city }}"
+          BUSINESS_PHONE="${{ steps.business_data.outputs.business_phone }}"
+          BUSINESS_EMAIL="${{ steps.business_data.outputs.business_email }}"
+          INDUSTRY="${{ steps.business_data.outputs.industry }}"
           WEBSITE_URL="${{ steps.business_data.outputs.website_url }}"
           WEBSITE_HTML_BASE64="${{ steps.business_data.outputs.website_html_base64 }}"
           
           # Try to get HTML content
           HTML_SUCCESS=false
           
-          # Strategy 1: Use base64 HTML from n8n
+          # Strategy 1: Use base64 HTML from n8n (your actual generated website)
           if [ -n "$WEBSITE_HTML_BASE64" ] && [ "$WEBSITE_HTML_BASE64" != "null" ] && [ ${#WEBSITE_HTML_BASE64} -gt 100 ]; then
-            echo "📥 Using base64 HTML content from n8n..."
+            echo "📥 Using base64 HTML content from n8n (your generated website)..."
             echo "$WEBSITE_HTML_BASE64" | base64 -d > website.html
             
             if [ -s website.html ]; then
               HTML_SIZE=$(wc -c < website.html)
               echo "✅ Decoded HTML content: $HTML_SIZE bytes"
+              echo "🎯 This is your actual generated website with real business data!"
               HTML_SUCCESS=true
             fi
           fi
           
-          # Strategy 2: Fetch from URL
+          # Strategy 2: Fetch from URL (if you have a live URL)
           if [ "$HTML_SUCCESS" = "false" ] && [ -n "$WEBSITE_URL" ] && [ "$WEBSITE_URL" != "null" ]; then
             echo "🌐 Fetching content from URL: $WEBSITE_URL"
             
@@ -153,217 +167,400 @@ jobs:
               HTML_SIZE=$(wc -c < website.html)
               if [ $HTML_SIZE -gt 500 ]; then
                 echo "✅ Fetched HTML content: $HTML_SIZE bytes"
+                echo "🎯 Using live website content!"
                 HTML_SUCCESS=true
               fi
             fi
           fi
           
-          # Strategy 3: Use repository template
+          # Strategy 3: Create COMPLETELY DYNAMIC template (no more Dutch roofing!)
           if [ "$HTML_SUCCESS" = "false" ]; then
-            echo "📄 Using repository template..."
+            echo "📄 Creating 100% dynamic template for: $BUSINESS_NAME"
+            echo "🏭 Industry: $INDUSTRY"
+            echo "📍 Location: $BUSINESS_CITY"
             
-            if [ -f "website.html" ]; then
-              echo "✅ Using existing website.html template"
-              HTML_SUCCESS=true
-            else
-              # Create basic template with business data
-              cat > website.html << EOF
-          <!DOCTYPE html>
-          <html lang="nl">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>$BUSINESS_NAME - Professionele Dakdekker</title>
-              <style>
-                  * { margin: 0; padding: 0; box-sizing: border-box; }
-                  body { 
-                      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-                      line-height: 1.6; 
-                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                      min-height: 100vh;
-                  }
-                  .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-                  .header { 
-                      background: rgba(255,255,255,0.95);
-                      padding: 80px 0; 
-                      text-align: center; 
-                      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                  }
-                  .header h1 { 
-                      font-size: 4em; 
-                      color: #2c3e50; 
-                      margin-bottom: 20px;
-                      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-                  }
-                  .tagline { 
-                      font-size: 1.8em; 
-                      color: #34495e; 
-                      font-weight: 300;
-                      margin-bottom: 30px;
-                  }
-                  .content { 
-                      background: white; 
-                      margin: 40px 0; 
-                      padding: 60px 40px;
-                      border-radius: 15px;
-                      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-                  }
-                  .services { 
-                      display: grid; 
-                      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-                      gap: 30px; 
-                      margin: 50px 0; 
-                  }
-                  .service { 
-                      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-                      color: white;
-                      padding: 40px 30px; 
-                      border-radius: 15px; 
-                      text-align: center;
-                      transition: transform 0.3s ease;
-                      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-                  }
-                  .service:hover { transform: translateY(-10px); }
-                  .service h3 { font-size: 1.5em; margin-bottom: 15px; }
-                  .service p { font-size: 1.1em; opacity: 0.9; }
-                  h2 { 
-                      color: #2c3e50; 
-                      font-size: 2.5em; 
-                      margin-bottom: 30px; 
-                      text-align: center;
-                  }
-                  .contact-section { 
-                      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-                      color: white;
-                      padding: 60px 40px;
-                      border-radius: 15px;
-                      text-align: center;
-                      margin: 40px 0;
-                  }
-                  .contact-info { 
-                      display: grid; 
-                      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-                      gap: 30px; 
-                      margin-top: 40px;
-                  }
-                  .contact-item { 
-                      background: rgba(255,255,255,0.1);
-                      padding: 30px;
-                      border-radius: 10px;
-                      backdrop-filter: blur(10px);
-                  }
-                  .contact-item h4 { font-size: 1.3em; margin-bottom: 10px; }
-                  .contact-item p { font-size: 1.1em; }
-                  .hero-stats {
-                      display: flex;
-                      justify-content: center;
-                      gap: 40px;
-                      margin-top: 40px;
-                      flex-wrap: wrap;
-                  }
-                  .stat {
-                      text-align: center;
-                      background: rgba(44, 62, 80, 0.1);
-                      padding: 20px;
-                      border-radius: 10px;
-                      min-width: 150px;
-                  }
-                  .stat-number {
-                      font-size: 2.5em;
-                      font-weight: bold;
-                      color: #e74c3c;
-                      display: block;
-                  }
-                  .stat-label {
-                      color: #7f8c8d;
-                      font-size: 1.1em;
-                      margin-top: 5px;
-                  }
-              </style>
-          </head>
-          <body>
-              <div class="header">
-                  <div class="container">
-                      <h1>$BUSINESS_NAME</h1>
-                      <p class="tagline">Professionele dakwerkzaamheden in Nederland</p>
-                      <div class="hero-stats">
-                          <div class="stat">
-                              <span class="stat-number">20+</span>
-                              <span class="stat-label">Jaar ervaring</span>
-                          </div>
-                          <div class="stat">
-                              <span class="stat-number">500+</span>
-                              <span class="stat-label">Tevreden klanten</span>
-                          </div>
-                          <div class="stat">
-                              <span class="stat-number">100%</span>
-                              <span class="stat-label">Kwaliteitsgarantie</span>
-                          </div>
-                      </div>
-                  </div>
+            # Use Node.js to generate proper dynamic content
+            node << 'TEMPLATE_EOF'
+            const fs = require('fs');
+            
+            // Get data from environment
+            const businessName = process.env.BUSINESS_NAME || 'Business';
+            const businessCity = process.env.BUSINESS_CITY || 'City';
+            const businessPhone = process.env.BUSINESS_PHONE || '';
+            const businessEmail = process.env.BUSINESS_EMAIL || '';
+            const industry = process.env.INDUSTRY || 'general';
+            
+            console.log(`🏢 Generating template for: ${businessName}`);
+            console.log(`🏭 Industry: ${industry}`);
+            console.log(`📍 Location: ${businessCity}`);
+            
+            // Dynamic industry configuration
+            const industryConfig = {
+              real_estate: {
+                primaryColor: '#1e3a8a',
+                secondaryColor: '#dc2626',
+                gradient: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
+                tagline: 'Professional Real Estate Services',
+                language: 'en',
+                services: [
+                  { icon: '🏠', title: 'Property Sales', desc: 'Comprehensive property sales and listings management' },
+                  { icon: '🏢', title: 'Commercial Real Estate', desc: 'Expert commercial property solutions' },
+                  { icon: '🏡', title: 'Residential Listings', desc: 'Premium residential property services' },
+                  { icon: '💼', title: 'Investment Properties', desc: 'Strategic investment opportunities' },
+                  { icon: '📊', title: 'Market Analysis', desc: 'Detailed market insights and trends' },
+                  { icon: '🔑', title: 'Property Management', desc: 'Full-service property management solutions' }
+                ]
+              },
+              hvac: {
+                primaryColor: '#dc2626',
+                secondaryColor: '#1e40af',
+                gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                tagline: 'Professional HVAC Services',
+                language: 'en',
+                services: [
+                  { icon: '🔥', title: 'Heating Systems', desc: 'Expert heating installation and repair' },
+                  { icon: '❄️', title: 'Air Conditioning', desc: 'Complete AC solutions and maintenance' },
+                  { icon: '🔧', title: 'HVAC Repair', desc: 'Emergency and scheduled repair services' },
+                  { icon: '🛠️', title: 'System Maintenance', desc: 'Preventive maintenance programs' },
+                  { icon: '💨', title: 'Air Quality', desc: 'Indoor air quality improvement' },
+                  { icon: '⚡', title: 'Emergency Service', desc: '24/7 emergency HVAC support' }
+                ]
+              },
+              restaurant: {
+                primaryColor: '#dc2626',
+                secondaryColor: '#92400e',
+                gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                tagline: 'Exceptional Dining Experience',
+                language: 'en',
+                services: [
+                  { icon: '🍽️', title: 'Fine Dining', desc: 'Exquisite culinary experiences' },
+                  { icon: '🥘', title: 'Catering Services', desc: 'Professional event catering' },
+                  { icon: '🍕', title: 'Delivery & Takeout', desc: 'Convenient dining options' },
+                  { icon: '🎉', title: 'Private Events', desc: 'Exclusive venue for special occasions' },
+                  { icon: '🍷', title: 'Bar & Cocktails', desc: 'Premium beverage selection' },
+                  { icon: '☕', title: 'Coffee & Desserts', desc: 'Artisanal coffee and sweet treats' }
+                ]
+              },
+              roofing: {
+                primaryColor: '#1e40af',
+                secondaryColor: '#dc2626',
+                gradient: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
+                tagline: 'Professional Roofing Services',
+                language: 'en',
+                services: [
+                  { icon: '🏠', title: 'Roof Installation', desc: 'Complete roofing systems with quality materials' },
+                  { icon: '🔧', title: 'Roof Repair', desc: 'Expert repair services for all roof types' },
+                  { icon: '🛡️', title: 'Roof Maintenance', desc: 'Preventive maintenance to extend roof life' },
+                  { icon: '🌧️', title: 'Gutter Services', desc: 'Professional gutter cleaning and repair' },
+                  { icon: '🔥', title: 'Roof Insulation', desc: 'Energy-efficient insulation solutions' },
+                  { icon: '⚡', title: 'Emergency Repairs', desc: '24/7 emergency roofing services' }
+                ]
+              },
+              general: {
+                primaryColor: '#1f2937',
+                secondaryColor: '#3b82f6',
+                gradient: 'linear-gradient(135deg, #6366f1 0%, #3b82f6 100%)',
+                tagline: 'Professional Business Services',
+                language: 'en',
+                services: [
+                  { icon: '⭐', title: 'Premium Service', desc: 'High-quality professional solutions' },
+                  { icon: '🔧', title: 'Expert Solutions', desc: 'Specialized problem-solving expertise' },
+                  { icon: '💼', title: 'Business Consulting', desc: 'Strategic business guidance' },
+                  { icon: '📞', title: 'Customer Support', desc: 'Dedicated customer service' },
+                  { icon: '🚀', title: 'Innovation', desc: 'Cutting-edge approaches and solutions' },
+                  { icon: '✅', title: 'Quality Assurance', desc: 'Guaranteed satisfaction and results' }
+                ]
+              }
+            };
+            
+            const config = industryConfig[industry] || industryConfig.general;
+            
+            // Generate contact section dynamically
+            const contactItems = [];
+            if (businessPhone) {
+              contactItems.push(`
+                <div class="contact-item">
+                  <h4>📞 Phone</h4>
+                  <p>${businessPhone}</p>
+                </div>
+              `);
+            }
+            if (businessEmail) {
+              contactItems.push(`
+                <div class="contact-item">
+                  <h4>📧 Email</h4>
+                  <p>${businessEmail}</p>
+                </div>
+              `);
+            }
+            contactItems.push(`
+              <div class="contact-item">
+                <h4>📍 Location</h4>
+                <p>${businessCity}</p>
               </div>
-              
-              <div class="container">
-                  <div class="content">
-                      <h2>Onze Specialisaties</h2>
-                      <div class="services">
-                          <div class="service">
-                              <h3>🏠 Dakbedekking</h3>
-                              <p>Complete dakbedekkingssystemen met hoogwaardige materialen en jarenlange garantie voor optimale bescherming.</p>
-                          </div>
-                          <div class="service">
-                              <h3>🔧 Dakreparatie</h3>
-                              <p>Snelle en vakkundige reparatie van lekke daken, kapotte dakpannen en andere dakschade door ervaren specialisten.</p>
-                          </div>
-                          <div class="service">
-                              <h3>🛡️ Dakonderhoud</h3>
-                              <p>Preventief onderhoud om de levensduur van uw dak te verlengen en dure reparaties in de toekomst te voorkomen.</p>
-                          </div>
-                          <div class="service">
-                              <h3>🌧️ Gootreiniging</h3>
-                              <p>Professionele reiniging en onderhoud van dakgoten voor optimale waterafvoer en voorkoming van waterschade.</p>
-                          </div>
-                          <div class="service">
-                              <h3>🔥 Dakisolatie</h3>
-                              <p>Moderne isolatieoplossingen voor betere energieprestaties en lagere verwarmingskosten van uw woning.</p>
-                          </div>
-                          <div class="service">
-                              <h3>⚡ Noodreparaties</h3>
-                              <p>24/7 beschikbaar voor spoedgevallen. Snelle hulp bij storm- en waterschade om verdere problemen te voorkomen.</p>
-                          </div>
-                      </div>
-                  </div>
-                  
-                  <div class="contact-section">
-                      <h2 style="color: white;">Contact & Informatie</h2>
-                      <p style="font-size: 1.2em; margin-bottom: 30px;">Neem vandaag nog contact met ons op voor een vrijblijvende offerte</p>
-                      <div class="contact-info">
-                          <div class="contact-item">
-                              <h4>📞 Telefoon</h4>
-                              <p>${{ steps.business_data.outputs.business_phone || '+31 6 12345678' }}</p>
-                          </div>
-                          <div class="contact-item">
-                              <h4>📧 Email</h4>
-                              <p>${{ steps.business_data.outputs.business_email || 'info@dakdekker.nl' }}</p>
-                          </div>
-                          <div class="contact-item">
-                              <h4>📍 Locatie</h4>
-                              <p>${{ steps.business_data.outputs.business_city || 'Nederland' }}</p>
-                          </div>
-                      </div>
-                  </div>
+            `);
+            
+            // Generate services section dynamically
+            const servicesHtml = config.services.map(service => `
+              <div class="service">
+                <h3>${service.icon} ${service.title}</h3>
+                <p>${service.desc}</p>
               </div>
-          </body>
-          </html>
-          EOF
-              echo "✅ Created professional HTML template"
-              HTML_SUCCESS=true
-            fi
+            `).join('');
+            
+            // Generate complete dynamic HTML
+            const html = `<!DOCTYPE html>
+            <html lang="${config.language}">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>${businessName} - ${config.tagline}</title>
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body { 
+                        font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; 
+                        line-height: 1.6; 
+                        background: ${config.gradient};
+                        min-height: 100vh;
+                        color: #1f2937;
+                    }
+                    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+                    .header { 
+                        background: rgba(255,255,255,0.95);
+                        padding: 120px 0; 
+                        text-align: center; 
+                        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+                        backdrop-filter: blur(10px);
+                    }
+                    .header h1 { 
+                        font-size: 5em; 
+                        color: ${config.primaryColor}; 
+                        margin-bottom: 30px;
+                        text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+                        font-weight: 800;
+                        letter-spacing: -2px;
+                    }
+                    .tagline { 
+                        font-size: 2.2em; 
+                        color: ${config.secondaryColor}; 
+                        font-weight: 300;
+                        margin-bottom: 20px;
+                    }
+                    .location {
+                        font-size: 1.6em;
+                        color: #6b7280;
+                        margin-bottom: 40px;
+                        font-weight: 500;
+                    }
+                    .hero-stats {
+                        display: flex;
+                        justify-content: center;
+                        gap: 60px;
+                        margin-top: 50px;
+                        flex-wrap: wrap;
+                    }
+                    .stat {
+                        text-align: center;
+                        background: rgba(0,0,0,0.05);
+                        padding: 30px 40px;
+                        border-radius: 20px;
+                        min-width: 200px;
+                        backdrop-filter: blur(10px);
+                    }
+                    .stat-number {
+                        font-size: 3.5em;
+                        font-weight: 900;
+                        color: ${config.secondaryColor};
+                        display: block;
+                        line-height: 1;
+                    }
+                    .stat-label {
+                        color: #6b7280;
+                        font-size: 1.1em;
+                        margin-top: 10px;
+                        font-weight: 600;
+                    }
+                    .content { 
+                        background: white; 
+                        margin: 60px 0; 
+                        padding: 80px 60px;
+                        border-radius: 30px;
+                        box-shadow: 0 30px 80px rgba(0,0,0,0.1);
+                    }
+                    h2 { 
+                        color: ${config.primaryColor}; 
+                        font-size: 3.5em; 
+                        margin-bottom: 50px; 
+                        text-align: center;
+                        font-weight: 700;
+                        letter-spacing: -1px;
+                    }
+                    .services { 
+                        display: grid; 
+                        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); 
+                        gap: 40px; 
+                        margin: 60px 0; 
+                    }
+                    .service { 
+                        background: ${config.gradient};
+                        color: white;
+                        padding: 50px 40px; 
+                        border-radius: 25px; 
+                        text-align: center;
+                        transition: all 0.4s ease;
+                        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+                        position: relative;
+                        overflow: hidden;
+                    }
+                    .service::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+                        opacity: 0;
+                        transition: opacity 0.3s ease;
+                    }
+                    .service:hover { 
+                        transform: translateY(-20px) scale(1.02); 
+                        box-shadow: 0 30px 70px rgba(0,0,0,0.25);
+                    }
+                    .service:hover::before {
+                        opacity: 1;
+                    }
+                    .service h3 { 
+                        font-size: 2em; 
+                        margin-bottom: 20px; 
+                        font-weight: 700;
+                    }
+                    .service p { 
+                        font-size: 1.2em; 
+                        opacity: 0.95; 
+                        line-height: 1.6;
+                        font-weight: 400;
+                    }
+                    .contact-section { 
+                        background: ${config.gradient};
+                        color: white;
+                        padding: 100px 60px;
+                        border-radius: 30px;
+                        text-align: center;
+                        margin: 60px 0;
+                        box-shadow: 0 30px 80px rgba(0,0,0,0.2);
+                    }
+                    .contact-section h2 {
+                        color: white;
+                        margin-bottom: 30px;
+                    }
+                    .contact-intro {
+                        font-size: 1.4em;
+                        margin-bottom: 50px;
+                        opacity: 0.95;
+                        font-weight: 300;
+                    }
+                    .contact-info { 
+                        display: grid; 
+                        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+                        gap: 40px; 
+                        margin-top: 50px;
+                    }
+                    .contact-item { 
+                        background: rgba(255,255,255,0.15);
+                        padding: 40px;
+                        border-radius: 20px;
+                        backdrop-filter: blur(20px);
+                        border: 1px solid rgba(255,255,255,0.2);
+                        transition: all 0.3s ease;
+                    }
+                    .contact-item:hover {
+                        background: rgba(255,255,255,0.25);
+                        transform: translateY(-5px);
+                    }
+                    .contact-item h4 { 
+                        font-size: 1.6em; 
+                        margin-bottom: 15px; 
+                        font-weight: 600;
+                    }
+                    .contact-item p { 
+                        font-size: 1.3em; 
+                        font-weight: 500;
+                        opacity: 0.95;
+                    }
+                    @media (max-width: 768px) {
+                        .header h1 { font-size: 3em; }
+                        .tagline { font-size: 1.6em; }
+                        .hero-stats { gap: 30px; }
+                        .stat { min-width: 150px; padding: 20px; }
+                        .content { padding: 40px 30px; }
+                        .services { grid-template-columns: 1fr; gap: 30px; }
+                        .service { padding: 40px 30px; }
+                        .contact-section { padding: 60px 30px; }
+                        h2 { font-size: 2.5em; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <div class="container">
+                        <h1>${businessName}</h1>
+                        <p class="tagline">${config.tagline}</p>
+                        <p class="location">📍 Serving ${businessCity}</p>
+                        <div class="hero-stats">
+                            <div class="stat">
+                                <span class="stat-number">20+</span>
+                                <span class="stat-label">Years Experience</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">500+</span>
+                                <span class="stat-label">Happy Clients</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">100%</span>
+                                <span class="stat-label">Satisfaction</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="container">
+                    <div class="content">
+                        <h2>Our Services</h2>
+                        <div class="services">
+                            ${servicesHtml}
+                        </div>
+                    </div>
+                    
+                    <div class="contact-section">
+                        <h2>Get In Touch</h2>
+                        <p class="contact-intro">Ready to work with ${businessName}? Contact us today for professional service you can trust.</p>
+                        <div class="contact-info">
+                            ${contactItems.join('')}
+                        </div>
+                    </div>
+                </div>
+            </body>
+            </html>`;
+            
+            // Write the HTML file
+            fs.writeFileSync('website.html', html);
+            console.log(`✅ Generated dynamic ${industry} template for ${businessName}`);
+            console.log(`📊 Template size: ${html.length} characters`);
+            console.log(`🎨 Colors: Primary ${config.primaryColor}, Secondary ${config.secondaryColor}`);
+            console.log(`🌐 Language: ${config.language}`);
+            
+            TEMPLATE_EOF
+            
+            HTML_SUCCESS=true
           fi
           
           if [ "$HTML_SUCCESS" = "true" ]; then
             HTML_SIZE=$(wc -c < website.html)
             echo "📄 Final HTML ready: $HTML_SIZE bytes"
+            echo "🎯 Business: $BUSINESS_NAME"
+            echo "🏭 Industry: $INDUSTRY"
+            echo "📍 Location: $BUSINESS_CITY"
           else
             echo "❌ Failed to create HTML content"
             exit 1
@@ -371,9 +568,10 @@ jobs:
           
       - name: Generate video
         run: |
-          echo "🎬 Starting video generation..."
+          echo "🎬 Starting video generation for ${{ steps.business_data.outputs.business_name }}..."
           
           BUSINESS_NAME="${{ steps.business_data.outputs.business_name }}"
+          INDUSTRY="${{ steps.business_data.outputs.industry }}"
           
           # Create videos directory
           mkdir -p videos
@@ -410,13 +608,16 @@ jobs:
           jq -n \
             --arg business_name "$BUSINESS_NAME" \
             --arg html_content "$HTML_CONTENT" \
+            --arg industry "$INDUSTRY" \
             '{
               business_name: $business_name,
-              html_content: $html_content
+              html_content: $html_content,
+              industry: $industry
             }' > payload.json
           
           echo "📋 Sending request to video server..."
           echo "📊 Business: $BUSINESS_NAME"
+          echo "🏭 Industry: $INDUSTRY"
           echo "📊 HTML Size: ${#HTML_CONTENT} characters"
           
           # Make API call with timeout
@@ -469,6 +670,8 @@ jobs:
             echo "✅ Video generated successfully!"
             echo "📁 File: $FILENAME"
             echo "📊 Size: $VIDEO_SIZE ($VIDEO_SIZE_BYTES bytes)"
+            echo "🏢 Business: $BUSINESS_NAME"
+            echo "🏭 Industry: $INDUSTRY"
             
             # Verify it's a real video file (should be at least 1MB)
             if [ $VIDEO_SIZE_BYTES -lt 1048576 ]; then
@@ -504,11 +707,12 @@ jobs:
         
       - name: Workflow summary
         run: |
-          echo "🎉 Dutch roofing video workflow completed!"
+          echo "🎉 Business video workflow completed!"
           echo ""
           echo "📊 FINAL SUMMARY:"
           echo "  🏢 Company: ${{ steps.business_data.outputs.business_name }}"
           echo "  🏙️ City: ${{ steps.business_data.outputs.business_city }}"
+          echo "  🏭 Industry: ${{ steps.business_data.outputs.industry }}"
           echo "  📞 Phone: ${{ steps.business_data.outputs.business_phone }}"
           echo "  📧 Email: ${{ steps.business_data.outputs.business_email }}"
           echo "  📦 Artifact: ${{ steps.business_data.outputs.artifact_name }}"
