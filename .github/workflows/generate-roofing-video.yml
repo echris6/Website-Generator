@@ -1,137 +1,4 @@
-name: Generate Business Video (Dynamic)
-
-on:
-  repository_dispatch:
-    types: [generate-roofing-video]
-  workflow_dispatch:
-    inputs:
-      business_name:
-        description: 'Business name'
-        required: true
-        type: string
-      website_url:
-        description: 'Company website URL'
-        required: false
-        type: string
-      business_city:
-        description: 'Business city'
-        required: false
-        type: string
-      business_phone:
-        description: 'Business phone number'
-        required: false
-        type: string
-      business_email:
-        description: 'Business email'
-        required: false
-        type: string
-      industry:
-        description: 'Business industry'
-        required: false
-        type: string
-
-jobs:
-  generate-business-video:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-        
-      - name: Install dependencies
-        run: |
-          echo "📦 Installing dependencies..."
-          npm install
-          
-          # Install FFmpeg for video processing
-          echo "🎥 Installing FFmpeg..."
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
-          
-          # Install additional system packages for Puppeteer
-          sudo apt-get install -y \
-            libasound2t64 \
-            libatk-bridge2.0-0 \
-            libgtk-3-0 \
-            libx11-xcb1 \
-            xvfb
-          
-          # Verify installations
-          echo "🔍 Verifying installations..."
-          node --version
-          npm --version
-          ffmpeg -version
-          
-          # Verify critical dependencies
-          echo "🔍 Verifying critical dependencies..."
-          node -e "console.log('Puppeteer:', require('puppeteer').version || 'installed')"
-          node -e "console.log('Express:', require('express').version || 'installed')"
-          
-      - name: Extract business data
-        id: business_data
-        run: |
-          echo "📊 Extracting business data..."
-          
-          # Extract data from either workflow_dispatch or repository_dispatch
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            BUSINESS_NAME="${{ inputs.business_name }}"
-            WEBSITE_URL="${{ inputs.website_url }}"
-            BUSINESS_CITY="${{ inputs.business_city }}"
-            BUSINESS_PHONE="${{ inputs.business_phone }}"
-            BUSINESS_EMAIL="${{ inputs.business_email }}"
-            INDUSTRY="${{ inputs.industry }}"
-            WEBSITE_HTML_BASE64=""
-          else
-            BUSINESS_NAME="${{ github.event.client_payload.business_name }}"
-            WEBSITE_URL="${{ github.event.client_payload.WEBSITE_URL }}"
-            BUSINESS_CITY="${{ github.event.client_payload.business_city }}"
-            BUSINESS_PHONE="${{ github.event.client_payload.business_phone }}"
-            BUSINESS_EMAIL="${{ github.event.client_payload.business_email }}"
-            INDUSTRY="${{ github.event.client_payload.industry }}"
-            WEBSITE_HTML_BASE64="${{ github.event.client_payload.WEBSITE_HTML_BASE64 }}"
-          fi
-          
-          # Set dynamic defaults (no more hardcoded Dutch roofing!)
-          BUSINESS_NAME="${BUSINESS_NAME:-Business}"
-          WEBSITE_URL="${WEBSITE_URL:-}"
-          BUSINESS_CITY="${BUSINESS_CITY:-City}"
-          BUSINESS_PHONE="${BUSINESS_PHONE:-}"
-          BUSINESS_EMAIL="${BUSINESS_EMAIL:-}"
-          INDUSTRY="${INDUSTRY:-general}"
-          WEBSITE_HTML_BASE64="${WEBSITE_HTML_BASE64:-}"
-          
-          # Create dynamic artifact name based on actual industry
-          SANITIZED_NAME=$(echo "$BUSINESS_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
-          ARTIFACT_NAME="${INDUSTRY}-video-${SANITIZED_NAME}"
-          
-          # Limit length to 100 characters
-          if [ ${#ARTIFACT_NAME} -gt 100 ]; then
-            ARTIFACT_NAME="${ARTIFACT_NAME:0:100}"
-          fi
-          
-          # Set outputs
-          echo "business_name=$BUSINESS_NAME" >> $GITHUB_OUTPUT
-          echo "website_url=$WEBSITE_URL" >> $GITHUB_OUTPUT
-          echo "business_city=$BUSINESS_CITY" >> $GITHUB_OUTPUT
-          echo "business_phone=$BUSINESS_PHONE" >> $GITHUB_OUTPUT
-          echo "business_email=$BUSINESS_EMAIL" >> $GITHUB_OUTPUT
-          echo "industry=$INDUSTRY" >> $GITHUB_OUTPUT
-          echo "website_html_base64=$WEBSITE_HTML_BASE64" >> $GITHUB_OUTPUT
-          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
-          
-          echo "✅ Business data extracted:"
-          echo "  🏢 Company: $BUSINESS_NAME"
-          echo "  🏙️ City: $BUSINESS_CITY"
-          echo "  🏭 Industry: $INDUSTRY"
-          echo "  📦 Artifact: $ARTIFACT_NAME"
-          
-      - name: Process website content
+- name: Process website content
         run: |
           echo "📄 Processing website content..."
           
@@ -179,379 +46,337 @@ jobs:
             echo "🏭 Industry: $INDUSTRY"
             echo "📍 Location: $BUSINESS_CITY"
             
-            # Use Node.js to generate proper dynamic content
-            node << 'TEMPLATE_EOF'
-            const fs = require('fs');
+            # Set industry-specific content based on the ACTUAL data received
+            case "$INDUSTRY" in
+              "real_estate")
+                PRIMARY_COLOR="#1e3a8a"
+                SECONDARY_COLOR="#dc2626"
+                TAGLINE="Professional Real Estate Services"
+                SERVICE1="🏠 Property Sales"
+                SERVICE2="🏢 Commercial Real Estate" 
+                SERVICE3="🏡 Residential Listings"
+                SERVICE4="💼 Investment Properties"
+                SERVICE5="📊 Market Analysis"
+                SERVICE6="🔑 Property Management"
+                ;;
+              "hvac")
+                PRIMARY_COLOR="#dc2626"
+                SECONDARY_COLOR="#1e40af"
+                TAGLINE="Professional HVAC Services"
+                SERVICE1="🔥 Heating Systems"
+                SERVICE2="❄️ Air Conditioning"
+                SERVICE3="🔧 HVAC Repair"
+                SERVICE4="🛠️ Maintenance"
+                SERVICE5="💨 Air Quality"
+                SERVICE6="⚡ Emergency Service"
+                ;;
+              "restaurant")
+                PRIMARY_COLOR="#dc2626"
+                SECONDARY_COLOR="#92400e"
+                TAGLINE="Exceptional Dining Experience"
+                SERVICE1="🍽️ Fine Dining"
+                SERVICE2="🥘 Catering Services"
+                SERVICE3="🍕 Delivery & Takeout"
+                SERVICE4="🎉 Private Events"
+                SERVICE5="🍷 Bar & Cocktails"
+                SERVICE6="☕ Coffee & Desserts"
+                ;;
+              "roofing")
+                PRIMARY_COLOR="#1e40af"
+                SECONDARY_COLOR="#dc2626"
+                TAGLINE="Professional Roofing Services"
+                SERVICE1="🏠 Roof Installation"
+                SERVICE2="🔧 Roof Repair"
+                SERVICE3="🛡️ Roof Maintenance"
+                SERVICE4="🌧️ Gutter Services"
+                SERVICE5="🔥 Roof Insulation"
+                SERVICE6="⚡ Emergency Repairs"
+                ;;
+              *)
+                # Default to generic business services
+                PRIMARY_COLOR="#1f2937"
+                SECONDARY_COLOR="#3b82f6"
+                TAGLINE="Professional Business Services"
+                SERVICE1="⭐ Premium Service"
+                SERVICE2="🔧 Expert Solutions"
+                SERVICE3="💼 Business Consulting"
+                SERVICE4="📞 Customer Support"
+                SERVICE5="🚀 Innovation"
+                SERVICE6="✅ Quality Assurance"
+                ;;
+            esac
             
-            // Get data from environment
-            const businessName = process.env.BUSINESS_NAME || 'Business';
-            const businessCity = process.env.BUSINESS_CITY || 'City';
-            const businessPhone = process.env.BUSINESS_PHONE || '';
-            const businessEmail = process.env.BUSINESS_EMAIL || '';
-            const industry = process.env.INDUSTRY || 'general';
-            
-            console.log(`🏢 Generating template for: ${businessName}`);
-            console.log(`🏭 Industry: ${industry}`);
-            console.log(`📍 Location: ${businessCity}`);
-            
-            // Dynamic industry configuration
-            const industryConfig = {
-              real_estate: {
-                primaryColor: '#1e3a8a',
-                secondaryColor: '#dc2626',
-                gradient: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
-                tagline: 'Professional Real Estate Services',
-                language: 'en',
-                services: [
-                  { icon: '🏠', title: 'Property Sales', desc: 'Comprehensive property sales and listings management' },
-                  { icon: '🏢', title: 'Commercial Real Estate', desc: 'Expert commercial property solutions' },
-                  { icon: '🏡', title: 'Residential Listings', desc: 'Premium residential property services' },
-                  { icon: '💼', title: 'Investment Properties', desc: 'Strategic investment opportunities' },
-                  { icon: '📊', title: 'Market Analysis', desc: 'Detailed market insights and trends' },
-                  { icon: '🔑', title: 'Property Management', desc: 'Full-service property management solutions' }
-                ]
-              },
-              hvac: {
-                primaryColor: '#dc2626',
-                secondaryColor: '#1e40af',
-                gradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-                tagline: 'Professional HVAC Services',
-                language: 'en',
-                services: [
-                  { icon: '🔥', title: 'Heating Systems', desc: 'Expert heating installation and repair' },
-                  { icon: '❄️', title: 'Air Conditioning', desc: 'Complete AC solutions and maintenance' },
-                  { icon: '🔧', title: 'HVAC Repair', desc: 'Emergency and scheduled repair services' },
-                  { icon: '🛠️', title: 'System Maintenance', desc: 'Preventive maintenance programs' },
-                  { icon: '💨', title: 'Air Quality', desc: 'Indoor air quality improvement' },
-                  { icon: '⚡', title: 'Emergency Service', desc: '24/7 emergency HVAC support' }
-                ]
-              },
-              restaurant: {
-                primaryColor: '#dc2626',
-                secondaryColor: '#92400e',
-                gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                tagline: 'Exceptional Dining Experience',
-                language: 'en',
-                services: [
-                  { icon: '🍽️', title: 'Fine Dining', desc: 'Exquisite culinary experiences' },
-                  { icon: '🥘', title: 'Catering Services', desc: 'Professional event catering' },
-                  { icon: '🍕', title: 'Delivery & Takeout', desc: 'Convenient dining options' },
-                  { icon: '🎉', title: 'Private Events', desc: 'Exclusive venue for special occasions' },
-                  { icon: '🍷', title: 'Bar & Cocktails', desc: 'Premium beverage selection' },
-                  { icon: '☕', title: 'Coffee & Desserts', desc: 'Artisanal coffee and sweet treats' }
-                ]
-              },
-              roofing: {
-                primaryColor: '#1e40af',
-                secondaryColor: '#dc2626',
-                gradient: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 100%)',
-                tagline: 'Professional Roofing Services',
-                language: 'en',
-                services: [
-                  { icon: '🏠', title: 'Roof Installation', desc: 'Complete roofing systems with quality materials' },
-                  { icon: '🔧', title: 'Roof Repair', desc: 'Expert repair services for all roof types' },
-                  { icon: '🛡️', title: 'Roof Maintenance', desc: 'Preventive maintenance to extend roof life' },
-                  { icon: '🌧️', title: 'Gutter Services', desc: 'Professional gutter cleaning and repair' },
-                  { icon: '🔥', title: 'Roof Insulation', desc: 'Energy-efficient insulation solutions' },
-                  { icon: '⚡', title: 'Emergency Repairs', desc: '24/7 emergency roofing services' }
-                ]
-              },
-              general: {
-                primaryColor: '#1f2937',
-                secondaryColor: '#3b82f6',
-                gradient: 'linear-gradient(135deg, #6366f1 0%, #3b82f6 100%)',
-                tagline: 'Professional Business Services',
-                language: 'en',
-                services: [
-                  { icon: '⭐', title: 'Premium Service', desc: 'High-quality professional solutions' },
-                  { icon: '🔧', title: 'Expert Solutions', desc: 'Specialized problem-solving expertise' },
-                  { icon: '💼', title: 'Business Consulting', desc: 'Strategic business guidance' },
-                  { icon: '📞', title: 'Customer Support', desc: 'Dedicated customer service' },
-                  { icon: '🚀', title: 'Innovation', desc: 'Cutting-edge approaches and solutions' },
-                  { icon: '✅', title: 'Quality Assurance', desc: 'Guaranteed satisfaction and results' }
-                ]
-              }
-            };
-            
-            const config = industryConfig[industry] || industryConfig.general;
-            
-            // Generate contact section dynamically
-            const contactItems = [];
-            if (businessPhone) {
-              contactItems.push(`
-                <div class="contact-item">
-                  <h4>📞 Phone</h4>
-                  <p>${businessPhone}</p>
-                </div>
-              `);
-            }
-            if (businessEmail) {
-              contactItems.push(`
-                <div class="contact-item">
-                  <h4>📧 Email</h4>
-                  <p>${businessEmail}</p>
-                </div>
-              `);
-            }
-            contactItems.push(`
-              <div class="contact-item">
-                <h4>📍 Location</h4>
-                <p>${businessCity}</p>
+            # Create dynamic HTML with ACTUAL business data
+            cat > website.html << 'HTML_EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>BUSINESS_NAME_PLACEHOLDER - TAGLINE_PLACEHOLDER</title>
+              <style>
+                  * { margin: 0; padding: 0; box-sizing: border-box; }
+                  body { 
+                      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; 
+                      line-height: 1.6; 
+                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                      min-height: 100vh;
+                      color: #1f2937;
+                  }
+                  .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+                  .header { 
+                      background: rgba(255,255,255,0.95);
+                      padding: 120px 0; 
+                      text-align: center; 
+                      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+                      backdrop-filter: blur(10px);
+                  }
+                  .header h1 { 
+                      font-size: 5em; 
+                      color: PRIMARY_COLOR_PLACEHOLDER; 
+                      margin-bottom: 30px;
+                      text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+                      font-weight: 800;
+                      letter-spacing: -2px;
+                  }
+                  .tagline { 
+                      font-size: 2.2em; 
+                      color: SECONDARY_COLOR_PLACEHOLDER; 
+                      font-weight: 300;
+                      margin-bottom: 20px;
+                  }
+                  .location {
+                      font-size: 1.6em;
+                      color: #6b7280;
+                      margin-bottom: 40px;
+                      font-weight: 500;
+                  }
+                  .hero-stats {
+                      display: flex;
+                      justify-content: center;
+                      gap: 60px;
+                      margin-top: 50px;
+                      flex-wrap: wrap;
+                  }
+                  .stat {
+                      text-align: center;
+                      background: rgba(0,0,0,0.05);
+                      padding: 30px 40px;
+                      border-radius: 20px;
+                      min-width: 200px;
+                      backdrop-filter: blur(10px);
+                  }
+                  .stat-number {
+                      font-size: 3.5em;
+                      font-weight: 900;
+                      color: SECONDARY_COLOR_PLACEHOLDER;
+                      display: block;
+                      line-height: 1;
+                  }
+                  .stat-label {
+                      color: #6b7280;
+                      font-size: 1.1em;
+                      margin-top: 10px;
+                      font-weight: 600;
+                  }
+                  .content { 
+                      background: white; 
+                      margin: 60px 0; 
+                      padding: 80px 60px;
+                      border-radius: 30px;
+                      box-shadow: 0 30px 80px rgba(0,0,0,0.1);
+                  }
+                  h2 { 
+                      color: PRIMARY_COLOR_PLACEHOLDER; 
+                      font-size: 3.5em; 
+                      margin-bottom: 50px; 
+                      text-align: center;
+                      font-weight: 700;
+                      letter-spacing: -1px;
+                  }
+                  .services { 
+                      display: grid; 
+                      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); 
+                      gap: 40px; 
+                      margin: 60px 0; 
+                  }
+                  .service { 
+                      background: linear-gradient(135deg, PRIMARY_COLOR_PLACEHOLDER 0%, SECONDARY_COLOR_PLACEHOLDER 100%);
+                      color: white;
+                      padding: 50px 40px; 
+                      border-radius: 25px; 
+                      text-align: center;
+                      transition: all 0.4s ease;
+                      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+                  }
+                  .service:hover { 
+                      transform: translateY(-20px) scale(1.02); 
+                      box-shadow: 0 30px 70px rgba(0,0,0,0.25);
+                  }
+                  .service h3 { 
+                      font-size: 2em; 
+                      margin-bottom: 20px; 
+                      font-weight: 700;
+                  }
+                  .service p { 
+                      font-size: 1.2em; 
+                      opacity: 0.95; 
+                      line-height: 1.6;
+                      font-weight: 400;
+                  }
+                  .contact-section { 
+                      background: linear-gradient(135deg, PRIMARY_COLOR_PLACEHOLDER 0%, SECONDARY_COLOR_PLACEHOLDER 100%);
+                      color: white;
+                      padding: 100px 60px;
+                      border-radius: 30px;
+                      text-align: center;
+                      margin: 60px 0;
+                      box-shadow: 0 30px 80px rgba(0,0,0,0.2);
+                  }
+                  .contact-section h2 {
+                      color: white;
+                      margin-bottom: 30px;
+                  }
+                  .contact-intro {
+                      font-size: 1.4em;
+                      margin-bottom: 50px;
+                      opacity: 0.95;
+                      font-weight: 300;
+                  }
+                  .contact-info { 
+                      display: grid; 
+                      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+                      gap: 40px; 
+                      margin-top: 50px;
+                  }
+                  .contact-item { 
+                      background: rgba(255,255,255,0.15);
+                      padding: 40px;
+                      border-radius: 20px;
+                      backdrop-filter: blur(20px);
+                      border: 1px solid rgba(255,255,255,0.2);
+                      transition: all 0.3s ease;
+                  }
+                  .contact-item:hover {
+                      background: rgba(255,255,255,0.25);
+                      transform: translateY(-5px);
+                  }
+                  .contact-item h4 { 
+                      font-size: 1.6em; 
+                      margin-bottom: 15px; 
+                      font-weight: 600;
+                  }
+                  .contact-item p { 
+                      font-size: 1.3em; 
+                      font-weight: 500;
+                      opacity: 0.95;
+                  }
+                  @media (max-width: 768px) {
+                      .header h1 { font-size: 3em; }
+                      .tagline { font-size: 1.6em; }
+                      .hero-stats { gap: 30px; }
+                      .stat { min-width: 150px; padding: 20px; }
+                      .content { padding: 40px 30px; }
+                      .services { grid-template-columns: 1fr; gap: 30px; }
+                      .service { padding: 40px 30px; }
+                      .contact-section { padding: 60px 30px; }
+                      h2 { font-size: 2.5em; }
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="header">
+                  <div class="container">
+                      <h1>BUSINESS_NAME_PLACEHOLDER</h1>
+                      <p class="tagline">TAGLINE_PLACEHOLDER</p>
+                      <p class="location">📍 Serving BUSINESS_CITY_PLACEHOLDER</p>
+                      <div class="hero-stats">
+                          <div class="stat">
+                              <span class="stat-number">20+</span>
+                              <span class="stat-label">Years Experience</span>
+                          </div>
+                          <div class="stat">
+                              <span class="stat-number">500+</span>
+                              <span class="stat-label">Happy Clients</span>
+                          </div>
+                          <div class="stat">
+                              <span class="stat-number">100%</span>
+                              <span class="stat-label">Satisfaction</span>
+                          </div>
+                      </div>
+                  </div>
               </div>
-            `);
-            
-            // Generate services section dynamically
-            const servicesHtml = config.services.map(service => `
-              <div class="service">
-                <h3>${service.icon} ${service.title}</h3>
-                <p>${service.desc}</p>
+              
+              <div class="container">
+                  <div class="content">
+                      <h2>Our Services</h2>
+                      <div class="services">
+                          <div class="service">
+                              <h3>SERVICE1_PLACEHOLDER</h3>
+                              <p>Professional and reliable service delivered with expertise and attention to detail.</p>
+                          </div>
+                          <div class="service">
+                              <h3>SERVICE2_PLACEHOLDER</h3>
+                              <p>Expert solutions tailored to meet your specific needs and requirements.</p>
+                          </div>
+                          <div class="service">
+                              <h3>SERVICE3_PLACEHOLDER</h3>
+                              <p>Comprehensive service offerings with guaranteed satisfaction and quality.</p>
+                          </div>
+                          <div class="service">
+                              <h3>SERVICE4_PLACEHOLDER</h3>
+                              <p>Advanced solutions designed to deliver exceptional results and value.</p>
+                          </div>
+                          <div class="service">
+                              <h3>SERVICE5_PLACEHOLDER</h3>
+                              <p>Specialized expertise to address complex challenges and opportunities.</p>
+                          </div>
+                          <div class="service">
+                              <h3>SERVICE6_PLACEHOLDER</h3>
+                              <p>Premium service options with dedicated support and professional excellence.</p>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="contact-section">
+                      <h2>Get In Touch</h2>
+                      <p class="contact-intro">Ready to work with BUSINESS_NAME_PLACEHOLDER? Contact us today for professional service you can trust.</p>
+                      <div class="contact-info">
+                          CONTACT_ITEMS_PLACEHOLDER
+                      </div>
+                  </div>
               </div>
-            `).join('');
+          </body>
+          </html>
+          HTML_EOF
             
-            // Generate complete dynamic HTML
-            const html = `<!DOCTYPE html>
-            <html lang="${config.language}">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>${businessName} - ${config.tagline}</title>
-                <style>
-                    * { margin: 0; padding: 0; box-sizing: border-box; }
-                    body { 
-                        font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; 
-                        line-height: 1.6; 
-                        background: ${config.gradient};
-                        min-height: 100vh;
-                        color: #1f2937;
-                    }
-                    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-                    .header { 
-                        background: rgba(255,255,255,0.95);
-                        padding: 120px 0; 
-                        text-align: center; 
-                        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-                        backdrop-filter: blur(10px);
-                    }
-                    .header h1 { 
-                        font-size: 5em; 
-                        color: ${config.primaryColor}; 
-                        margin-bottom: 30px;
-                        text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-                        font-weight: 800;
-                        letter-spacing: -2px;
-                    }
-                    .tagline { 
-                        font-size: 2.2em; 
-                        color: ${config.secondaryColor}; 
-                        font-weight: 300;
-                        margin-bottom: 20px;
-                    }
-                    .location {
-                        font-size: 1.6em;
-                        color: #6b7280;
-                        margin-bottom: 40px;
-                        font-weight: 500;
-                    }
-                    .hero-stats {
-                        display: flex;
-                        justify-content: center;
-                        gap: 60px;
-                        margin-top: 50px;
-                        flex-wrap: wrap;
-                    }
-                    .stat {
-                        text-align: center;
-                        background: rgba(0,0,0,0.05);
-                        padding: 30px 40px;
-                        border-radius: 20px;
-                        min-width: 200px;
-                        backdrop-filter: blur(10px);
-                    }
-                    .stat-number {
-                        font-size: 3.5em;
-                        font-weight: 900;
-                        color: ${config.secondaryColor};
-                        display: block;
-                        line-height: 1;
-                    }
-                    .stat-label {
-                        color: #6b7280;
-                        font-size: 1.1em;
-                        margin-top: 10px;
-                        font-weight: 600;
-                    }
-                    .content { 
-                        background: white; 
-                        margin: 60px 0; 
-                        padding: 80px 60px;
-                        border-radius: 30px;
-                        box-shadow: 0 30px 80px rgba(0,0,0,0.1);
-                    }
-                    h2 { 
-                        color: ${config.primaryColor}; 
-                        font-size: 3.5em; 
-                        margin-bottom: 50px; 
-                        text-align: center;
-                        font-weight: 700;
-                        letter-spacing: -1px;
-                    }
-                    .services { 
-                        display: grid; 
-                        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); 
-                        gap: 40px; 
-                        margin: 60px 0; 
-                    }
-                    .service { 
-                        background: ${config.gradient};
-                        color: white;
-                        padding: 50px 40px; 
-                        border-radius: 25px; 
-                        text-align: center;
-                        transition: all 0.4s ease;
-                        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-                        position: relative;
-                        overflow: hidden;
-                    }
-                    .service::before {
-                        content: '';
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        right: 0;
-                        bottom: 0;
-                        background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
-                        opacity: 0;
-                        transition: opacity 0.3s ease;
-                    }
-                    .service:hover { 
-                        transform: translateY(-20px) scale(1.02); 
-                        box-shadow: 0 30px 70px rgba(0,0,0,0.25);
-                    }
-                    .service:hover::before {
-                        opacity: 1;
-                    }
-                    .service h3 { 
-                        font-size: 2em; 
-                        margin-bottom: 20px; 
-                        font-weight: 700;
-                    }
-                    .service p { 
-                        font-size: 1.2em; 
-                        opacity: 0.95; 
-                        line-height: 1.6;
-                        font-weight: 400;
-                    }
-                    .contact-section { 
-                        background: ${config.gradient};
-                        color: white;
-                        padding: 100px 60px;
-                        border-radius: 30px;
-                        text-align: center;
-                        margin: 60px 0;
-                        box-shadow: 0 30px 80px rgba(0,0,0,0.2);
-                    }
-                    .contact-section h2 {
-                        color: white;
-                        margin-bottom: 30px;
-                    }
-                    .contact-intro {
-                        font-size: 1.4em;
-                        margin-bottom: 50px;
-                        opacity: 0.95;
-                        font-weight: 300;
-                    }
-                    .contact-info { 
-                        display: grid; 
-                        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-                        gap: 40px; 
-                        margin-top: 50px;
-                    }
-                    .contact-item { 
-                        background: rgba(255,255,255,0.15);
-                        padding: 40px;
-                        border-radius: 20px;
-                        backdrop-filter: blur(20px);
-                        border: 1px solid rgba(255,255,255,0.2);
-                        transition: all 0.3s ease;
-                    }
-                    .contact-item:hover {
-                        background: rgba(255,255,255,0.25);
-                        transform: translateY(-5px);
-                    }
-                    .contact-item h4 { 
-                        font-size: 1.6em; 
-                        margin-bottom: 15px; 
-                        font-weight: 600;
-                    }
-                    .contact-item p { 
-                        font-size: 1.3em; 
-                        font-weight: 500;
-                        opacity: 0.95;
-                    }
-                    @media (max-width: 768px) {
-                        .header h1 { font-size: 3em; }
-                        .tagline { font-size: 1.6em; }
-                        .hero-stats { gap: 30px; }
-                        .stat { min-width: 150px; padding: 20px; }
-                        .content { padding: 40px 30px; }
-                        .services { grid-template-columns: 1fr; gap: 30px; }
-                        .service { padding: 40px 30px; }
-                        .contact-section { padding: 60px 30px; }
-                        h2 { font-size: 2.5em; }
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="header">
-                    <div class="container">
-                        <h1>${businessName}</h1>
-                        <p class="tagline">${config.tagline}</p>
-                        <p class="location">📍 Serving ${businessCity}</p>
-                        <div class="hero-stats">
-                            <div class="stat">
-                                <span class="stat-number">20+</span>
-                                <span class="stat-label">Years Experience</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-number">500+</span>
-                                <span class="stat-label">Happy Clients</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-number">100%</span>
-                                <span class="stat-label">Satisfaction</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="container">
-                    <div class="content">
-                        <h2>Our Services</h2>
-                        <div class="services">
-                            ${servicesHtml}
-                        </div>
-                    </div>
-                    
-                    <div class="contact-section">
-                        <h2>Get In Touch</h2>
-                        <p class="contact-intro">Ready to work with ${businessName}? Contact us today for professional service you can trust.</p>
-                        <div class="contact-info">
-                            ${contactItems.join('')}
-                        </div>
-                    </div>
-                </div>
-            </body>
-            </html>`;
+            # Replace placeholders with actual data
+            sed -i "s/BUSINESS_NAME_PLACEHOLDER/$BUSINESS_NAME/g" website.html
+            sed -i "s/BUSINESS_CITY_PLACEHOLDER/$BUSINESS_CITY/g" website.html
+            sed -i "s/TAGLINE_PLACEHOLDER/$TAGLINE/g" website.html
+            sed -i "s/PRIMARY_COLOR_PLACEHOLDER/$PRIMARY_COLOR/g" website.html
+            sed -i "s/SECONDARY_COLOR_PLACEHOLDER/$SECONDARY_COLOR/g" website.html
+            sed -i "s/SERVICE1_PLACEHOLDER/$SERVICE1/g" website.html
+            sed -i "s/SERVICE2_PLACEHOLDER/$SERVICE2/g" website.html
+            sed -i "s/SERVICE3_PLACEHOLDER/$SERVICE3/g" website.html
+            sed -i "s/SERVICE4_PLACEHOLDER/$SERVICE4/g" website.html
+            sed -i "s/SERVICE5_PLACEHOLDER/$SERVICE5/g" website.html
+            sed -i "s/SERVICE6_PLACEHOLDER/$SERVICE6/g" website.html
             
-            // Write the HTML file
-            fs.writeFileSync('website.html', html);
-            console.log(`✅ Generated dynamic ${industry} template for ${businessName}`);
-            console.log(`📊 Template size: ${html.length} characters`);
-            console.log(`🎨 Colors: Primary ${config.primaryColor}, Secondary ${config.secondaryColor}`);
-            console.log(`🌐 Language: ${config.language}`);
+            # Add contact information dynamically
+            CONTACT_ITEMS=""
+            if [ -n "$BUSINESS_PHONE" ] && [ "$BUSINESS_PHONE" != "null" ]; then
+              CONTACT_ITEMS="$CONTACT_ITEMS<div class=\"contact-item\"><h4>📞 Phone</h4><p>$BUSINESS_PHONE</p></div>"
+            fi
+            if [ -n "$BUSINESS_EMAIL" ] && [ "$BUSINESS_EMAIL" != "null" ]; then
+              CONTACT_ITEMS="$CONTACT_ITEMS<div class=\"contact-item\"><h4>📧 Email</h4><p>$BUSINESS_EMAIL</p></div>"
+            fi
+            CONTACT_ITEMS="$CONTACT_ITEMS<div class=\"contact-item\"><h4>📍 Location</h4><p>$BUSINESS_CITY</p></div>"
             
-            TEMPLATE_EOF
+            sed -i "s/CONTACT_ITEMS_PLACEHOLDER/$CONTACT_ITEMS/g" website.html
             
+            echo "✅ Created dynamic $INDUSTRY template for $BUSINESS_NAME in $BUSINESS_CITY"
+            echo "🎨 Colors: Primary $PRIMARY_COLOR, Secondary $SECONDARY_COLOR"
             HTML_SUCCESS=true
           fi
           
@@ -565,160 +390,3 @@ jobs:
             echo "❌ Failed to create HTML content"
             exit 1
           fi
-          
-      - name: Generate video
-        run: |
-          echo "🎬 Starting video generation for ${{ steps.business_data.outputs.business_name }}..."
-          
-          BUSINESS_NAME="${{ steps.business_data.outputs.business_name }}"
-          INDUSTRY="${{ steps.business_data.outputs.industry }}"
-          
-          # Create videos directory
-          mkdir -p videos
-          
-          # Start the server
-          echo "🚀 Starting video generation server..."
-          node server-roofing-simple.js > server.log 2>&1 &
-          SERVER_PID=$!
-          
-          # Wait for server to start
-          echo "⏳ Waiting for server to start..."
-          for i in {1..30}; do
-            if curl -s http://localhost:3030/health > /dev/null 2>&1; then
-              echo "✅ Server started successfully!"
-              break
-            fi
-            echo "⏳ Attempt $i/30..."
-            sleep 2
-          done
-          
-          # Check if server is running
-          if ! curl -s http://localhost:3030/health > /dev/null 2>&1; then
-            echo "❌ Server failed to start"
-            echo "📋 Server logs:"
-            cat server.log || echo "No logs available"
-            exit 1
-          fi
-          
-          # Read HTML content
-          HTML_CONTENT=$(cat website.html)
-          
-          # Create JSON payload using jq for safe JSON encoding
-          echo "📋 Creating JSON payload..."
-          jq -n \
-            --arg business_name "$BUSINESS_NAME" \
-            --arg html_content "$HTML_CONTENT" \
-            --arg industry "$INDUSTRY" \
-            '{
-              business_name: $business_name,
-              html_content: $html_content,
-              industry: $industry
-            }' > payload.json
-          
-          echo "📋 Sending request to video server..."
-          echo "📊 Business: $BUSINESS_NAME"
-          echo "🏭 Industry: $INDUSTRY"
-          echo "📊 HTML Size: ${#HTML_CONTENT} characters"
-          
-          # Make API call with timeout
-          RESPONSE=$(curl -s -w "%{http_code}" -X POST http://localhost:3030/generate-video \
-            -H "Content-Type: application/json" \
-            -d @payload.json \
-            --max-time 300)
-          
-          HTTP_CODE="${RESPONSE: -3}"
-          RESPONSE_BODY="${RESPONSE%???}"
-          
-          echo "📊 HTTP Status: $HTTP_CODE"
-          echo "📊 Response: $RESPONSE_BODY"
-          
-          if [ "$HTTP_CODE" != "200" ]; then
-            echo "❌ API call failed with status $HTTP_CODE"
-            echo "📋 Server logs:"
-            cat server.log || echo "No logs available"
-            kill $SERVER_PID 2>/dev/null || true
-            exit 1
-          fi
-          
-          # Extract filename from response
-          FILENAME=$(echo "$RESPONSE_BODY" | jq -r '.file_name // empty')
-          if [ -z "$FILENAME" ]; then
-            echo "❌ No filename in response"
-            echo "Response: $RESPONSE_BODY"
-            kill $SERVER_PID 2>/dev/null || true
-            exit 1
-          fi
-          
-          echo "📁 Expected filename: $FILENAME"
-          
-          # Wait for video generation with progress monitoring
-          echo "⏳ Waiting for video generation to complete..."
-          for i in {1..12}; do  # 12 * 10 = 120 seconds max wait
-            if [ -f "videos/$FILENAME" ]; then
-              echo "✅ Video file detected after ${i}0 seconds!"
-              break
-            fi
-            echo "⏱️ Waiting... ${i}0 seconds elapsed"
-            sleep 10
-          done
-          
-          # Final verification
-          if [ -f "videos/$FILENAME" ]; then
-            VIDEO_SIZE=$(du -h "videos/$FILENAME" | cut -f1)
-            VIDEO_SIZE_BYTES=$(stat -c%s "videos/$FILENAME")
-            
-            echo "✅ Video generated successfully!"
-            echo "📁 File: $FILENAME"
-            echo "📊 Size: $VIDEO_SIZE ($VIDEO_SIZE_BYTES bytes)"
-            echo "🏢 Business: $BUSINESS_NAME"
-            echo "🏭 Industry: $INDUSTRY"
-            
-            # Verify it's a real video file (should be at least 1MB)
-            if [ $VIDEO_SIZE_BYTES -lt 1048576 ]; then
-              echo "⚠️ Warning: Video file seems small ($VIDEO_SIZE)"
-              echo "⚠️ This might indicate an issue with generation"
-            fi
-            
-            ls -la videos/
-          else
-            echo "❌ Video file not found: videos/$FILENAME"
-            echo "📋 Available files in videos directory:"
-            ls -la videos/ || echo "Videos directory empty or not found"
-            echo "📋 All MP4 files:"
-            find . -name "*.mp4" -type f || echo "No MP4 files found"
-            echo "📋 Final server logs:"
-            tail -50 server.log || echo "No server logs available"
-            kill $SERVER_PID 2>/dev/null || true
-            exit 1
-          fi
-          
-          # Cleanup
-          kill $SERVER_PID 2>/dev/null || true
-          rm -f payload.json website.html
-          
-      - name: Upload video artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.business_data.outputs.artifact_name }}
-          path: videos/
-          retention-days: 30
-          if-no-files-found: warn
-        continue-on-error: true
-        
-      - name: Workflow summary
-        run: |
-          echo "🎉 Business video workflow completed!"
-          echo ""
-          echo "📊 FINAL SUMMARY:"
-          echo "  🏢 Company: ${{ steps.business_data.outputs.business_name }}"
-          echo "  🏙️ City: ${{ steps.business_data.outputs.business_city }}"
-          echo "  🏭 Industry: ${{ steps.business_data.outputs.industry }}"
-          echo "  📞 Phone: ${{ steps.business_data.outputs.business_phone }}"
-          echo "  📧 Email: ${{ steps.business_data.outputs.business_email }}"
-          echo "  📦 Artifact: ${{ steps.business_data.outputs.artifact_name }}"
-          echo ""
-          echo "📁 Generated files:"
-          ls -la videos/ || echo "No files generated"
-          echo ""
-          echo "🎬 Video available in GitHub Actions Artifacts"
-          echo "✅ Workflow completed successfully!"
