@@ -1,4 +1,137 @@
-- name: Process website content
+name: Generate Business Video (Dynamic)
+
+on:
+  repository_dispatch:
+    types: [generate-roofing-video]
+  workflow_dispatch:
+    inputs:
+      business_name:
+        description: 'Business name'
+        required: true
+        type: string
+      website_url:
+        description: 'Company website URL'
+        required: false
+        type: string
+      business_city:
+        description: 'Business city'
+        required: false
+        type: string
+      business_phone:
+        description: 'Business phone number'
+        required: false
+        type: string
+      business_email:
+        description: 'Business email'
+        required: false
+        type: string
+      industry:
+        description: 'Business industry'
+        required: false
+        type: string
+
+jobs:
+  generate-business-video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+        
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies..."
+          npm install
+          
+          # Install FFmpeg for video processing
+          echo "🎥 Installing FFmpeg..."
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          
+          # Install additional system packages for Puppeteer
+          sudo apt-get install -y \
+            libasound2t64 \
+            libatk-bridge2.0-0 \
+            libgtk-3-0 \
+            libx11-xcb1 \
+            xvfb
+          
+          # Verify installations
+          echo "🔍 Verifying installations..."
+          node --version
+          npm --version
+          ffmpeg -version
+          
+          # Verify critical dependencies
+          echo "🔍 Verifying critical dependencies..."
+          node -e "console.log('Puppeteer:', require('puppeteer').version || 'installed')"
+          node -e "console.log('Express:', require('express').version || 'installed')"
+          
+      - name: Extract business data
+        id: business_data
+        run: |
+          echo "📊 Extracting business data..."
+          
+          # Extract data from either workflow_dispatch or repository_dispatch
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            BUSINESS_NAME="${{ inputs.business_name }}"
+            WEBSITE_URL="${{ inputs.website_url }}"
+            BUSINESS_CITY="${{ inputs.business_city }}"
+            BUSINESS_PHONE="${{ inputs.business_phone }}"
+            BUSINESS_EMAIL="${{ inputs.business_email }}"
+            INDUSTRY="${{ inputs.industry }}"
+            WEBSITE_HTML_BASE64=""
+          else
+            BUSINESS_NAME="${{ github.event.client_payload.business_name }}"
+            WEBSITE_URL="${{ github.event.client_payload.WEBSITE_URL }}"
+            BUSINESS_CITY="${{ github.event.client_payload.business_city }}"
+            BUSINESS_PHONE="${{ github.event.client_payload.business_phone }}"
+            BUSINESS_EMAIL="${{ github.event.client_payload.business_email }}"
+            INDUSTRY="${{ github.event.client_payload.industry }}"
+            WEBSITE_HTML_BASE64="${{ github.event.client_payload.WEBSITE_HTML_BASE64 }}"
+          fi
+          
+          # Set dynamic defaults (no more hardcoded Dutch roofing!)
+          BUSINESS_NAME="${BUSINESS_NAME:-Business}"
+          WEBSITE_URL="${WEBSITE_URL:-}"
+          BUSINESS_CITY="${BUSINESS_CITY:-City}"
+          BUSINESS_PHONE="${BUSINESS_PHONE:-}"
+          BUSINESS_EMAIL="${BUSINESS_EMAIL:-}"
+          INDUSTRY="${INDUSTRY:-general}"
+          WEBSITE_HTML_BASE64="${WEBSITE_HTML_BASE64:-}"
+          
+          # Create dynamic artifact name based on actual industry
+          SANITIZED_NAME=$(echo "$BUSINESS_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
+          ARTIFACT_NAME="${INDUSTRY}-video-${SANITIZED_NAME}"
+          
+          # Limit length to 100 characters
+          if [ ${#ARTIFACT_NAME} -gt 100 ]; then
+            ARTIFACT_NAME="${ARTIFACT_NAME:0:100}"
+          fi
+          
+          # Set outputs
+          echo "business_name=$BUSINESS_NAME" >> $GITHUB_OUTPUT
+          echo "website_url=$WEBSITE_URL" >> $GITHUB_OUTPUT
+          echo "business_city=$BUSINESS_CITY" >> $GITHUB_OUTPUT
+          echo "business_phone=$BUSINESS_PHONE" >> $GITHUB_OUTPUT
+          echo "business_email=$BUSINESS_EMAIL" >> $GITHUB_OUTPUT
+          echo "industry=$INDUSTRY" >> $GITHUB_OUTPUT
+          echo "website_html_base64=$WEBSITE_HTML_BASE64" >> $GITHUB_OUTPUT
+          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
+          
+          echo "✅ Business data extracted:"
+          echo "  🏢 Company: $BUSINESS_NAME"
+          echo "  🏙️ City: $BUSINESS_CITY"
+          echo "  🏭 Industry: $INDUSTRY"
+          echo "  📦 Artifact: $ARTIFACT_NAME"
+          
+      - name: Process website content
         run: |
           echo "📄 Processing website content..."
           
@@ -390,3 +523,160 @@
             echo "❌ Failed to create HTML content"
             exit 1
           fi
+          
+      - name: Generate video
+        run: |
+          echo "🎬 Starting video generation for ${{ steps.business_data.outputs.business_name }}..."
+          
+          BUSINESS_NAME="${{ steps.business_data.outputs.business_name }}"
+          INDUSTRY="${{ steps.business_data.outputs.industry }}"
+          
+          # Create videos directory
+          mkdir -p videos
+          
+          # Start the server
+          echo "🚀 Starting video generation server..."
+          node server-roofing-simple.js > server.log 2>&1 &
+          SERVER_PID=$!
+          
+          # Wait for server to start
+          echo "⏳ Waiting for server to start..."
+          for i in {1..30}; do
+            if curl -s http://localhost:3030/health > /dev/null 2>&1; then
+              echo "✅ Server started successfully!"
+              break
+            fi
+            echo "⏳ Attempt $i/30..."
+            sleep 2
+          done
+          
+          # Check if server is running
+          if ! curl -s http://localhost:3030/health > /dev/null 2>&1; then
+            echo "❌ Server failed to start"
+            echo "📋 Server logs:"
+            cat server.log || echo "No logs available"
+            exit 1
+          fi
+          
+          # Read HTML content
+          HTML_CONTENT=$(cat website.html)
+          
+          # Create JSON payload using jq for safe JSON encoding
+          echo "📋 Creating JSON payload..."
+          jq -n \
+            --arg business_name "$BUSINESS_NAME" \
+            --arg html_content "$HTML_CONTENT" \
+            --arg industry "$INDUSTRY" \
+            '{
+              business_name: $business_name,
+              html_content: $html_content,
+              industry: $industry
+            }' > payload.json
+          
+          echo "📋 Sending request to video server..."
+          echo "📊 Business: $BUSINESS_NAME"
+          echo "🏭 Industry: $INDUSTRY"
+          echo "📊 HTML Size: ${#HTML_CONTENT} characters"
+          
+          # Make API call with timeout
+          RESPONSE=$(curl -s -w "%{http_code}" -X POST http://localhost:3030/generate-video \
+            -H "Content-Type: application/json" \
+            -d @payload.json \
+            --max-time 300)
+          
+          HTTP_CODE="${RESPONSE: -3}"
+          RESPONSE_BODY="${RESPONSE%???}"
+          
+          echo "📊 HTTP Status: $HTTP_CODE"
+          echo "📊 Response: $RESPONSE_BODY"
+          
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "❌ API call failed with status $HTTP_CODE"
+            echo "📋 Server logs:"
+            cat server.log || echo "No logs available"
+            kill $SERVER_PID 2>/dev/null || true
+            exit 1
+          fi
+          
+          # Extract filename from response
+          FILENAME=$(echo "$RESPONSE_BODY" | jq -r '.file_name // empty')
+          if [ -z "$FILENAME" ]; then
+            echo "❌ No filename in response"
+            echo "Response: $RESPONSE_BODY"
+            kill $SERVER_PID 2>/dev/null || true
+            exit 1
+          fi
+          
+          echo "📁 Expected filename: $FILENAME"
+          
+          # Wait for video generation with progress monitoring
+          echo "⏳ Waiting for video generation to complete..."
+          for i in {1..12}; do  # 12 * 10 = 120 seconds max wait
+            if [ -f "videos/$FILENAME" ]; then
+              echo "✅ Video file detected after ${i}0 seconds!"
+              break
+            fi
+            echo "⏱️ Waiting... ${i}0 seconds elapsed"
+            sleep 10
+          done
+          
+          # Final verification
+          if [ -f "videos/$FILENAME" ]; then
+            VIDEO_SIZE=$(du -h "videos/$FILENAME" | cut -f1)
+            VIDEO_SIZE_BYTES=$(stat -c%s "videos/$FILENAME")
+            
+            echo "✅ Video generated successfully!"
+            echo "📁 File: $FILENAME"
+            echo "📊 Size: $VIDEO_SIZE ($VIDEO_SIZE_BYTES bytes)"
+            echo "🏢 Business: $BUSINESS_NAME"
+            echo "🏭 Industry: $INDUSTRY"
+            
+            # Verify it's a real video file (should be at least 1MB)
+            if [ $VIDEO_SIZE_BYTES -lt 1048576 ]; then
+              echo "⚠️ Warning: Video file seems small ($VIDEO_SIZE)"
+              echo "⚠️ This might indicate an issue with generation"
+            fi
+            
+            ls -la videos/
+          else
+            echo "❌ Video file not found: videos/$FILENAME"
+            echo "📋 Available files in videos directory:"
+            ls -la videos/ || echo "Videos directory empty or not found"
+            echo "📋 All MP4 files:"
+            find . -name "*.mp4" -type f || echo "No MP4 files found"
+            echo "📋 Final server logs:"
+            tail -50 server.log || echo "No server logs available"
+            kill $SERVER_PID 2>/dev/null || true
+            exit 1
+          fi
+          
+          # Cleanup
+          kill $SERVER_PID 2>/dev/null || true
+          rm -f payload.json website.html
+          
+      - name: Upload video artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.business_data.outputs.artifact_name }}
+          path: videos/
+          retention-days: 30
+          if-no-files-found: warn
+        continue-on-error: true
+        
+      - name: Workflow summary
+        run: |
+          echo "🎉 Business video workflow completed!"
+          echo ""
+          echo "📊 FINAL SUMMARY:"
+          echo "  🏢 Company: ${{ steps.business_data.outputs.business_name }}"
+          echo "  🏙️ City: ${{ steps.business_data.outputs.business_city }}"
+          echo "  🏭 Industry: ${{ steps.business_data.outputs.industry }}"
+          echo "  📞 Phone: ${{ steps.business_data.outputs.business_phone }}"
+          echo "  📧 Email: ${{ steps.business_data.outputs.business_email }}"
+          echo "  📦 Artifact: ${{ steps.business_data.outputs.artifact_name }}"
+          echo ""
+          echo "📁 Generated files:"
+          ls -la videos/ || echo "No files generated"
+          echo ""
+          echo "🎬 Video available in GitHub Actions Artifacts"
+          echo "✅ Workflow completed successfully!"
