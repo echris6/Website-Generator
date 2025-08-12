@@ -220,8 +220,8 @@ app.post('/generate-video', async (req, res) => {
           reject(err);
         });
       
-      // Set timeout for FFmpeg process (30 seconds for reduced frames)
-      command.timeout(30000);
+      // Removed timeout as it causes issues with fluent-ffmpeg
+      // command.timeout(30000);
       command.run();
     });
     
