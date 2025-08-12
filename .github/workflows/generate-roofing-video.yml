@@ -592,17 +592,23 @@ jobs:
           echo "🔍 Making API call with 120-second timeout..."
           set +e  # Don't exit on curl error
           
-          # Use 120s timeout to allow video generation to complete
-          RESPONSE=$(timeout 120s curl -v -w "\nHTTP_STATUS:%{http_code}" -X POST http://localhost:3030/generate-video \
+          # Separate verbose output from response
+          echo "🔍 Making API call (verbose output will show above)..."
+          timeout 120s curl -v -X POST http://localhost:3030/generate-video \
             -H "Content-Type: application/json" \
-            -d @payload.json 2>&1)
+            -d @payload.json > /tmp/response.txt 2> /tmp/curl_verbose.txt
           
           CURL_EXIT_CODE=$?
           kill $TAIL_PID 2>/dev/null
           
           echo "🔍 Curl exit code: $CURL_EXIT_CODE"
-          echo "🔍 Curl response:"
-          echo "$RESPONSE"
+          
+          echo "🔍 Curl verbose output:"
+          cat /tmp/curl_verbose.txt
+          
+          echo "🔍 Response body:"
+          RESPONSE_BODY=$(cat /tmp/response.txt)
+          echo "$RESPONSE_BODY"
           
           echo "📋 Server logs (last 50 lines):"
           tail -50 server.log 2>/dev/null || echo "No server logs"
@@ -646,11 +652,22 @@ jobs:
             exit 1
           fi
           
-          # Extract filename from response
-          FILENAME=$(echo "$RESPONSE_BODY" | jq -r '.file_name // empty')
-          if [ -z "$FILENAME" ]; then
-            echo "❌ No filename in response"
-            echo "Response: $RESPONSE_BODY"
+          # Check if response is valid JSON and extract filename
+          if echo "$RESPONSE_BODY" | jq . > /dev/null 2>&1; then
+            echo "✅ Valid JSON response received"
+            FILENAME=$(echo "$RESPONSE_BODY" | jq -r '.file_name // empty')
+            SUCCESS=$(echo "$RESPONSE_BODY" | jq -r '.success // false')
+          else
+            echo "❌ Invalid JSON response"
+            FILENAME=""
+            SUCCESS="false"
+          fi
+          
+          # Verify we got a filename
+          if [ -z "$FILENAME" ] || [ "$FILENAME" = "null" ]; then
+            echo "❌ No filename in response or invalid JSON"
+            echo "📋 Raw response:"
+            echo "$RESPONSE_BODY"
             kill $SERVER_PID 2>/dev/null || true
             exit 1
           fi
