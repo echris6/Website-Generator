@@ -1,0 +1,286 @@
+name: Generate Dutch Roofing Video
+
+on:
+  repository_dispatch:
+    types: [generate-roofing-video]
+  workflow_dispatch:
+    inputs:
+      business_name:
+        description: 'Business name for the video'
+        required: true
+        default: 'KVS Onderhoud'
+      business_city:
+        description: 'Business city'
+        required: false
+        default: 'Amsterdam'
+      business_phone:
+        description: 'Business phone'
+        required: false
+        default: '+31 20 123 4567'
+      business_email:
+        description: 'Business email'
+        required: false
+        default: 'info@kvsonderhoud.nl'
+
+jobs:
+  generate-video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: |
+        echo "📦 Installing Node.js dependencies..."
+        npm ci || npm install
+        echo "✅ Dependencies installed"
+    
+    - name: Create videos directory
+      run: mkdir -p videos
+    
+    - name: Prepare HTML content
+      id: prepare_html
+      run: |
+        echo "🌷 Preparing Dutch roofing HTML content..."
+        
+        # Get business data from dispatch or workflow_dispatch
+        if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+          BUSINESS_NAME="${{ github.event.client_payload.business_name }}"
+          BUSINESS_CITY="${{ github.event.client_payload.business_city }}"
+          BUSINESS_PHONE="${{ github.event.client_payload.business_phone }}"
+          BUSINESS_EMAIL="${{ github.event.client_payload.business_email }}"
+          BUSINESS_RATING="${{ github.event.client_payload.business_rating }}"
+          BUSINESS_REVIEWS="${{ github.event.client_payload.business_reviews }}"
+          BUSINESS_ADDRESS="${{ github.event.client_payload.business_address }}"
+          BUSINESS_IMAGE="${{ github.event.client_payload.business_image }}"
+          WEBSITE_URL="${{ github.event.client_payload.website_url }}"
+          HTML_BASE64="${{ github.event.client_payload.website_html_base64 }}"
+          HTML_READY="${{ github.event.client_payload.html_transmission_ready }}"
+        else
+          BUSINESS_NAME="${{ github.event.inputs.business_name }}"
+          BUSINESS_CITY="${{ github.event.inputs.business_city }}"
+          BUSINESS_PHONE="${{ github.event.inputs.business_phone }}"
+          BUSINESS_EMAIL="${{ github.event.inputs.business_email }}"
+          BUSINESS_RATING="4.8"
+          BUSINESS_REVIEWS="127"
+          BUSINESS_ADDRESS="Hoofdstraat 123, 1011 AB Amsterdam"
+          BUSINESS_IMAGE="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800"
+          WEBSITE_URL="https://kvsonderhoud.nl"
+          HTML_READY="false"
+        fi
+        
+        # Set defaults if empty
+        BUSINESS_NAME="${BUSINESS_NAME:-KVS Onderhoud}"
+        BUSINESS_CITY="${BUSINESS_CITY:-Amsterdam}"
+        BUSINESS_PHONE="${BUSINESS_PHONE:-+31 20 123 4567}"
+        BUSINESS_EMAIL="${BUSINESS_EMAIL:-info@kvsonderhoud.nl}"
+        BUSINESS_RATING="${BUSINESS_RATING:-4.8}"
+        BUSINESS_REVIEWS="${BUSINESS_REVIEWS:-127}"
+        BUSINESS_ADDRESS="${BUSINESS_ADDRESS:-Hoofdstraat 123, 1011 AB Amsterdam}"
+        BUSINESS_IMAGE="${BUSINESS_IMAGE:-https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800}"
+        WEBSITE_URL="${WEBSITE_URL:-https://kvsonderhoud.nl}"
+        
+        echo "Business: $BUSINESS_NAME in $BUSINESS_CITY"
+        
+        # Check if custom HTML is provided
+        if [ "$HTML_READY" = "true" ] && [ ! -z "$HTML_BASE64" ]; then
+          echo "📄 Using custom HTML content from n8n"
+          echo "$HTML_BASE64" | base64 -d > website_content.html
+        else
+          echo "📄 Using template HTML with business data"
+          # Use the website.html template and replace placeholders
+          if [ -f "website.html" ]; then
+            cp website.html website_content.html
+            # Replace placeholders with actual business data
+            sed -i "s/{{BUSINESS_NAME}}/$BUSINESS_NAME/g" website_content.html
+            sed -i "s/{{BUSINESS_CITY}}/$BUSINESS_CITY/g" website_content.html
+            sed -i "s/{{BUSINESS_PHONE}}/$BUSINESS_PHONE/g" website_content.html
+            sed -i "s/{{BUSINESS_EMAIL}}/$BUSINESS_EMAIL/g" website_content.html
+            sed -i "s/{{BUSINESS_RATING}}/$BUSINESS_RATING/g" website_content.html
+            sed -i "s/{{BUSINESS_REVIEWS}}/$BUSINESS_REVIEWS/g" website_content.html
+            sed -i "s|{{BUSINESS_ADDRESS}}|$BUSINESS_ADDRESS|g" website_content.html
+            sed -i "s|{{BUSINESS_IMAGE}}|$BUSINESS_IMAGE|g" website_content.html
+            sed -i "s|{{WEBSITE_URL}}|$WEBSITE_URL|g" website_content.html
+          else
+            # Create a basic HTML if template doesn't exist
+            cat > website_content.html << 'EOF'
+        <!DOCTYPE html>
+        <html lang="nl">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>KVS Onderhoud - Professionele Dakdekkers in Amsterdam</title>
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+                .hero { height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; display: flex; align-items: center; justify-content: center; text-align: center; }
+                .hero h1 { font-size: 4em; margin-bottom: 20px; }
+                .services { padding: 80px 20px; background: #f8f9fa; }
+                .services h2 { font-size: 3em; text-align: center; margin-bottom: 50px; color: #333; }
+                .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+                .service-card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+                .contact { padding: 80px 20px; background: #333; color: white; text-align: center; }
+                .contact h2 { font-size: 3em; margin-bottom: 30px; }
+            </style>
+        </head>
+        <body>
+            <div class="hero">
+                <div>
+                    <h1>KVS Onderhoud</h1>
+                    <p style="font-size: 1.5em;">Uw Betrouwbare Dakdekker in Amsterdam</p>
+                </div>
+            </div>
+            <div class="services">
+                <h2>Onze Diensten</h2>
+                <div class="service-grid">
+                    <div class="service-card">
+                        <h3>Dakbedekking</h3>
+                        <p>Complete dakrenovatie en nieuwe dakbedekking</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>Dakreparatie</h3>
+                        <p>Snelle en vakkundige reparaties bij lekkages</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>Dakisolatie</h3>
+                        <p>Energiebesparende isolatie voor uw dak</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>Dakinspectie</h3>
+                        <p>Professionele inspectie en advies</p>
+                    </div>
+                </div>
+            </div>
+            <div class="contact">
+                <h2>Contact</h2>
+                <p style="font-size: 1.2em;">📞 +31 20 123 4567</p>
+                <p style="font-size: 1.2em;">✉️ info@kvsonderhoud.nl</p>
+                <p style="font-size: 1.2em;">📍 Amsterdam, Nederland</p>
+            </div>
+        </body>
+        </html>
+        EOF
+          fi
+        fi
+        
+        # Store business name for later use
+        echo "BUSINESS_NAME=$BUSINESS_NAME" >> $GITHUB_ENV
+        
+        echo "✅ HTML content prepared"
+    
+    - name: Start video generation server
+      run: |
+        echo "🚀 Starting Dutch roofing video server..."
+        npm start &
+        SERVER_PID=$!
+        echo "SERVER_PID=$SERVER_PID" >> $GITHUB_ENV
+        
+        # Wait for server to be ready
+        echo "⏳ Waiting for server to start..."
+        for i in {1..30}; do
+          if curl -s http://localhost:3030/health > /dev/null; then
+            echo "✅ Server is ready!"
+            break
+          fi
+          echo "Waiting... ($i/30)"
+          sleep 1
+        done
+        
+        # Verify server is running
+        curl -s http://localhost:3030/health | jq '.' || echo "Health check response received"
+    
+    - name: Generate video
+      id: generate
+      run: |
+        echo "🎬 Generating Dutch roofing video..."
+        
+        # Read HTML content
+        HTML_CONTENT=$(cat website_content.html | jq -Rs .)
+        
+        # Send request to generate video
+        RESPONSE=$(curl -X POST http://localhost:3030/generate-video \
+          -H "Content-Type: application/json" \
+          -d "{\"business_name\": \"$BUSINESS_NAME\", \"html_content\": $HTML_CONTENT}" \
+          -s -w "\nHTTP_STATUS:%{http_code}")
+        
+        HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS:" | cut -d: -f2)
+        BODY=$(echo "$RESPONSE" | grep -v "HTTP_STATUS:")
+        
+        echo "Response: $BODY"
+        echo "HTTP Status: $HTTP_STATUS"
+        
+        if [ "$HTTP_STATUS" != "200" ]; then
+          echo "❌ Failed to generate video (HTTP $HTTP_STATUS)"
+          echo "$BODY"
+          exit 1
+        fi
+        
+        # Extract filename from response
+        FILENAME=$(echo "$BODY" | jq -r '.file_name')
+        echo "FILENAME=$FILENAME" >> $GITHUB_ENV
+        
+        echo "✅ Video generated: $FILENAME"
+    
+    - name: Stop server
+      if: always()
+      run: |
+        if [ ! -z "$SERVER_PID" ]; then
+          echo "🛑 Stopping server (PID: $SERVER_PID)..."
+          kill $SERVER_PID || true
+          sleep 2
+          kill -9 $SERVER_PID 2>/dev/null || true
+        fi
+    
+    - name: Verify video file
+      run: |
+        echo "🔍 Verifying video file..."
+        VIDEO_PATH="videos/$FILENAME"
+        
+        if [ ! -f "$VIDEO_PATH" ]; then
+          echo "❌ Video file not found: $VIDEO_PATH"
+          ls -la videos/ || echo "Videos directory not found"
+          exit 1
+        fi
+        
+        FILE_SIZE=$(stat -c%s "$VIDEO_PATH" 2>/dev/null || stat -f%z "$VIDEO_PATH" 2>/dev/null || echo "0")
+        FILE_SIZE_MB=$(echo "scale=2; $FILE_SIZE / 1048576" | bc)
+        
+        echo "✅ Video file exists"
+        echo "📁 File: $FILENAME"
+        echo "📊 Size: ${FILE_SIZE_MB} MB"
+        
+        if [ "$FILE_SIZE" -lt 1048576 ]; then
+          echo "⚠️ Warning: Video file is smaller than 1MB"
+        fi
+    
+    - name: Upload video artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: dutch-roofing-video-${{ github.run_id }}
+        path: videos/${{ env.FILENAME }}
+        retention-days: 30
+    
+    - name: Create summary
+      run: |
+        echo "## 🎬 Dutch Roofing Video Generated Successfully" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📊 Video Details" >> $GITHUB_STEP_SUMMARY
+        echo "- **Business**: $BUSINESS_NAME" >> $GITHUB_STEP_SUMMARY
+        echo "- **Filename**: $FILENAME" >> $GITHUB_STEP_SUMMARY
+        echo "- **Duration**: 16 seconds" >> $GITHUB_STEP_SUMMARY
+        echo "- **Resolution**: 1920x1080" >> $GITHUB_STEP_SUMMARY
+        echo "- **Format**: MP4 (H.264)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📥 Download" >> $GITHUB_STEP_SUMMARY
+        echo "The video has been uploaded as an artifact and can be downloaded from the workflow summary." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "---" >> $GITHUB_STEP_SUMMARY
+        echo "🌷 Generated for Dutch dakdekkers | Powered by Puppeteer & FFmpeg" >> $GITHUB_STEP_SUMMARY

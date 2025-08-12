@@ -2,20 +2,39 @@ const express = require('express');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
+const ffmpeg = require('fluent-ffmpeg');
+const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
+
+// Set FFmpeg path
+ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 
 const PORT = 3030;
 
+// Check FFmpeg availability on startup
+console.log('🔧 FFmpeg path:', ffmpegInstaller.path);
+console.log('🔧 FFmpeg version:', ffmpegInstaller.version);
+
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ status: 'healthy', service: 'Dutch Roofing Video Generator' });
+  res.json({ 
+    status: 'healthy', 
+    service: 'Dutch Roofing Video Generator',
+    ffmpeg: {
+      path: ffmpegInstaller.path,
+      version: ffmpegInstaller.version
+    }
+  });
 });
 
 // Video generation endpoint
 app.post('/generate-video', async (req, res) => {
   console.log('🎬 Starting Dutch roofing video generation...');
+  
+  let browser = null;
+  let tempDir = null;
   
   try {
     const { business_name, html_content } = req.body;
@@ -41,14 +60,20 @@ app.post('/generate-video', async (req, res) => {
     const timestamp = Date.now();
     const filename = `roofing_${sanitizedName}_${timestamp}.mp4`;
     
+    // Create temporary directory for frames
+    tempDir = path.join(__dirname, `temp_${timestamp}`);
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir);
+    }
+    
     // Save HTML content to a temporary file
-    const htmlPath = path.join(__dirname, 'website.html');
+    const htmlPath = path.join(tempDir, 'website.html');
     fs.writeFileSync(htmlPath, html_content);
     console.log('📄 HTML content saved to temporary file');
     
     // Launch browser
     console.log('🚀 Launching browser...');
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       headless: true,
       args: [
         '--no-sandbox',
@@ -88,9 +113,8 @@ app.post('/generate-video', async (req, res) => {
     console.log('🎥 Starting screen recording...');
     
     const videoPath = path.join(videosDir, filename);
-    const frames = [];
     const totalDuration = 16000; // 16 seconds
-    const fps = 60;
+    const fps = 60; // 60 FPS for smooth video
     const totalFrames = Math.floor((totalDuration / 1000) * fps);
     const frameInterval = 1000 / fps; // ~16.67ms per frame
     
@@ -103,7 +127,7 @@ app.post('/generate-video', async (req, res) => {
     
     console.log(`📏 Page height: ${pageHeight}px, Max scroll: ${maxScroll}px`);
     
-    // Record frames
+    // Capture frames and save to disk immediately to reduce memory usage
     for (let frame = 0; frame < totalFrames; frame++) {
       const progress = frame / totalFrames;
       
@@ -117,16 +141,24 @@ app.post('/generate-video', async (req, res) => {
         await page.evaluate(scrollY => window.scrollTo(0, scrollY), scrollY);
       }
       
-      // FIXED: Use standard JavaScript setTimeout for Puppeteer compatibility
-      await new Promise(resolve => setTimeout(resolve, frameInterval));
+      // Precise timing for 60fps (account for screenshot time)
+      const frameStart = Date.now();
       
-      // Take screenshot
-      const screenshot = await page.screenshot({
+      // Take screenshot and save to disk
+      const framePath = path.join(tempDir, `frame_${String(frame).padStart(5, '0')}.png`);
+      await page.screenshot({
         type: 'png',
+        path: framePath,
         fullPage: false
       });
       
-      frames.push(screenshot);
+      // Wait for remaining frame time to maintain 60fps
+      const frameEnd = Date.now();
+      const elapsed = frameEnd - frameStart;
+      const waitTime = Math.max(0, frameInterval - elapsed);
+      if (waitTime > 0) {
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+      }
       
       // Log progress every 60 frames (1 second)
       if (frame % 60 === 0) {
@@ -135,56 +167,60 @@ app.post('/generate-video', async (req, res) => {
     }
     
     console.log('✅ Screen recording completed');
-    console.log(`📁 Converting ${frames.length} frames to MP4...`);
+    console.log(`📁 Converting ${totalFrames} frames to MP4...`);
     
-    // Convert frames to video using FFmpeg
-    const { spawn } = require('child_process');
+    // Close browser early to free memory
+    await browser.close();
+    browser = null;
     
-    const ffmpegArgs = [
-      '-y', // Overwrite output file
-      '-f', 'image2pipe',
-      '-vcodec', 'png',
-      '-r', fps.toString(),
-      '-i', '-', // Input from stdin
-      '-vcodec', 'libx264',
-      '-pix_fmt', 'yuv420p',
-      '-crf', '23',
-      '-preset', 'medium',
-      videoPath
-    ];
-    
-    const ffmpeg = spawn('ffmpeg', ffmpegArgs);
-    
-    // Send frames to FFmpeg
-    for (let i = 0; i < frames.length; i++) {
-      ffmpeg.stdin.write(frames[i]);
-      if (i % 120 === 0) { // Log every 2 seconds worth of frames
-        console.log(`🎞️ Processing frame ${i}/${frames.length}`);
-      }
-    }
-    ffmpeg.stdin.end();
-    
-    // Wait for FFmpeg to complete
+    // Convert frames to video using fluent-ffmpeg
     await new Promise((resolve, reject) => {
-      ffmpeg.on('close', (code) => {
-        if (code === 0) {
+      const framePattern = path.join(tempDir, 'frame_%05d.png');
+      
+      const command = ffmpeg()
+        .input(framePattern)
+        .inputOptions([
+          '-framerate', fps.toString(),
+          '-pattern_type', 'sequence'
+        ])
+        .videoCodec('libx264')
+        .outputOptions([
+          '-pix_fmt', 'yuv420p',
+          '-crf', '18',  // Lower CRF for better quality at 60fps
+          '-preset', 'slow',  // Slower preset for better compression
+          '-movflags', '+faststart',
+          '-r', '60'  // Ensure output is 60fps
+        ])
+        .output(videoPath)
+        .on('start', (commandLine) => {
+          console.log('🎬 FFmpeg command:', commandLine);
+        })
+        .on('progress', (progress) => {
+          if (progress.percent) {
+            console.log(`🎞️ Processing: ${Math.round(progress.percent)}% complete`);
+          }
+        })
+        .on('end', () => {
           console.log('✅ Video conversion completed successfully');
           resolve();
-        } else {
-          console.log(`❌ FFmpeg failed with code ${code}`);
-          reject(new Error(`FFmpeg failed with code ${code}`));
-        }
-      });
+        })
+        .on('error', (err) => {
+          console.error('❌ FFmpeg error:', err.message);
+          reject(err);
+        });
       
-      ffmpeg.on('error', (err) => {
-        console.log(`❌ FFmpeg error: ${err.message}`);
-        reject(err);
-      });
+      // Set timeout for FFmpeg process (45 seconds for 960 frames)
+      command.timeout(45000);
+      command.run();
     });
     
-    // Clean up
-    await browser.close();
-    fs.unlinkSync(htmlPath); // Remove temporary HTML file
+    // Clean up temporary files
+    console.log('🧹 Cleaning up temporary files...');
+    const tempFiles = fs.readdirSync(tempDir);
+    for (const file of tempFiles) {
+      fs.unlinkSync(path.join(tempDir, file));
+    }
+    fs.rmdirSync(tempDir);
     
     // Verify video file was created
     if (fs.existsSync(videoPath)) {
@@ -209,7 +245,26 @@ app.post('/generate-video', async (req, res) => {
     }
     
   } catch (error) {
-    console.log(`❌ Error generating video: ${error.message}`);
+    console.error(`❌ Error generating video: ${error.message}`);
+    console.error('Stack trace:', error.stack);
+    
+    // Clean up on error
+    if (browser) {
+      await browser.close();
+    }
+    
+    if (tempDir && fs.existsSync(tempDir)) {
+      try {
+        const tempFiles = fs.readdirSync(tempDir);
+        for (const file of tempFiles) {
+          fs.unlinkSync(path.join(tempDir, file));
+        }
+        fs.rmdirSync(tempDir);
+      } catch (cleanupError) {
+        console.error('Error during cleanup:', cleanupError.message);
+      }
+    }
+    
     res.status(500).json({
       success: false,
       error: error.message,

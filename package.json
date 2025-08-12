@@ -1,6 +1,6 @@
 {
   "name": "dutch-roofing-video-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Automated video generation system for Dutch roofing companies (dakdekkers) with n8n integration",
   "main": "server-roofing-simple.js",
   "scripts": {
@@ -28,7 +28,9 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
-    "puppeteer": "^22.8.2"
+    "puppeteer": "^22.8.2",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "fluent-ffmpeg": "^2.1.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
