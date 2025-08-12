@@ -483,18 +483,18 @@ jobs:
           </html>
           HTML_EOF
             
-            # Replace placeholders with actual data
-            sed -i "s/BUSINESS_NAME_PLACEHOLDER/$BUSINESS_NAME/g" website.html
-            sed -i "s/BUSINESS_CITY_PLACEHOLDER/$BUSINESS_CITY/g" website.html
-            sed -i "s/TAGLINE_PLACEHOLDER/$TAGLINE/g" website.html
-            sed -i "s/PRIMARY_COLOR_PLACEHOLDER/$PRIMARY_COLOR/g" website.html
-            sed -i "s/SECONDARY_COLOR_PLACEHOLDER/$SECONDARY_COLOR/g" website.html
-            sed -i "s/SERVICE1_PLACEHOLDER/$SERVICE1/g" website.html
-            sed -i "s/SERVICE2_PLACEHOLDER/$SERVICE2/g" website.html
-            sed -i "s/SERVICE3_PLACEHOLDER/$SERVICE3/g" website.html
-            sed -i "s/SERVICE4_PLACEHOLDER/$SERVICE4/g" website.html
-            sed -i "s/SERVICE5_PLACEHOLDER/$SERVICE5/g" website.html
-            sed -i "s/SERVICE6_PLACEHOLDER/$SERVICE6/g" website.html
+            # Replace placeholders with actual data (using | as delimiter to avoid conflicts with /)
+            sed -i "s|BUSINESS_NAME_PLACEHOLDER|$BUSINESS_NAME|g" website.html
+            sed -i "s|BUSINESS_CITY_PLACEHOLDER|$BUSINESS_CITY|g" website.html
+            sed -i "s|TAGLINE_PLACEHOLDER|$TAGLINE|g" website.html
+            sed -i "s|PRIMARY_COLOR_PLACEHOLDER|$PRIMARY_COLOR|g" website.html
+            sed -i "s|SECONDARY_COLOR_PLACEHOLDER|$SECONDARY_COLOR|g" website.html
+            sed -i "s|SERVICE1_PLACEHOLDER|$SERVICE1|g" website.html
+            sed -i "s|SERVICE2_PLACEHOLDER|$SERVICE2|g" website.html
+            sed -i "s|SERVICE3_PLACEHOLDER|$SERVICE3|g" website.html
+            sed -i "s|SERVICE4_PLACEHOLDER|$SERVICE4|g" website.html
+            sed -i "s|SERVICE5_PLACEHOLDER|$SERVICE5|g" website.html
+            sed -i "s|SERVICE6_PLACEHOLDER|$SERVICE6|g" website.html
             
             # Add contact information dynamically
             CONTACT_ITEMS=""
@@ -506,7 +506,9 @@ jobs:
             fi
             CONTACT_ITEMS="$CONTACT_ITEMS<div class=\"contact-item\"><h4>📍 Location</h4><p>$BUSINESS_CITY</p></div>"
             
-            sed -i "s/CONTACT_ITEMS_PLACEHOLDER/$CONTACT_ITEMS/g" website.html
+            # Escape special characters for sed
+            CONTACT_ITEMS_ESCAPED=$(echo "$CONTACT_ITEMS" | sed 's/[[\.*^$()+?{|]/\\&/g')
+            sed -i "s|CONTACT_ITEMS_PLACEHOLDER|$CONTACT_ITEMS_ESCAPED|g" website.html
             
             echo "✅ Created dynamic $INDUSTRY template for $BUSINESS_NAME in $BUSINESS_CITY"
             echo "🎨 Colors: Primary $PRIMARY_COLOR, Secondary $SECONDARY_COLOR"
