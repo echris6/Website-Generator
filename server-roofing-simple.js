@@ -91,10 +91,10 @@ app.post('/generate-video', async (req, res) => {
     
     const page = await browser.newPage();
     
-    // Set viewport for video recording (optimized resolution for faster capture)
+    // Set viewport for TRUE 1080p video recording
     await page.setViewport({
-      width: 1280,
-      height: 720,
+      width: 1920,
+      height: 1080,
       deviceScaleFactor: 1
     });
     
@@ -113,21 +113,25 @@ app.post('/generate-video', async (req, res) => {
     }
     
     // Start recording
-    console.log('🎥 Starting professional video recording...');
+    console.log('🎥 Starting TRUE 60 FPS 1080p video recording...');
     
     const videoPath = path.join(videosDir, filename);
-    // PROFESSIONAL SETTINGS: 16 seconds at 60 FPS for smooth cinematic quality
-    const totalDuration = 16000; // 16 seconds for professional pacing
-    const fps = 60; // 60 FPS for smooth cinema quality
-    const totalFrames = Math.floor((totalDuration / 1000) * fps); // 960 frames
-    const frameInterval = 1000 / fps; // 16.67ms per frame for perfect 60 FPS
+    // TRUE 60 FPS SETTINGS: 18 seconds with 2-second homepage pause
+    const totalDuration = 18000; // 18 seconds total
+    const fps = 60; // TRUE 60 FPS for smooth cinema quality
+    const totalFrames = 1080; // 18 seconds * 60 FPS = 1080 frames
+    const pauseFrames = 120; // 2 seconds * 60 FPS = 120 frames for homepage
+    const scrollFrames = 960; // 16 seconds * 60 FPS = 960 frames for scrolling
+    const frameInterval = 1000 / 60; // Exactly 16.67ms per frame for TRUE 60 FPS
     
-    console.log(`🎬 Recording ${totalFrames} frames at ${fps} FPS (Cinema Quality)`);
-    console.log(`⏱️ Duration: ${totalDuration/1000} seconds`);
+    console.log(`🎬 Recording ${totalFrames} frames at TRUE ${fps} FPS (1080p Cinema Quality)`);
+    console.log(`⏱️ Total Duration: ${totalDuration/1000} seconds`);
+    console.log(`⏸️ Homepage Pause: 2 seconds (${pauseFrames} frames)`);
+    console.log(`📜 Scroll Duration: 16 seconds (${scrollFrames} frames)`);
     
     // Get page height for scrolling
     const pageHeight = await page.evaluate(() => document.body.scrollHeight);
-    const viewportHeight = 720; // Match the optimized viewport
+    const viewportHeight = 1080; // Match the 1080p viewport
     const maxScroll = Math.max(0, pageHeight - viewportHeight);
     
     console.log(`📏 Page height: ${pageHeight}px, Max scroll: ${maxScroll}px`);
@@ -135,23 +139,35 @@ app.post('/generate-video', async (req, res) => {
     console.log(`⏱️ Estimated capture time: ${totalFrames/fps} seconds`);
     const captureStartTime = Date.now();
     
-    // Calculate scroll increment for perfectly smooth linear motion
-    const scrollIncrement = maxScroll / totalFrames;
-    console.log(`📐 Scroll increment: ${scrollIncrement.toFixed(3)}px per frame`);
+    // Calculate scroll increment for smooth motion AFTER the pause
+    const scrollIncrement = maxScroll / scrollFrames; // Divide by scroll frames only
+    console.log(`📐 Scroll increment: ${scrollIncrement.toFixed(3)}px per frame (after pause)`);
     
-    // Capture frames with smooth linear scrolling
+    // Capture frames with 2-second homepage pause then smooth scrolling
     for (let frame = 0; frame < totalFrames; frame++) {
       const progress = frame / totalFrames;
+      let scrollY = 0;
       
-      // SMOOTH LINEAR SCROLLING: Continuous motion from top to bottom
-      // No pauses, just buttery smooth progression
-      const scrollY = Math.min(frame * scrollIncrement, maxScroll);
-      await page.evaluate(scrollY => {
-        window.scrollTo({
-          top: scrollY,
-          behavior: 'instant' // Use instant for precise frame-by-frame control
+      if (frame < pauseFrames) {
+        // HOMEPAGE PAUSE: First 120 frames (2 seconds) stay at top
+        scrollY = 0;
+        await page.evaluate(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'instant'
+          });
         });
-      }, scrollY);
+      } else {
+        // SMOOTH SCROLLING: Frames 120-1079 (16 seconds) scroll smoothly
+        const scrollFrame = frame - pauseFrames; // 0-959
+        scrollY = Math.min(scrollFrame * scrollIncrement, maxScroll);
+        await page.evaluate(scrollY => {
+          window.scrollTo({
+            top: scrollY,
+            behavior: 'instant' // Use instant for precise frame-by-frame control
+          });
+        }, scrollY);
+      }
       
       // Precise timing for 60fps (account for screenshot time)
       const frameStart = Date.now();
@@ -178,7 +194,8 @@ app.post('/generate-video', async (req, res) => {
         const progressPercent = (progress * 100).toFixed(1);
         const currentScrollPercent = ((scrollY / maxScroll) * 100).toFixed(1);
         const fps_actual = (frame / elapsedSeconds).toFixed(1);
-        console.log(`📹 Frame ${frame}/${totalFrames} (${progressPercent}%) - ${elapsedSeconds.toFixed(1)}s elapsed - Scroll: ${currentScrollPercent}% - Actual FPS: ${fps_actual}`);
+        const status = frame < pauseFrames ? '⏸️ PAUSE' : '📜 SCROLL';
+        console.log(`📹 Frame ${frame}/${totalFrames} (${progressPercent}%) - ${elapsedSeconds.toFixed(1)}s - ${status} - Scroll: ${currentScrollPercent}% - FPS: ${fps_actual}`);
       }
     }
     
@@ -198,21 +215,23 @@ app.post('/generate-video', async (req, res) => {
       const command = ffmpeg()
         .input(framePattern)
         .inputOptions([
-          '-framerate', fps.toString(),
+          '-framerate', '60',  // Explicit 60 FPS input
           '-pattern_type', 'sequence'
         ])
         .videoCodec('libx264')
         .outputOptions([
           '-pix_fmt', 'yuv420p',
-          '-crf', '20',  // Balanced quality/speed for 60fps (slightly higher CRF)
-          '-preset', 'fast',  // Much faster encoding while maintaining good quality
+          '-crf', '17',  // High quality for 1080p60
+          '-preset', 'slower',  // Better quality for TRUE 60 FPS
           '-movflags', '+faststart',
-          '-r', fps.toString(),  // Ensure output matches input FPS (60)
-          '-g', '120',  // Keyframe interval (2 seconds at 60fps)
+          '-r', '60',  // Force exact 60 FPS output
+          '-g', '120',  // GOP size: keyframe every 2 seconds (120 frames)
+          '-keyint_min', '60',  // Minimum keyframe interval (1 second)
           '-bf', '2',  // B-frames for better compression
-          '-profile:v', 'main',  // Main profile for better compatibility
-          '-level', '4.0',  // Support for 720p60
-          '-tune', 'film'  // Optimize for high-motion content
+          '-profile:v', 'high',  // High profile for 1080p60
+          '-level', '4.2',  // Level 4.2 supports 1080p60
+          '-tune', 'film',  // Optimize for high-motion content
+          '-x264-params', 'ref=4:bframes=3:b-adapt=2'  // Advanced x264 settings for quality
         ])
         .output(videoPath)
         .on('start', (commandLine) => {
@@ -256,13 +275,14 @@ app.post('/generate-video', async (req, res) => {
       
       res.json({
         success: true,
-        message: 'Professional video generated successfully',
+        message: 'Professional TRUE 60 FPS video generated successfully',
         file_name: filename,
         file_size: stats.size,
         file_size_readable: `${fileSizeMB} MB`,
-        duration: '16 seconds',
-        fps: '60 FPS',
-        quality: 'HD Quality (720p60)',
+        duration: '18 seconds',
+        fps: 'TRUE 60 FPS',
+        quality: 'Full HD 1080p60',
+        homepage_pause: '2 seconds',
         business_name: business_name
       });
     } else {

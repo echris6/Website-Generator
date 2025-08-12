@@ -607,10 +607,10 @@ jobs:
           echo "📊 HTML Size: ${#HTML_CONTENT} characters"
           
           # Make API call with separated output
-          echo "🔍 Making API call (300 second timeout for 60 FPS generation)..."
+          echo "🔍 Making API call (600 second timeout for TRUE 1080p60 generation)..."
           
-          # Separate curl verbose output from response (5 minute timeout for 960 frames)
-          timeout 300s curl -X POST http://localhost:3030/generate-video \
+          # Separate curl verbose output from response (10 minute timeout for 1080 frames at 1080p60)
+          timeout 600s curl -X POST http://localhost:3030/generate-video \
             -H "Content-Type: application/json" \
             -d @payload.json \
             -o /tmp/response.json \
@@ -709,8 +709,8 @@ jobs:
             echo "| 🏭 **Industry** | ${{ steps.business_data.outputs.industry }} |" >> $GITHUB_STEP_SUMMARY
             echo "| 📍 **Location** | ${{ steps.business_data.outputs.business_city }} |" >> $GITHUB_STEP_SUMMARY
             echo "| 📦 **Artifact** | ${{ steps.business_data.outputs.artifact_name }} |" >> $GITHUB_STEP_SUMMARY
-            echo "| 🎬 **Duration** | 16 seconds |" >> $GITHUB_STEP_SUMMARY
-            echo "| 🎞️ **Format** | 60 FPS HD Quality, 1280x720 |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🎬 **Duration** | 18 seconds (2s pause + 16s scroll) |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🎞️ **Format** | TRUE 60 FPS Full HD, 1920x1080 |" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### 📥 Download" >> $GITHUB_STEP_SUMMARY
             echo "Click the **Artifacts** section below to download your video." >> $GITHUB_STEP_SUMMARY
