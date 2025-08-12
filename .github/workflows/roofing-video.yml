@@ -179,7 +179,7 @@ jobs:
     - name: Start video generation server
       run: |
         echo "🚀 Starting Dutch roofing video server..."
-        npm start &
+        npm start > server.log 2>&1 &
         SERVER_PID=$!
         echo "SERVER_PID=$SERVER_PID" >> $GITHUB_ENV
         
@@ -228,6 +228,36 @@ jobs:
         echo "FILENAME=$FILENAME" >> $GITHUB_ENV
         
         echo "✅ Video generated: $FILENAME"
+    
+    - name: Debug Video Generation Failure
+      if: always()
+      run: |
+        echo "🔍 DEBUGGING VIDEO GENERATION"
+        
+        echo "📋 Server logs (last 100 lines):"
+        if [ -f server.log ]; then
+          tail -100 server.log
+        else
+          echo "❌ No server.log found"
+        fi
+        
+        echo "📁 Videos directory contents:"
+        ls -la videos/ 2>/dev/null || echo "❌ Videos directory not found"
+        
+        echo "🔍 All files in workspace:"
+        find . -name "*.mp4" -o -name "*.log" -o -name "payload.json" | head -10
+        
+        echo "💾 Available disk space:"
+        df -h
+        
+        echo "🧠 Memory usage:"
+        free -h || echo "Memory info not available"
+        
+        echo "⚡ Process list:"
+        ps aux | grep -E "(node|ffmpeg)" || echo "No relevant processes"
+        
+        echo "🌐 Test server health again:"
+        curl -v http://localhost:3030/health || echo "Health check failed"
     
     - name: Stop server
       if: always()
