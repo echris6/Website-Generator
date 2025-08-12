@@ -709,8 +709,8 @@ jobs:
             echo "| 🏭 **Industry** | ${{ steps.business_data.outputs.industry }} |" >> $GITHUB_STEP_SUMMARY
             echo "| 📍 **Location** | ${{ steps.business_data.outputs.business_city }} |" >> $GITHUB_STEP_SUMMARY
             echo "| 📦 **Artifact** | ${{ steps.business_data.outputs.artifact_name }} |" >> $GITHUB_STEP_SUMMARY
-            echo "| 🎬 **Duration** | 8 seconds |" >> $GITHUB_STEP_SUMMARY
-            echo "| 🎞️ **Format** | 30 FPS, 1920x1080 |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🎬 **Duration** | 16 seconds |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🎞️ **Format** | 60 FPS Cinema Quality, 1920x1080 |" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### 📥 Download" >> $GITHUB_STEP_SUMMARY
             echo "Click the **Artifacts** section below to download your video." >> $GITHUB_STEP_SUMMARY
