@@ -205,28 +205,80 @@ jobs:
         # Read HTML content
         HTML_CONTENT=$(cat website_content.html | jq -Rs .)
         
-        # Send request to generate video
+        # Save payload to file for debugging
+        echo "{\"business_name\": \"$BUSINESS_NAME\", \"html_content\": $HTML_CONTENT}" > payload.json
+        echo "📋 Payload size: $(wc -c < payload.json) bytes"
+        
+        # Make API call with timeout and detailed debugging
+        echo "🔍 Making API call to video server..."
+        set +e  # Don't exit on curl error, let us debug it
+        
         RESPONSE=$(curl -X POST http://localhost:3030/generate-video \
           -H "Content-Type: application/json" \
-          -d "{\"business_name\": \"$BUSINESS_NAME\", \"html_content\": $HTML_CONTENT}" \
-          -s -w "\nHTTP_STATUS:%{http_code}")
+          -d @payload.json \
+          --max-time 300 \
+          --connect-timeout 10 \
+          -v \
+          -s -w "\nHTTP_STATUS:%{http_code}" 2>&1)
         
-        HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS:" | cut -d: -f2)
-        BODY=$(echo "$RESPONSE" | grep -v "HTTP_STATUS:")
+        CURL_EXIT_CODE=$?
+        echo "🔍 Curl exit code: $CURL_EXIT_CODE"
         
-        echo "Response: $BODY"
-        echo "HTTP Status: $HTTP_STATUS"
+        if [ $CURL_EXIT_CODE -ne 0 ]; then
+          echo "❌ Curl failed with exit code $CURL_EXIT_CODE"
+          echo "📋 Exit code meanings:"
+          echo "  - 28: Operation timeout"
+          echo "  - 7: Failed to connect"
+          echo "  - 52: Empty response from server"
+          echo "  - 56: Failure receiving network data"
+          echo ""
+          echo "📋 Curl response/error:"
+          echo "$RESPONSE"
+          echo ""
+          echo "📋 Server logs (last 50 lines):"
+          tail -50 server.log 2>/dev/null || echo "No server logs"
+          echo ""
+          echo "📋 Server health check:"
+          curl -v http://localhost:3030/health 2>&1 || echo "Health check failed"
+          echo ""
+          echo "📋 Process status:"
+          ps aux | grep -E "(node|ffmpeg|puppeteer)" || echo "No relevant processes"
+          echo ""
+          echo "📋 Network connections:"
+          netstat -an | grep 3030 || echo "No connections on port 3030"
+          kill $SERVER_PID 2>/dev/null || true
+          exit 1
+        fi
+        
+        set -e  # Re-enable exit on error
+        
+        # Parse response
+        HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS:" | tail -1 | cut -d: -f2)
+        BODY=$(echo "$RESPONSE" | grep -v "HTTP_STATUS:" | grep -v "^*" | grep -v "^>" | grep -v "^<" | grep -v "^{" | tail -n +2)
+        
+        echo "📊 HTTP Status: $HTTP_STATUS"
+        echo "📊 Response Body: $BODY"
         
         if [ "$HTTP_STATUS" != "200" ]; then
           echo "❌ Failed to generate video (HTTP $HTTP_STATUS)"
-          echo "$BODY"
+          echo "📋 Full response:"
+          echo "$RESPONSE"
+          echo ""
+          echo "📋 Server logs:"
+          tail -50 server.log 2>/dev/null || echo "No server logs"
           exit 1
         fi
         
         # Extract filename from response
-        FILENAME=$(echo "$BODY" | jq -r '.file_name')
-        echo "FILENAME=$FILENAME" >> $GITHUB_ENV
+        FILENAME=$(echo "$BODY" | jq -r '.file_name' 2>/dev/null || echo "")
+        if [ -z "$FILENAME" ] || [ "$FILENAME" = "null" ]; then
+          echo "❌ Could not extract filename from response"
+          echo "📋 Response body for debugging:"
+          echo "$BODY"
+          exit 1
+        fi
         
+        echo "FILENAME=$FILENAME" >> $GITHUB_ENV
         echo "✅ Video generated: $FILENAME"
     
     - name: Debug Video Generation Failure
