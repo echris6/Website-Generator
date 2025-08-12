@@ -91,10 +91,10 @@ app.post('/generate-video', async (req, res) => {
     
     const page = await browser.newPage();
     
-    // Set viewport for video recording
+    // Set viewport for video recording (optimized resolution for faster capture)
     await page.setViewport({
-      width: 1920,
-      height: 1080,
+      width: 1280,
+      height: 720,
       deviceScaleFactor: 1
     });
     
@@ -127,7 +127,7 @@ app.post('/generate-video', async (req, res) => {
     
     // Get page height for scrolling
     const pageHeight = await page.evaluate(() => document.body.scrollHeight);
-    const viewportHeight = 1080;
+    const viewportHeight = 720; // Match the optimized viewport
     const maxScroll = Math.max(0, pageHeight - viewportHeight);
     
     console.log(`📏 Page height: ${pageHeight}px, Max scroll: ${maxScroll}px`);
@@ -172,12 +172,13 @@ app.post('/generate-video', async (req, res) => {
         await new Promise(resolve => setTimeout(resolve, waitTime));
       }
       
-      // Log progress every 60 frames (1 second) for clean output
-      if (frame % 60 === 0 && frame > 0) {
+      // Log progress every 30 frames (0.5 seconds) for better visibility and to prevent timeout
+      if (frame % 30 === 0 && frame > 0) {
         const elapsedSeconds = (Date.now() - captureStartTime) / 1000;
         const progressPercent = (progress * 100).toFixed(1);
         const currentScrollPercent = ((scrollY / maxScroll) * 100).toFixed(1);
-        console.log(`📹 Frame ${frame}/${totalFrames} (${progressPercent}%) - ${elapsedSeconds.toFixed(1)}s elapsed - Scroll: ${currentScrollPercent}%`);
+        const fps_actual = (frame / elapsedSeconds).toFixed(1);
+        console.log(`📹 Frame ${frame}/${totalFrames} (${progressPercent}%) - ${elapsedSeconds.toFixed(1)}s elapsed - Scroll: ${currentScrollPercent}% - Actual FPS: ${fps_actual}`);
       }
     }
     
@@ -203,14 +204,15 @@ app.post('/generate-video', async (req, res) => {
         .videoCodec('libx264')
         .outputOptions([
           '-pix_fmt', 'yuv420p',
-          '-crf', '17',  // Ultra high quality for 60fps cinematic look
-          '-preset', 'slower',  // Maximum quality encoding
+          '-crf', '20',  // Balanced quality/speed for 60fps (slightly higher CRF)
+          '-preset', 'fast',  // Much faster encoding while maintaining good quality
           '-movflags', '+faststart',
           '-r', fps.toString(),  // Ensure output matches input FPS (60)
           '-g', '120',  // Keyframe interval (2 seconds at 60fps)
           '-bf', '2',  // B-frames for better compression
-          '-profile:v', 'high',  // High profile for best quality
-          '-level', '4.2'  // Support for 1080p60
+          '-profile:v', 'main',  // Main profile for better compatibility
+          '-level', '4.0',  // Support for 720p60
+          '-tune', 'film'  // Optimize for high-motion content
         ])
         .output(videoPath)
         .on('start', (commandLine) => {
@@ -260,7 +262,7 @@ app.post('/generate-video', async (req, res) => {
         file_size_readable: `${fileSizeMB} MB`,
         duration: '16 seconds',
         fps: '60 FPS',
-        quality: 'Cinema Quality (1080p60)',
+        quality: 'HD Quality (720p60)',
         business_name: business_name
       });
     } else {
