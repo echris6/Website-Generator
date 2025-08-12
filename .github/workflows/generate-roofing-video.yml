@@ -527,6 +527,7 @@ jobs:
           fi
           
       - name: Generate video
+        continue-on-error: true
         run: |
           echo "🎬 Starting video generation for ${{ steps.business_data.outputs.business_name }}..."
           
@@ -719,29 +720,79 @@ jobs:
           kill $SERVER_PID 2>/dev/null || true
           rm -f payload.json website.html
           
+      - name: Check for Generated Videos
+        id: check_videos
+        if: always()
+        run: |
+          echo "🔍 Checking for generated video files..."
+          
+          if [ -d "videos" ] && [ "$(ls -A videos/)" ]; then
+            echo "✅ Video files found:"
+            ls -la videos/
+            
+            # Find the most recent video file
+            LATEST_VIDEO=$(ls -t videos/*.mp4 2>/dev/null | head -1 || echo "")
+            
+            if [ -n "$LATEST_VIDEO" ]; then
+              VIDEO_NAME=$(basename "$LATEST_VIDEO")
+              VIDEO_SIZE=$(du -h "$LATEST_VIDEO" | cut -f1)
+              echo "📁 Latest video: $VIDEO_NAME"
+              echo "📊 Size: $VIDEO_SIZE"
+              echo "has_video=true" >> $GITHUB_OUTPUT
+              echo "video_name=$VIDEO_NAME" >> $GITHUB_OUTPUT
+            else
+              echo "❌ No MP4 files found"
+              echo "has_video=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "❌ No videos directory or empty"
+            echo "has_video=false" >> $GITHUB_OUTPUT
+          fi
+          
       - name: Upload video artifact
+        if: always() && steps.check_videos.outputs.has_video == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.business_data.outputs.artifact_name }}
-          path: videos/
+          path: videos/*.mp4
           retention-days: 30
           if-no-files-found: warn
-        continue-on-error: true
         
       - name: Workflow summary
+        if: always()
         run: |
-          echo "🎉 Business video workflow completed!"
-          echo ""
-          echo "📊 FINAL SUMMARY:"
-          echo "  🏢 Company: ${{ steps.business_data.outputs.business_name }}"
-          echo "  🏙️ City: ${{ steps.business_data.outputs.business_city }}"
-          echo "  🏭 Industry: ${{ steps.business_data.outputs.industry }}"
-          echo "  📞 Phone: ${{ steps.business_data.outputs.business_phone }}"
-          echo "  📧 Email: ${{ steps.business_data.outputs.business_email }}"
-          echo "  📦 Artifact: ${{ steps.business_data.outputs.artifact_name }}"
-          echo ""
-          echo "📁 Generated files:"
-          ls -la videos/ || echo "No files generated"
-          echo ""
-          echo "🎬 Video available in GitHub Actions Artifacts"
-          echo "✅ Workflow completed successfully!"
+          echo "## 🎬 Video Generation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.check_videos.outputs.has_video }}" == "true" ]; then
+            echo "### ✅ SUCCESS: Video Generated!" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+            echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| 📁 **File** | ${{ steps.check_videos.outputs.video_name }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🏢 **Business** | ${{ steps.business_data.outputs.business_name }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🏭 **Industry** | ${{ steps.business_data.outputs.industry }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| 📍 **Location** | ${{ steps.business_data.outputs.business_city }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| 📦 **Artifact** | ${{ steps.business_data.outputs.artifact_name }} |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 📥 Download" >> $GITHUB_STEP_SUMMARY
+            echo "The video is available in the **Artifacts** section of this workflow run." >> $GITHUB_STEP_SUMMARY
+            
+            # Also log to console
+            echo "✅ Video generation successful!"
+            echo "📁 Video: ${{ steps.check_videos.outputs.video_name }}"
+            echo "🏢 Business: ${{ steps.business_data.outputs.business_name }}"
+          else
+            echo "### ❌ No Video Generated" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "The workflow completed but no video file was found." >> $GITHUB_STEP_SUMMARY
+            echo "Check the **Generate video** step logs for details." >> $GITHUB_STEP_SUMMARY
+            
+            # Also log to console
+            echo "❌ No video file was generated"
+            echo "Check the logs above for details"
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "*Generated on $(date)*" >> $GITHUB_STEP_SUMMARY
