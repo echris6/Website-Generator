@@ -54,6 +54,8 @@ app.post('/generate-video', async (req, res) => {
     }
     
     console.log(`🏢 Generating video for: ${business_name}`);
+    console.log(`📊 HTML size: ${html_content.length} characters`);
+    console.log(`⏰ Started at: ${new Date().toISOString()}`);
     
     // Create a safe filename
     const sanitizedName = business_name.toLowerCase().replace(/[^a-z0-9]/g, '_');
@@ -66,10 +68,8 @@ app.post('/generate-video', async (req, res) => {
       fs.mkdirSync(tempDir);
     }
     
-    // Save HTML content to a temporary file
-    const htmlPath = path.join(tempDir, 'website.html');
-    fs.writeFileSync(htmlPath, html_content);
-    console.log('📄 HTML content saved to temporary file');
+    // Note: We now use page.setContent() instead of saving to file
+    // This avoids file:// URL issues in containerized environments
     
     // Launch browser
     console.log('🚀 Launching browser...');
@@ -94,14 +94,13 @@ app.post('/generate-video', async (req, res) => {
       deviceScaleFactor: 1
     });
     
-    // Load the HTML content
-    const fileUrl = `file://${htmlPath}`;
-    console.log(`📄 Loading website: ${fileUrl}`);
-    
-    await page.goto(fileUrl, {
+    // Load the HTML content directly (avoids file:// URL issues)
+    console.log(`📄 Loading HTML content directly (${html_content.length} characters)`);
+    await page.setContent(html_content, {
       waitUntil: 'networkidle0',
       timeout: 30000
     });
+    console.log(`✅ HTML content loaded successfully`);
     
     // Create videos directory
     const videosDir = path.join(__dirname, 'videos');
@@ -126,6 +125,9 @@ app.post('/generate-video', async (req, res) => {
     const maxScroll = Math.max(0, pageHeight - viewportHeight);
     
     console.log(`📏 Page height: ${pageHeight}px, Max scroll: ${maxScroll}px`);
+    console.log(`🎬 Starting frame capture: ${totalFrames} frames at ${fps} FPS`);
+    console.log(`⏱️ Estimated capture time: ${totalFrames/fps} seconds`);
+    const captureStartTime = Date.now();
     
     // Capture frames and save to disk immediately to reduce memory usage
     for (let frame = 0; frame < totalFrames; frame++) {
@@ -160,9 +162,11 @@ app.post('/generate-video', async (req, res) => {
         await new Promise(resolve => setTimeout(resolve, waitTime));
       }
       
-      // Log progress every 60 frames (1 second)
-      if (frame % 60 === 0) {
-        console.log(`📸 Frame ${frame}/${totalFrames} (${Math.round(progress * 100)}%)`);
+      // Log progress every 30 frames (0.5 seconds) for better visibility
+      if (frame % 30 === 0) {
+        const elapsed = (Date.now() - captureStartTime) / 1000;
+        const progressPercent = (progress * 100).toFixed(1);
+        console.log(`📸 Frame ${frame}/${totalFrames} (${progressPercent}%) - ${elapsed.toFixed(1)}s elapsed`);
       }
     }
     
@@ -174,6 +178,8 @@ app.post('/generate-video', async (req, res) => {
     browser = null;
     
     // Convert frames to video using fluent-ffmpeg
+    console.log(`🎞️ Starting FFmpeg conversion of ${totalFrames} frames`);
+    console.log(`⏰ FFmpeg started at: ${new Date().toISOString()}`);
     await new Promise((resolve, reject) => {
       const framePattern = path.join(tempDir, 'frame_%05d.png');
       
