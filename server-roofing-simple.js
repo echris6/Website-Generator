@@ -31,6 +31,10 @@ app.get('/health', (req, res) => {
 
 // Video generation endpoint
 app.post('/generate-video', async (req, res) => {
+  console.log('🚀 RECEIVED POST REQUEST AT:', new Date().toISOString());
+  console.log('📊 Request body keys:', Object.keys(req.body));
+  console.log('📊 HTML size:', req.body.html_content?.length || 'undefined');
+  console.log('🏢 Business name:', req.body.business_name);
   console.log('🎬 Starting Dutch roofing video generation...');
   
   let browser = null;
@@ -112,8 +116,9 @@ app.post('/generate-video', async (req, res) => {
     console.log('🎥 Starting screen recording...');
     
     const videoPath = path.join(videosDir, filename);
-    const totalDuration = 16000; // 16 seconds
-    const fps = 60; // 60 FPS for smooth video
+    // TEMPORARILY REDUCED FOR TESTING (8 seconds, 30 FPS = 240 frames)
+    const totalDuration = 8000; // Reduced to 8 seconds for testing
+    const fps = 30; // Reduced to 30 FPS for testing
     const totalFrames = Math.floor((totalDuration / 1000) * fps);
     const frameInterval = 1000 / fps; // ~16.67ms per frame
     
@@ -215,8 +220,8 @@ app.post('/generate-video', async (req, res) => {
           reject(err);
         });
       
-      // Set timeout for FFmpeg process (45 seconds for 960 frames)
-      command.timeout(45000);
+      // Set timeout for FFmpeg process (30 seconds for reduced frames)
+      command.timeout(30000);
       command.run();
     });
     
@@ -243,7 +248,7 @@ app.post('/generate-video', async (req, res) => {
         file_name: filename,
         file_size: stats.size,
         file_size_readable: `${fileSizeMB} MB`,
-        duration_estimate: '16 seconds',
+        duration_estimate: '8 seconds',
         business_name: business_name
       });
     } else {
