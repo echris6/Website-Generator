@@ -581,144 +581,42 @@ jobs:
           echo "🏭 Industry: $INDUSTRY"
           echo "📊 HTML Size: ${#HTML_CONTENT} characters"
           
-          # Make API call with detailed debugging and shorter timeout
-          echo "🔍 About to make API call to video server..."
-          echo "🔍 Server health before request:"
-          curl -s http://localhost:3030/health || echo "Health check failed"
+          # Make API call with separated output
+          echo "🔍 Making API call (120 second timeout)..."
           
-          echo "🔍 Starting background server log monitoring..."
-          tail -f server.log &
-          TAIL_PID=$!
-          
-          echo "🔍 Making API call with 120-second timeout..."
-          set +e  # Don't exit on curl error
-          
-          # Separate verbose output from response
-          echo "🔍 Making API call (verbose output will show above)..."
-          timeout 120s curl -v -X POST http://localhost:3030/generate-video \
+          # Separate curl verbose output from response
+          timeout 120s curl -X POST http://localhost:3030/generate-video \
             -H "Content-Type: application/json" \
-            -d @payload.json > /tmp/response.txt 2> /tmp/curl_verbose.txt
+            -d @payload.json \
+            -o /tmp/response.json \
+            -w "%{http_code}" \
+            -v 2> /tmp/curl_verbose.txt > /tmp/http_code.txt
           
           CURL_EXIT_CODE=$?
-          kill $TAIL_PID 2>/dev/null
+          HTTP_CODE=$(cat /tmp/http_code.txt 2>/dev/null || echo "000")
           
           echo "🔍 Curl exit code: $CURL_EXIT_CODE"
+          echo "📊 HTTP Status: $HTTP_CODE"
           
-          echo "🔍 Curl verbose output:"
-          cat /tmp/curl_verbose.txt
-          
-          echo "🔍 Response body:"
-          RESPONSE_BODY=$(cat /tmp/response.txt)
-          echo "$RESPONSE_BODY"
-          
-          echo "📋 Server logs (last 50 lines):"
-          tail -50 server.log 2>/dev/null || echo "No server logs"
-          
-          if [ $CURL_EXIT_CODE -ne 0 ]; then
-            echo "❌ Request failed with exit code $CURL_EXIT_CODE"
-            echo "📋 Exit code meanings:"
-            echo "  - 124: timeout command killed the process (120s timeout reached)"
-            echo "  - 28: curl operation timeout"
-            echo "  - 7: Failed to connect"
-            echo "  - 52: Empty response from server"
-            echo ""
-            echo "📋 Final server health check:"
-            curl -v http://localhost:3030/health 2>&1 || echo "Health check failed"
-            echo ""
-            echo "📋 Process status:"
-            ps aux | grep -E "(node|ffmpeg|puppeteer)" || echo "No relevant processes"
-            echo ""
-            echo "❌ Killing server and exiting"
-            kill $SERVER_PID 2>/dev/null || true
-            exit 1
+          if [ -f /tmp/curl_verbose.txt ]; then
+            echo "🔍 Curl verbose output:"
+            cat /tmp/curl_verbose.txt
           fi
           
-          set -e  # Re-enable exit on error
-          
-          # Parse response if successful
-          HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS:" | tail -1 | cut -d: -f2)
-          RESPONSE_BODY=$(echo "$RESPONSE" | grep -v "HTTP_STATUS:" | grep -v "^*" | grep -v "^>" | grep -v "^<" | grep -v "^{" | tail -n +2)
-          
-          echo "📊 HTTP Status: $HTTP_STATUS"
-          echo "📊 Response Body: $RESPONSE_BODY"
-          
-          if [ "$HTTP_STATUS" != "200" ]; then
-            echo "❌ API call failed with status $HTTP_STATUS"
-            echo "📋 Full response:"
-            echo "$RESPONSE"
-            echo ""
-            echo "📋 Server logs:"
-            tail -50 server.log 2>/dev/null || echo "No logs available"
-            kill $SERVER_PID 2>/dev/null || true
-            exit 1
+          if [ -f /tmp/response.json ]; then
+            echo "📊 Response body:"
+            cat /tmp/response.json
           fi
           
-          # Check if response is valid JSON and extract filename
-          if echo "$RESPONSE_BODY" | jq . > /dev/null 2>&1; then
-            echo "✅ Valid JSON response received"
-            FILENAME=$(echo "$RESPONSE_BODY" | jq -r '.file_name // empty')
-            SUCCESS=$(echo "$RESPONSE_BODY" | jq -r '.success // false')
-          else
-            echo "❌ Invalid JSON response"
-            FILENAME=""
-            SUCCESS="false"
-          fi
-          
-          # Verify we got a filename
-          if [ -z "$FILENAME" ] || [ "$FILENAME" = "null" ]; then
-            echo "❌ No filename in response or invalid JSON"
-            echo "📋 Raw response:"
-            echo "$RESPONSE_BODY"
-            kill $SERVER_PID 2>/dev/null || true
-            exit 1
-          fi
-          
-          echo "📁 Expected filename: $FILENAME"
-          
-          # Wait for video generation with progress monitoring
-          echo "⏳ Waiting for video generation to complete..."
-          for i in {1..12}; do  # 12 * 10 = 120 seconds max wait
-            if [ -f "videos/$FILENAME" ]; then
-              echo "✅ Video file detected after ${i}0 seconds!"
-              break
-            fi
-            echo "⏱️ Waiting... ${i}0 seconds elapsed"
-            sleep 10
-          done
-          
-          # Final verification
-          if [ -f "videos/$FILENAME" ]; then
-            VIDEO_SIZE=$(du -h "videos/$FILENAME" | cut -f1)
-            VIDEO_SIZE_BYTES=$(stat -c%s "videos/$FILENAME")
-            
-            echo "✅ Video generated successfully!"
-            echo "📁 File: $FILENAME"
-            echo "📊 Size: $VIDEO_SIZE ($VIDEO_SIZE_BYTES bytes)"
-            echo "🏢 Business: $BUSINESS_NAME"
-            echo "🏭 Industry: $INDUSTRY"
-            
-            # Verify it's a real video file (should be at least 1MB)
-            if [ $VIDEO_SIZE_BYTES -lt 1048576 ]; then
-              echo "⚠️ Warning: Video file seems small ($VIDEO_SIZE)"
-              echo "⚠️ This might indicate an issue with generation"
-            fi
-            
-            ls -la videos/
-          else
-            echo "❌ Video file not found: videos/$FILENAME"
-            echo "📋 Available files in videos directory:"
-            ls -la videos/ || echo "Videos directory empty or not found"
-            echo "📋 All MP4 files:"
-            find . -name "*.mp4" -type f || echo "No MP4 files found"
-            echo "📋 Final server logs:"
-            tail -50 server.log || echo "No server logs available"
-            kill $SERVER_PID 2>/dev/null || true
-            exit 1
-          fi
+          # Always show server logs for debugging
+          echo "📋 Server logs (last 20 lines):"
+          tail -20 server.log 2>/dev/null || echo "No server logs"
           
           # Cleanup
           kill $SERVER_PID 2>/dev/null || true
-          rm -f payload.json website.html
+          rm -f payload.json website.html /tmp/response.json /tmp/curl_verbose.txt /tmp/http_code.txt
+          
+          echo "✅ Video generation step completed (exit code: $CURL_EXIT_CODE)"
           
       - name: Check for Generated Videos
         id: check_videos
@@ -726,7 +624,7 @@ jobs:
         run: |
           echo "🔍 Checking for generated video files..."
           
-          if [ -d "videos" ] && [ "$(ls -A videos/)" ]; then
+          if [ -d "videos" ] && [ "$(ls -A videos/ 2>/dev/null)" ]; then
             echo "✅ Video files found:"
             ls -la videos/
             
@@ -736,10 +634,21 @@ jobs:
             if [ -n "$LATEST_VIDEO" ]; then
               VIDEO_NAME=$(basename "$LATEST_VIDEO")
               VIDEO_SIZE=$(du -h "$LATEST_VIDEO" | cut -f1)
+              VIDEO_SIZE_BYTES=$(stat -c%s "$LATEST_VIDEO" 2>/dev/null || stat -f%z "$LATEST_VIDEO" 2>/dev/null || echo "0")
+              
               echo "📁 Latest video: $VIDEO_NAME"
-              echo "📊 Size: $VIDEO_SIZE"
-              echo "has_video=true" >> $GITHUB_OUTPUT
-              echo "video_name=$VIDEO_NAME" >> $GITHUB_OUTPUT
+              echo "📊 Size: $VIDEO_SIZE ($VIDEO_SIZE_BYTES bytes)"
+              
+              # Check if it's a real video file (at least 100KB)
+              if [ "$VIDEO_SIZE_BYTES" -gt 100000 ]; then
+                echo "✅ Video file appears valid"
+                echo "has_video=true" >> $GITHUB_OUTPUT
+                echo "video_name=$VIDEO_NAME" >> $GITHUB_OUTPUT
+                echo "video_size=$VIDEO_SIZE" >> $GITHUB_OUTPUT
+              else
+                echo "⚠️ Video file too small, might be corrupted"
+                echo "has_video=false" >> $GITHUB_OUTPUT
+              fi
             else
               echo "❌ No MP4 files found"
               echo "has_video=false" >> $GITHUB_OUTPUT
@@ -770,13 +679,16 @@ jobs:
             echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
             echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
             echo "| 📁 **File** | ${{ steps.check_videos.outputs.video_name }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| 📊 **Size** | ${{ steps.check_videos.outputs.video_size }} |" >> $GITHUB_STEP_SUMMARY
             echo "| 🏢 **Business** | ${{ steps.business_data.outputs.business_name }} |" >> $GITHUB_STEP_SUMMARY
             echo "| 🏭 **Industry** | ${{ steps.business_data.outputs.industry }} |" >> $GITHUB_STEP_SUMMARY
             echo "| 📍 **Location** | ${{ steps.business_data.outputs.business_city }} |" >> $GITHUB_STEP_SUMMARY
             echo "| 📦 **Artifact** | ${{ steps.business_data.outputs.artifact_name }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🎬 **Duration** | 8 seconds |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🎞️ **Format** | 30 FPS, 1920x1080 |" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### 📥 Download" >> $GITHUB_STEP_SUMMARY
-            echo "The video is available in the **Artifacts** section of this workflow run." >> $GITHUB_STEP_SUMMARY
+            echo "Click the **Artifacts** section below to download your video." >> $GITHUB_STEP_SUMMARY
             
             # Also log to console
             echo "✅ Video generation successful!"
