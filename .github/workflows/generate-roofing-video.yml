@@ -580,22 +580,68 @@ jobs:
           echo "🏭 Industry: $INDUSTRY"
           echo "📊 HTML Size: ${#HTML_CONTENT} characters"
           
-          # Make API call with timeout
-          RESPONSE=$(curl -s -w "%{http_code}" -X POST http://localhost:3030/generate-video \
+          # Make API call with detailed debugging and shorter timeout
+          echo "🔍 About to make API call to video server..."
+          echo "🔍 Server health before request:"
+          curl -s http://localhost:3030/health || echo "Health check failed"
+          
+          echo "🔍 Starting background server log monitoring..."
+          tail -f server.log &
+          TAIL_PID=$!
+          
+          echo "🔍 Making API call with 60-second timeout..."
+          set +e  # Don't exit on curl error
+          
+          # Use shorter timeout to fail faster and see logs
+          RESPONSE=$(timeout 60s curl -v -w "\nHTTP_STATUS:%{http_code}" -X POST http://localhost:3030/generate-video \
             -H "Content-Type: application/json" \
-            -d @payload.json \
-            --max-time 300)
+            -d @payload.json 2>&1)
           
-          HTTP_CODE="${RESPONSE: -3}"
-          RESPONSE_BODY="${RESPONSE%???}"
+          CURL_EXIT_CODE=$?
+          kill $TAIL_PID 2>/dev/null
           
-          echo "📊 HTTP Status: $HTTP_CODE"
-          echo "📊 Response: $RESPONSE_BODY"
+          echo "🔍 Curl exit code: $CURL_EXIT_CODE"
+          echo "🔍 Curl response:"
+          echo "$RESPONSE"
           
-          if [ "$HTTP_CODE" != "200" ]; then
-            echo "❌ API call failed with status $HTTP_CODE"
+          echo "📋 Server logs (last 50 lines):"
+          tail -50 server.log 2>/dev/null || echo "No server logs"
+          
+          if [ $CURL_EXIT_CODE -ne 0 ]; then
+            echo "❌ Request failed with exit code $CURL_EXIT_CODE"
+            echo "📋 Exit code meanings:"
+            echo "  - 124: timeout command killed the process (60s timeout reached)"
+            echo "  - 28: curl operation timeout"
+            echo "  - 7: Failed to connect"
+            echo "  - 52: Empty response from server"
+            echo ""
+            echo "📋 Final server health check:"
+            curl -v http://localhost:3030/health 2>&1 || echo "Health check failed"
+            echo ""
+            echo "📋 Process status:"
+            ps aux | grep -E "(node|ffmpeg|puppeteer)" || echo "No relevant processes"
+            echo ""
+            echo "❌ Killing server and exiting"
+            kill $SERVER_PID 2>/dev/null || true
+            exit 1
+          fi
+          
+          set -e  # Re-enable exit on error
+          
+          # Parse response if successful
+          HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS:" | tail -1 | cut -d: -f2)
+          RESPONSE_BODY=$(echo "$RESPONSE" | grep -v "HTTP_STATUS:" | grep -v "^*" | grep -v "^>" | grep -v "^<" | grep -v "^{" | tail -n +2)
+          
+          echo "📊 HTTP Status: $HTTP_STATUS"
+          echo "📊 Response Body: $RESPONSE_BODY"
+          
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "❌ API call failed with status $HTTP_STATUS"
+            echo "📋 Full response:"
+            echo "$RESPONSE"
+            echo ""
             echo "📋 Server logs:"
-            cat server.log || echo "No logs available"
+            tail -50 server.log 2>/dev/null || echo "No logs available"
             kill $SERVER_PID 2>/dev/null || true
             exit 1
           fi
