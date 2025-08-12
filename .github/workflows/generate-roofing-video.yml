@@ -94,6 +94,8 @@ jobs:
             BUSINESS_PHONE="${{ github.event.client_payload.business_phone }}"
             BUSINESS_EMAIL="${{ github.event.client_payload.business_email }}"
             INDUSTRY="${{ github.event.client_payload.industry }}"
+            HTML_FILENAME="${{ github.event.client_payload.html_filename }}"
+            HTML_SIZE="${{ github.event.client_payload.html_size }}"
             WEBSITE_HTML_BASE64="${{ github.event.client_payload.WEBSITE_HTML_BASE64 }}"
           fi
           
@@ -122,6 +124,8 @@ jobs:
           echo "business_phone=$BUSINESS_PHONE" >> $GITHUB_OUTPUT
           echo "business_email=$BUSINESS_EMAIL" >> $GITHUB_OUTPUT
           echo "industry=$INDUSTRY" >> $GITHUB_OUTPUT
+          echo "html_filename=$HTML_FILENAME" >> $GITHUB_OUTPUT
+          echo "html_size=$HTML_SIZE" >> $GITHUB_OUTPUT
           echo "website_html_base64=$WEBSITE_HTML_BASE64" >> $GITHUB_OUTPUT
           echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
           
@@ -129,6 +133,8 @@ jobs:
           echo "  🏢 Company: $BUSINESS_NAME"
           echo "  🏙️ City: $BUSINESS_CITY"
           echo "  🏭 Industry: $INDUSTRY"
+          echo "  📄 HTML File: $HTML_FILENAME"
+          echo "  📊 HTML Size: $HTML_SIZE bytes"
           echo "  📦 Artifact: $ARTIFACT_NAME"
           
       - name: Process website content
@@ -140,36 +146,55 @@ jobs:
           BUSINESS_PHONE="${{ steps.business_data.outputs.business_phone }}"
           BUSINESS_EMAIL="${{ steps.business_data.outputs.business_email }}"
           INDUSTRY="${{ steps.business_data.outputs.industry }}"
-          WEBSITE_URL="${{ steps.business_data.outputs.website_url }}"
-          WEBSITE_HTML_BASE64="${{ steps.business_data.outputs.website_html_base64 }}"
+          
+          # Get HTML filename from repository dispatch payload
+          HTML_FILENAME="${{ github.event.client_payload.html_filename }}"
+          HTML_SIZE_EXPECTED="${{ github.event.client_payload.html_size }}"
           
           # Try to get HTML content
           HTML_SUCCESS=false
           
-          # Strategy 1: Use base64 HTML from n8n (your actual generated website)
-          if [ -n "$WEBSITE_HTML_BASE64" ] && [ "$WEBSITE_HTML_BASE64" != "null" ] && [ ${#WEBSITE_HTML_BASE64} -gt 100 ]; then
-            echo "📥 Using base64 HTML content from n8n (your generated website)..."
-            echo "$WEBSITE_HTML_BASE64" | base64 -d > website.html
+          # Primary Strategy: Download uploaded HTML file from repository
+          if [ -n "$HTML_FILENAME" ] && [ "$HTML_FILENAME" != "null" ]; then
+            echo "📥 Downloading HTML file: $HTML_FILENAME"
+            echo "📊 Expected size: $HTML_SIZE_EXPECTED bytes"
             
-            if [ -s website.html ]; then
-              HTML_SIZE=$(wc -c < website.html)
-              echo "✅ Decoded HTML content: $HTML_SIZE bytes"
-              echo "🎯 This is your actual generated website with real business data!"
-              HTML_SUCCESS=true
+            # Try to download from temp-html directory
+            echo "🔍 Attempting to download from temp-html/$HTML_FILENAME..."
+            
+            RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/${{ github.repository }}/contents/temp-html/$HTML_FILENAME")
+            
+            HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS:" | cut -d: -f2)
+            
+            if [ "$HTTP_STATUS" = "200" ]; then
+              # Extract and decode the content
+              echo "$RESPONSE" | grep -v "HTTP_STATUS:" | jq -r '.content' | base64 -d > website.html
+              
+              if [ -s website.html ]; then
+                HTML_SIZE=$(wc -c < website.html)
+                echo "✅ Downloaded HTML content: $HTML_SIZE bytes"
+                echo "🎯 Using actual uploaded HTML from n8n!"
+                HTML_SUCCESS=true
+              else
+                echo "❌ Failed to decode HTML content"
+              fi
+            else
+              echo "❌ Failed to download HTML file (HTTP $HTTP_STATUS)"
+              echo "📋 Response: $(echo "$RESPONSE" | grep -v "HTTP_STATUS:" | jq -r '.message // "Unknown error"' 2>/dev/null)"
             fi
           fi
           
-          # Strategy 2: Fetch from URL (if you have a live URL)
-          if [ "$HTML_SUCCESS" = "false" ] && [ -n "$WEBSITE_URL" ] && [ "$WEBSITE_URL" != "null" ]; then
-            echo "🌐 Fetching content from URL: $WEBSITE_URL"
-            
-            if curl -s -L --max-time 30 "$WEBSITE_URL" > website.html; then
+          # Fallback: Check if file was already committed to repo
+          if [ "$HTML_SUCCESS" = "false" ] && [ -n "$HTML_FILENAME" ]; then
+            echo "🔍 Checking if HTML file exists in repository root..."
+            if [ -f "$HTML_FILENAME" ]; then
+              cp "$HTML_FILENAME" website.html
               HTML_SIZE=$(wc -c < website.html)
-              if [ $HTML_SIZE -gt 500 ]; then
-                echo "✅ Fetched HTML content: $HTML_SIZE bytes"
-                echo "🎯 Using live website content!"
-                HTML_SUCCESS=true
-              fi
+              echo "✅ Found HTML file locally: $HTML_SIZE bytes"
+              HTML_SUCCESS=true
             fi
           fi
           
