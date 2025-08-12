@@ -2,7 +2,7 @@ name: Generate Business Video (Dynamic)
 
 on:
   repository_dispatch:
-    types: [generate-roofing-video]
+    types: [generate-roofing-video, generate-business-video]
   workflow_dispatch:
     inputs:
       business_name:
