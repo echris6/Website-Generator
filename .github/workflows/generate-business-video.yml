@@ -1,0 +1,51 @@
+name: Generate Business Video
+
+on:
+  repository_dispatch:
+    types: [generate_video]
+
+jobs:
+  generate-video:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Create business slug
+      id: slug
+      run: |
+        BUSINESS_NAME="${{ github.event.client_payload.business_name }}"
+        BUSINESS_SLUG=$(echo "$BUSINESS_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
+        VIDEO_NAME="video-${BUSINESS_SLUG}"
+        echo "video_name=$VIDEO_NAME" >> $GITHUB_OUTPUT
+        echo "Business Name: $BUSINESS_NAME"
+        echo "Generated Video Name: $VIDEO_NAME"
+    
+    - name: Generate video
+      run: |
+        # Add your video generation command here
+        # Example: node generate-video.js "${{ github.event.client_payload.business_name }}"
+        mkdir -p output
+        # Placeholder - replace with actual video generation
+        echo "Generating video for ${{ github.event.client_payload.business_name }}" > output/video.mp4
+    
+    - name: Upload video artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ steps.slug.outputs.video_name }}
+        path: ./output/video.mp4
+        retention-days: 7
+    
+    - name: Output artifact info
+      run: |
+        echo "Video artifact uploaded as: ${{ steps.slug.outputs.video_name }}"
+        echo "This will be accessible to n8n for matching"
