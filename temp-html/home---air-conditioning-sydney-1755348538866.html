@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Home - Air Conditioning Sydney - Comfort Home HVAC Services in New York</title>
+   <link rel="stylesheet" href="/template-fixes.css">
+   <style>
+       /* Reset and Base Styles */
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+       }
+       
+       :root {
+           --primary: #059669;
+           --secondary: #6b7280;
+           --accent: #a7f3d0;
+           --text-dark: #1f2937;
+           --text-light: #6b7280;
+           --white: #ffffff;
+           --gray-bg: #f9fafb;
+           --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+           --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+           --spacing-unit: 8px;
+       }
+       
+       body {
+           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+           font-size: 16px;
+           line-height: 1.6;
+           color: var(--text-dark);
+           overflow-x: hidden;
+       }
+       
+       h1, h2, h3, h4, h5, h6 {
+           font-family: 'Source Sans Pro', sans-serif;
+           font-weight: 700;
+           line-height: 1.2;
+       }
+       
+       .container {
+           max-width: 1200px;
+           margin: 0 auto;
+           padding: 0 calc(var(--spacing-unit) * 2);
+       }
+       
+       /* Header Styles */
+       header {
+           background: var(--white);
+           box-shadow: var(--shadow);
+           position: sticky;
+           top: 0;
+           z-index: 100;
+       }
+       
+       nav {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding: calc(var(--spacing-unit) * 2) 0;
+       }
+       
+       .logo {
+           font-size: 1.5rem;
+           font-weight: 700;
+           color: var(--primary);
+           text-decoration: none;
+           display: flex;
+           align-items: center;
+           gap: 0.75rem;
+           transition: transform 0.2s ease;
+       }
+       
+       .logo:hover {
+           transform: translateX(2px);
+       }
+       
+       .logo-icon {
+           width: 36px;
+           height: 36px;
+           background: linear-gradient(135deg, var(--primary) 0%, #047857 100%);
+           border-radius: 10px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+       }
+       
+       .nav-links {
+           display: none;
+           gap: calc(var(--spacing-unit) * 4);
+           align-items: center;
+       }
+       
+       .nav-links a {
+           text-decoration: none;
+           color: var(--text-dark);
+           font-weight: 500;
+           transition: color 0.3s ease;
+       }
+       
+       .nav-links a:hover {
+           color: var(--primary);
+       }
+       
+       .phone-cta {
+           background: var(--primary);
+           color: var(--white);
+           padding: calc(var(--spacing-unit) * 1.5) calc(var(--spacing-unit) * 3);
+           border-radius: 25px;
+           text-decoration: none;
+           font-weight: 600;
+           transition: all 0.3s ease;
+       }
+       
+       .phone-cta:hover {
+           background: #047857;
+           transform: translateY(-2px);
+           box-shadow: var(--shadow);
+       }
+       
+       .mobile-menu {
+           display: block;
+           background: none;
+           border: none;
+           cursor: pointer;
+       }
+       
+       .mobile-menu span {
+           display: block;
+           width: 25px;
+           height: 3px;
+           background: var(--text-dark);
+           margin: 5px 0;
+           transition: 0.3s;
+           border-radius: 3px;
+       }
+       
+       /* Hero Section */
+       .hero {
+           background: linear-gradient(135deg, var(--accent) 0%, #d1fae5 100%);
+           padding: calc(var(--spacing-unit) * 10) 0;
+           position: relative;
+           overflow: hidden;
+       }
+       
+       .hero::before {
+           content: '';
+           position: absolute;
+           top: -50%;
+           right: -50%;
+           width: 200%;
+           height: 200%;
+           background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+           background-size: 50px 50px;
+           transform: rotate(45deg);
+       }
+       
+       .hero-content {
+           position: relative;
+           z-index: 1;
+           text-align: center;
+       }
+       
+       .hero h1 {
+           font-size: 2.5rem;
+           margin-bottom: calc(var(--spacing-unit) * 2);
+           color: var(--text-dark);
+       }
+       
+       .hero p {
+           font-size: 1.125rem;
+           margin-bottom: calc(var(--spacing-unit) * 4);
+           color: var(--text-dark);
+           opacity: 0.9;
+       }
+       
+       .hero-buttons {
+           display: flex;
+           gap: calc(var(--spacing-unit) * 2);
+           justify-content: center;
+           flex-wrap: wrap;
+       }
+       
+       .btn-primary, .btn-secondary {
+           padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 4);
+           border-radius: 25px;
+           text-decoration: none;
+           font-weight: 600;
+           transition: all 0.3s ease;
+           display: inline-block;
+       }
+       
+       .btn-primary {
+           background: var(--primary);
+           color: var(--white);
+       }
+       
+       .btn-primary:hover {
+           background: #047857;
+           transform: translateY(-2px);
+           box-shadow: var(--shadow-lg);
+       }
+       
+       .btn-secondary {
+           background: var(--white);
+           color: var(--primary);
+           border: 2px solid var(--primary);
+       }
+       
+       .btn-secondary:hover {
+           background: var(--primary);
+           color: var(--white);
+           transform: translateY(-2px);
+           box-shadow: var(--shadow-lg);
+       }
+       
+       /* Services Section */
+       .services {
+           padding: calc(var(--spacing-unit) * 10) 0;
+           background: var(--white);
+       }
+       
+       .services h2 {
+           text-align: center;
+           font-size: 2.25rem;
+           margin-bottom: calc(var(--spacing-unit) * 2);
+           color: var(--primary);
+       }
+       
+       .services-intro {
+           text-align: center;
+           color: var(--text-light);
+           margin-bottom: calc(var(--spacing-unit) * 6);
+           max-width: 600px;
+           margin-left: auto;
+           margin-right: auto;
+       }
+       
+       .services-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+           gap: calc(var(--spacing-unit) * 4);
+       }
+       
+       .service-card {
+           background: var(--gray-bg);
+           padding: calc(var(--spacing-unit) * 4);
+           border-radius: 16px;
+           transition: all 0.3s ease;
+           text-align: center;
+           border: 2px solid transparent;
+       }
+       
+       .service-card:hover {
+           transform: translateY(-5px);
+           box-shadow: var(--shadow-lg);
+           border-color: var(--accent);
+           background: var(--white);
+       }
+       
+       .service-icon {
+           width: 80px;
+           height: 80px;
+           background: var(--accent);
+           border-radius: 50%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           margin: 0 auto calc(var(--spacing-unit) * 3);
+           font-size: 2rem;
+       }
+       
+       .service-card h3 {
+           font-size: 1.25rem;
+           margin-bottom: calc(var(--spacing-unit) * 1.5);
+           color: var(--text-dark);
+       }
+       
+       .service-card p {
+           color: var(--text-light);
+           line-height: 1.7;
+       }
+       
+       /* About Section */
+       .about {
+           padding: calc(var(--spacing-unit) * 10) 0;
+           background: var(--accent);
+       }
+       
+       .about-content {
+           display: grid;
+           grid-template-columns: 1fr;
+           gap: calc(var(--spacing-unit) * 6);
+           align-items: center;
+       }
+       
+       .about-text h2 {
+           font-size: 2.25rem;
+           margin-bottom: calc(var(--spacing-unit) * 3);
+           color: var(--text-dark);
+       }
+       
+       .about-text p {
+           color: var(--text-dark);
+           margin-bottom: calc(var(--spacing-unit) * 3);
+           line-height: 1.8;
+       }
+       
+       .features-list {
+           list-style: none;
+           margin-top: calc(var(--spacing-unit) * 3);
+           display: grid;
+           grid-template-columns: 1fr;
+           gap: calc(var(--spacing-unit) * 2);
+       }
+       
+       .features-list li {
+           background: var(--white);
+           padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 3);
+           border-radius: 8px;
+           display: flex;
+           align-items: center;
+           gap: calc(var(--spacing-unit) * 2);
+           transition: all 0.3s ease;
+       }
+       
+       .features-list li:hover {
+           transform: translateX(10px);
+           box-shadow: var(--shadow);
+       }
+       
+       .features-list li::before {
+           content: "";
+           width: 24px;
+           height: 24px;
+           background-image: url('data:image/svg+xml,%3Csvg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23059669" stroke-width="2"%3E%3Cpolyline points="20 6 9 17 4 12"%3E%3C/polyline%3E%3C/svg%3E');
+           background-repeat: no-repeat;
+           background-position: center;
+           display: inline-block;
+           flex-shrink: 0;
+       }
+       
+       .about-image {
+           background: var(--white);
+           padding: calc(var(--spacing-unit) * 8);
+           border-radius: 16px;
+           text-align: center;
+           color: var(--primary);
+           font-size: 1.125rem;
+           box-shadow: var(--shadow);
+       }
+       
+       /* Reviews Section */
+       .reviews {
+           padding: calc(var(--spacing-unit) * 10) 0;
+           background: var(--white);
+           text-align: center;
+       }
+       
+       .reviews h2 {
+           font-size: 2.25rem;
+           margin-bottom: calc(var(--spacing-unit) * 6);
+           color: var(--primary);
+       }
+       
+       .rating-display {
+           font-size: 4rem;
+           color: var(--primary);
+           margin-bottom: calc(var(--spacing-unit) * 2);
+           font-weight: 700;
+       }
+       
+       .stars {
+           color: #fbbf24;
+           font-size: 2rem;
+           margin-bottom: calc(var(--spacing-unit) * 1);
+       }
+       
+       .review-count {
+           color: var(--text-light);
+           margin-bottom: calc(var(--spacing-unit) * 6);
+           font-size: 1.125rem;
+       }
+       
+       .testimonial {
+           max-width: 700px;
+           margin: 0 auto;
+           background: var(--accent);
+           padding: calc(var(--spacing-unit) * 5);
+           border-radius: 16px;
+           position: relative;
+       }
+       
+       .testimonial::before {
+           content: '"';
+           position: absolute;
+           top: -20px;
+           left: 30px;
+           font-size: 5rem;
+           color: var(--primary);
+           opacity: 0.3;
+       }
+       
+       .testimonial-text {
+           color: var(--text-dark);
+           margin-bottom: calc(var(--spacing-unit) * 2);
+           font-size: 1.25rem;
+           line-height: 1.8;
+       }
+       
+       .testimonial-author {
+           color: var(--primary);
+           font-weight: 600;
+           font-size: 1.125rem;
+       }
+       
+       /* Contact Section */
+       .contact {
+           padding: calc(var(--spacing-unit) * 10) 0;
+           background: var(--gray-bg);
+       }
+       
+       .contact h2 {
+           text-align: center;
+           font-size: 2.25rem;
+           margin-bottom: calc(var(--spacing-unit) * 2);
+           color: var(--primary);
+       }
+       
+       .contact-intro {
+           text-align: center;
+           color: var(--text-light);
+           margin-bottom: calc(var(--spacing-unit) * 6);
+           max-width: 600px;
+           margin-left: auto;
+           margin-right: auto;
+       }
+       
+       .contact-content {
+           display: grid;
+           grid-template-columns: 1fr;
+           gap: calc(var(--spacing-unit) * 6);
+       }
+       
+       .contact-form {
+           background: var(--white);
+           padding: calc(var(--spacing-unit) * 5);
+           border-radius: 16px;
+           box-shadow: var(--shadow);
+       }
+       
+       .form-group {
+           margin-bottom: calc(var(--spacing-unit) * 3);
+       }
+       
+       .form-group label {
+           display: block;
+           margin-bottom: calc(var(--spacing-unit) * 1);
+           color: var(--text-dark);
+           font-weight: 500;
+       }
+       
+       .form-group input,
+       .form-group textarea,
+       .form-group select {
+           width: 100%;
+           padding: calc(var(--spacing-unit) * 2);
+           border: 2px solid #e5e7eb;
+           border-radius: 8px;
+           font-size: 1rem;
+           transition: all 0.3s ease;
+           background: var(--gray-bg);
+       }
+       
+       .form-group input:focus,
+       .form-group textarea:focus,
+       .form-group select:focus {
+           outline: none;
+           border-color: var(--primary);
+           background: var(--white);
+       }
+       
+       .form-group textarea {
+           resize: vertical;
+           min-height: 120px;
+       }
+       
+       .submit-btn {
+           background: var(--primary);
+           color: var(--white);
+           padding: calc(var(--spacing-unit) * 2) calc(var(--spacing-unit) * 6);
+           border: none;
+           border-radius: 25px;
+           font-size: 1rem;
+           font-weight: 600;
+           cursor: pointer;
+           transition: all 0.3s ease;
+           width: 100%;
+       }
+       
+       .submit-btn:hover {
+           background: #047857;
+           transform: translateY(-2px);
+           box-shadow: var(--shadow-lg);
+       }
+       
+       .contact-info {
+           background: var(--white);
+           padding: calc(var(--spacing-unit) * 5);
+           border-radius: 16px;
+           box-shadow: var(--shadow);
+       }
+       
+       .contact-info h3 {
+           color: var(--primary);
+           margin-bottom: calc(var(--spacing-unit) * 4);
+           font-size: 1.5rem;
+       }
+       
+       .contact-item {
+           margin-bottom: calc(var(--spacing-unit) * 3);
+           padding-bottom: calc(var(--spacing-unit) * 3);
+           border-bottom: 1px solid #e5e7eb;
+       }
+       
+       .contact-item:last-child {
+           border-bottom: none;
+           margin-bottom: 0;
+           padding-bottom: 0;
+       }
+       
+       .contact-item strong {
+           display: flex;
+           align-items: center;
+           gap: calc(var(--spacing-unit) * 1);
+           color: var(--primary);
+           margin-bottom: calc(var(--spacing-unit) * 1);
+           font-size: 1.125rem;
+       }
+       
+       /* Footer */
+       footer {
+           background: var(--secondary);
+           color: var(--white);
+           padding: calc(var(--spacing-unit) * 6) 0;
+       }
+       
+       .footer-content {
+           display: grid;
+           grid-template-columns: 1fr;
+           gap: calc(var(--spacing-unit) * 4);
+           margin-bottom: calc(var(--spacing-unit) * 4);
+           text-align: center;
+       }
+       
+       .footer-brand h4 {
+           font-size: 1.5rem;
+           margin-bottom: calc(var(--spacing-unit) * 1);
+       }
+       
+       .social-links {
+           display: flex;
+           gap: calc(var(--spacing-unit) * 3);
+           justify-content: center;
+           margin-top: calc(var(--spacing-unit) * 2);
+       }
+       
+       .social-links a {
+           color: var(--white);
+           text-decoration: none;
+           padding: calc(var(--spacing-unit) * 1) calc(var(--spacing-unit) * 2);
+           background: rgba(255, 255, 255, 0.1);
+           border-radius: 8px;
+           transition: all 0.3s ease;
+       }
+       
+       .social-links a:hover {
+           background: rgba(255, 255, 255, 0.2);
+           transform: translateY(-2px);
+       }
+       
+       .footer-links {
+           display: flex;
+           gap: calc(var(--spacing-unit) * 4);
+           justify-content: center;
+           flex-wrap: wrap;
+       }
+       
+       .footer-links a {
+           color: var(--white);
+           text-decoration: none;
+           opacity: 0.8;
+           transition: opacity 0.3s ease;
+       }
+       
+       .footer-links a:hover {
+           opacity: 1;
+       }
+       
+       .copyright {
+           text-align: center;
+           padding-top: calc(var(--spacing-unit) * 3);
+           border-top: 1px solid rgba(255, 255, 255, 0.1);
+           opacity: 0.8;
+       }
+       
+       /* Responsive Design */
+       @media (min-width: 768px) {
+           .nav-links {
+               display: flex;
+           }
+           
+           .mobile-menu {
+               display: none;
+           }
+           
+           .hero h1 {
+               font-size: 3.5rem;
+           }
+           
+           .hero p {
+               font-size: 1.25rem;
+           }
+           
+           .about-content {
+               grid-template-columns: 1fr 1fr;
+           }
+           
+           .features-list {
+               grid-template-columns: 1fr 1fr;
+           }
+           
+           .contact-content {
+               grid-template-columns: 1fr 1fr;
+           }
+           
+           .footer-content {
+               grid-template-columns: repeat(3, 1fr);
+               text-align: left;
+           }
+           
+           .social-links {
+               justify-content: flex-start;
+           }
+       }
+       
+       @media (min-width: 1024px) {
+           .hero h1 {
+               font-size: 4rem;
+           }
+           
+           .services-grid {
+               grid-template-columns: repeat(3, 1fr);
+           }
+       }
+   </style>
+</head>
+<body>
+   <!-- Header -->
+   <header>
+       <nav class="container">
+           <a href="#" class="logo">
+               <div class="logo-icon">
+                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                       <path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/>
+                       <path d="M9.6 4.6A2 2 0 1 1 11 8H2"/>
+                       <path d="M12.6 19.4A2 2 0 1 0 14 16H2"/>
+                   </svg>
+               </div>
+               <span>Home - Air Conditioning Sydney</span>
+           </a>
+           <div class="nav-links">
+               <a href="#services">Services</a>
+               <a href="#about">About</a>
+               <a href="#reviews">Reviews</a>
+               <a href="#contact">Contact</a>
+           </div>
+           <a href="tel:0282944138" class="phone-cta">0282944138</a>
+           <button class="mobile-menu">
+               <span></span>
+               <span></span>
+               <span></span>
+           </button>
+       </nav>
+   </header>
+   
+   <!-- Mobile Menu Overlay -->
+   <div class="mobile-menu-overlay"></div>
+
+   <!-- Hero Section -->
+   <section class="hero">
+       <div class="container hero-content">
+           <h1>Your Home Comfort Experts in New York</h1>
+           <p>Creating perfect indoor climates for families since 5</p>
+           <div class="hero-buttons">
+               <a href="#contact" class="btn-primary">Schedule Service</a>
+               <a href="tel:0282944138" class="btn-secondary">Call Now</a>
+           </div>
+       </div>
+   </section>
+
+   <!-- Services Section -->
+   <section class="services" id="services">
+       <div class="container">
+           <h2>Complete Home Comfort Solutions</h2>
+           <p class="services-intro">We provide comprehensive HVAC services to keep your home comfortable year-round</p>
+           <div class="services-grid">
+               <div class="service-card">
+                   <div class="service-icon">
+                       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                           <path d="M12 2v20M8.5 4l7 4-7 4 7 4-7 4"/>
+                           <path d="M3.5 8l4.5 2.5L3.5 13l4.5 2.5"/>
+                           <path d="M20.5 8l-4.5 2.5 4.5 2.5-4.5 2.5"/>
+                       </svg>
+                   </div>
+                   <h3>Air Conditioning Repair</h3>
+                   <p>Fast, reliable AC repairs to restore your home's cool comfort when you need it most.</p>
+               </div>
+               <div class="service-card">
+                   <div class="service-icon">
+                       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                           <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                       </svg>
+                   </div>
+                   <h3>Heating Installation</h3>
+                   <p>Energy-efficient heating systems installed with care for cozy winters ahead.</p>
+               </div>
+               <div class="service-card">
+                   <div class="service-icon">
+                       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                           <path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/>
+                           <path d="M9.6 4.6A2 2 0 1 1 11 8H2"/>
+                           <path d="M12.6 19.4A2 2 0 1 0 14 16H2"/>
+                       </svg>
+                   </div>
+                   <h3>Ductwork Services</h3>
+                   <p>Professional duct cleaning and repair for better air quality and system efficiency.</p>
+               </div>
+               <div class="service-card">
+                   <div class="service-icon">
+                       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                           <path d="M9 12l2 2 4-4"/>
+                       </svg>
+                   </div>
+                   <h3>Preventive Maintenance</h3>
+                   <p>Regular tune-ups to keep your system running smoothly and prevent costly breakdowns.</p>
+               </div>
+               <div class="service-card">
+                   <div class="service-icon">
+                       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                           <line x1="12" y1="9" x2="12" y2="13"/>
+                           <line x1="12" y1="17" x2="12.01" y2="17"/>
+                       </svg>
+                   </div>
+                   <h3>Emergency HVAC</h3>
+                   <p>24/7 emergency service because comfort can't wait when your system fails.</p>
+               </div>
+               <div class="service-card">
+                   <div class="service-icon">
+                       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                           <path d="m3 7 9 6 9-6-9 13z"/>
+                           <path d="M21 3 3 3l9 13 9-13z" opacity="0.5"/>
+                       </svg>
+                   </div>
+                   <h3>Energy Efficiency Consulting</h3>
+                   <p>Smart solutions to reduce energy bills while maintaining perfect home comfort.</p>
+               </div>
+           </div>
+       </div>
+   </section>
+
+   <!-- About Section -->
+   <section class="about" id="about">
+       <div class="container">
+           <div class="about-content">
+               <div class="about-text">
+                   <h2>Your Trusted Comfort Partners</h2>
+                   <p>At Home - Air Conditioning Sydney, we understand that your home is your sanctuary. That's why we've dedicated 5 years to perfecting the art of home comfort in New York.</p>
+                   <p>Our family-owned business treats every home like our own, ensuring you receive personalized service and solutions that truly meet your needs.</p>
+                   <ul class="features-list">
+                       <li>Family-Owned & Operated</li>
+                       <li>Transparent, Upfront Pricing</li>
+                       <li>Same-Day Service Available</li>
+                       <li>100% Satisfaction Guarantee</li>
+                   </ul>
+               </div>
+               <div class="about-image">
+                   https://places.googleapis.com/v1/places/ChIJPx36iTiuEmsR1qrdKB04Fzc/photos/ATKogpdMygFRcYzftmY3DZqDmZzhWMxxcSw2Tz0l3_z3vgSe8mcvbVI8c6-2-TOA17-WgmL8W2GBpEvjkHxRyqBZTMVgLss4TPnVJT3B2mvkp4NuSB1IkQOmu4vIqev55-hBnW-jp_iC1C3Rzy87Vnz0OWTd8y8e7l0DwVqOgYDSu_A-a5YlAT7V_rvKsfSTdZgCdlzkTIQydD7LhIqT1Xu3AjCdUOKfaBcmlOi25ixu8Zv3zjEeqFJp5KVoTwyddThx-i6xjhzeyI7tI9KQK542A7vKeq1HoxDB5ndRNm9qMzDmiA/media?maxWidthPx=200&key=AIzaSyA8DaCy6okrmtSyFoYxIrBQS8-eVmF5F8U
+               </div>
+           </div>
+       </div>
+   </section>
+
+   <!-- Reviews Section -->
+   <section class="reviews" id="reviews">
+       <div class="container">
+           <h2>What Our Neighbors Say</h2>
+           <div class="rating-display">4.8</div>
+           <div class="stars">
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+           </div>
+           <div class="review-count">Based on several happy customers</div>
+           <div class="testimonial">
+               <p class="testimonial-text">Outstanding experience with Home - Air Conditioning Sydney. They went above and beyond to help us in New York.</p>
+               <p class="testimonial-author">- Mike & Sarah Taylor</p>
+           </div>
+       </div>
+   </section>
+
+   <!-- Contact Section -->
+   <section class="contact" id="contact">
+       <div class="container">
+           <h2>Let's Make Your Home Comfortable</h2>
+           <p class="contact-intro">Get in touch today for a free estimate or to schedule service</p>
+           <div class="contact-content">
+               <form class="contact-form" action="https://formspree.io/f/home---air-conditioning-sydney-contact" method="POST">
+                   <div class="form-group">
+                       <label for="name">Your Name</label>
+                       <input type="text" id="name" name="name" required>
+                   </div>
+                   <div class="form-group">
+                       <label for="email">Email Address</label>
+                       <input type="email" id="email" name="email" required>
+                   </div>
+                   <div class="form-group">
+                       <label for="phone">Phone Number</label>
+                       <input type="tel" id="phone" name="phone" required>
+                   </div>
+                   <div class="form-group">
+                       <label for="service">Service Needed</label>
+                       <select id="service" name="service" required>
+                           <option value="">Select a service</option>
+                           <option value="ac-repair">Air Conditioning Repair</option>
+                           <option value="heating">Heating Installation</option>
+                           <option value="ductwork">Ductwork Services</option>
+                           <option value="maintenance">Preventive Maintenance</option>
+                           <option value="emergency">Emergency Service</option>
+                           <option value="efficiency">Energy Efficiency Consulting</option>
+                       </select>
+                   </div>
+                   <div class="form-group">
+                       <label for="message">Tell Us More</label>
+                       <textarea id="message" name="message" placeholder="Describe your comfort needs..." required></textarea>
+                   </div>
+                   <button type="submit" class="submit-btn">Get Your Free Estimate</button>
+               </form>
+               <div class="contact-info">
+                   <h3>We're Here to Help</h3>
+                   <div class="contact-item">
+                       <strong>
+                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                           </svg>
+                           Phone
+                       </strong>
+                       0282944138
+                   </div>
+                   <div class="contact-item">
+                       <strong>
+                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                               <polyline points="22,6 12,13 2,6"/>
+                           </svg>
+                           Email
+                       </strong>
+                       info@air-conditioning-sydney.com
+                   </div>
+                   <div class="contact-item">
+                       <strong>
+                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                               <circle cx="12" cy="10" r="3"/>
+                           </svg>
+                           Location
+                       </strong>
+                       504/35 Lime St, Sydney NSW 2000, Australia
+                   </div>
+                   <div class="contact-item">
+                       <strong>
+                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                               <circle cx="12" cy="12" r="10"/>
+                               <polyline points="12 6 12 12 16 14"/>
+                           </svg>
+                           Hours
+                       </strong>
+                       Mon-Fri: 9AM-6PM, Sat: 10AM-4PM, Sun: Closed
+                   </div>
+                   <div class="map-container" style="margin-bottom: 2rem; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); height: 300px;">
+                       <iframe 
+                           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387190.2799160891!2d-74.25987368715491!3d40.697670064237676!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQxJzUxLjYiTiA3NMKwMTUnMzUuNCJX!5e0!3m2!1sen!2sus!4v1634567890123" 
+                           width="100%" 
+                           height="100%" 
+                           style="border:0;" 
+                           allowfullscreen="" 
+                           loading="lazy" 
+                           referrerpolicy="no-referrer-when-downgrade"
+                           title="Business Location Map">
+                       </iframe>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </section>
+
+   <!-- Footer -->
+   <footer>
+       <div class="container">
+           <div class="footer-content">
+               <div class="footer-brand">
+                   <h4>Home - Air Conditioning Sydney</h4>
+                   <p>Your Home Comfort Experts</p>
+                   <div class="social-links">
+                       <a href="https://facebook.com/homeairconditioningsydney">Facebook</a>
+                       <a href="https://linkedin.com/homeairconditioningsydney">LinkedIn</a>
+                       <a href="https://instagram.com/homeairconditioningsydney">Instagram</a>
+                       <a href="https://g.page/home---air-conditioning-sydney-new-york/review">Reviews</a>
+                   </div>
+               </div>
+               <div>
+                   <h5>Quick Links</h5>
+                   <div class="footer-links">
+                       <a href="#services">Services</a>
+                       <a href="#about">About</a>
+                       <a href="#contact">Contact</a>
+                   </div>
+               </div>
+               <div>
+                   <h5>Legal</h5>
+                   <div class="footer-links">
+                       <a href="https://home---air-conditioning-sydney.com/privacy-policy">Privacy Policy</a>
+                       <a href="https://home---air-conditioning-sydney.com/terms-policy">Terms of Service</a>
+                   </div>
+               </div>
+           </div>
+           <div class="copyright">
+               &copy; 2025 Home - Air Conditioning Sydney. All rights reserved.
+           </div>
+       </div>
+   </footer>
+   
+   <script>
+       // Mobile menu toggle
+       document.querySelector('.mobile-menu').addEventListener('click', function() {
+           this.classList.toggle('active');
+           document.querySelector('.nav-links').classList.toggle('active');
+           document.querySelector('.mobile-menu-overlay').classList.toggle('active');
+           document.body.style.overflow = this.classList.contains('active') ? 'hidden' : '';
+       });
+       
+       // Close mobile menu when clicking overlay
+       document.querySelector('.mobile-menu-overlay').addEventListener('click', function() {
+           document.querySelector('.mobile-menu').classList.remove('active');
+           document.querySelector('.nav-links').classList.remove('active');
+           this.classList.remove('active');
+           document.body.style.overflow = '';
+       });
+       
+       // Close mobile menu when clicking a link
+       document.querySelectorAll('.nav-links a').forEach(link => {
+           link.addEventListener('click', function() {
+               document.querySelector('.mobile-menu').classList.remove('active');
+               document.querySelector('.nav-links').classList.remove('active');
+               document.querySelector('.mobile-menu-overlay').classList.remove('active');
+               document.body.style.overflow = '';
+           });
+       });
+       
+       // Header scroll effect
+       let lastScroll = 0;
+       window.addEventListener('scroll', function() {
+           const header = document.querySelector('header');
+           const currentScroll = window.pageYOffset;
+           
+           if (currentScroll > 50) {
+               header.classList.add('scrolled');
+           } else {
+               header.classList.remove('scrolled');
+           }
+           
+           lastScroll = currentScroll;
+       });
+       
+       // Smooth scroll
+       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+           anchor.addEventListener('click', function (e) {
+               e.preventDefault();
+               const target = document.querySelector(this.getAttribute('href'));
+               if (target) {
+                   target.scrollIntoView({
+                       behavior: 'smooth',
+                       block: 'start'
+                   });
+               }
+           });
+       });
+   </script>
+</body>
+</html>
