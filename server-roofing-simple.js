@@ -102,7 +102,7 @@ app.post('/generate-video', async (req, res) => {
     console.log(`📄 Loading HTML content directly (${html_content.length} characters)`);
     await page.setContent(html_content, {
       waitUntil: 'networkidle0',
-      timeout: 30000
+      timeout: 120000
     });
     console.log(`✅ HTML content loaded successfully`);
     
