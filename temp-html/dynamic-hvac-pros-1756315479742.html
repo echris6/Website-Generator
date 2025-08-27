@@ -1,0 +1,1572 @@
+[<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic HVAC Pros - Professional HVAC Services | 24/7 Emergency Service</title>
+    <meta name="description" content="Dynamic HVAC Pros provides reliable HVAC services in Phoenix. 24/7 emergency service, licensed technicians, and 5 star rating. Call 6025629665 today.">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #1e3a8a;
+            --primary-dark: #1e2a5a;
+            --primary-light: #3b5998;
+            --accent: #ea580c;
+            --accent-dark: #c2410c;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --text-light: #6b7280;
+            --background: #ffffff;
+            --background-gray: #f9fafb;
+            --background-light: #f3f4f6;
+            --border: #e5e7eb;
+            --border-light: #f3f4f6;
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--background);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--text-primary);
+        }
+        
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.25rem; }
+        h3 { font-size: 1.5rem; }
+        h4 { font-size: 1.25rem; }
+        
+        p {
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--background);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .header.scrolled {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 0;
+        }
+        
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .logo:hover {
+            color: var(--primary-dark);
+        }
+        
+        .nav {
+            display: none;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav a:hover {
+            color: var(--primary);
+        }
+        
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav a:hover::after {
+            width: 100%;
+        }
+        
+        .header-cta {
+            display: none;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .phone-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .phone-link:hover {
+            color: var(--accent-dark);
+        }
+        
+        .phone-link svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        
+        .mobile-menu-btn {
+            display: block;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .mobile-menu-btn svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: var(--text-primary);
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--background);
+            z-index: 999;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .mobile-menu-nav {
+            padding: 2rem 1.5rem;
+        }
+        
+        .mobile-menu-nav a {
+            display: block;
+            padding: 1rem 0;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-light);
+            transition: color 0.3s ease;
+        }
+        
+        .mobile-menu-nav a:hover {
+            color: var(--primary);
+        }
+        
+        .mobile-menu-cta {
+            padding: 0 1.5rem 2rem;
+        }
+        
+        .mobile-menu-phone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        .mobile-menu-phone:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 8rem 0 6rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://i.ibb.co/XwS00y6/hvachero.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: blur(3px);
+            transform: scale(1.05);
+            z-index: -2;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+        
+        
+        .hero-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 720px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-content h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero-content h1 .accent {
+            color: #ff6b35;
+            font-weight: 800;
+            filter: brightness(1.2);
+        }
+        
+        .hero-content .subtitle {
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 1.75rem;
+            font-weight: 400;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.75rem;
+            justify-content: center;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            line-height: 1.5;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 1.25rem;
+            flex-wrap: wrap;
+        }
+        
+        .hero-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .hero-feature-item svg {
+            width: 1.125rem;
+            height: 1.125rem;
+            color: rgba(255, 255, 255, 0.8);
+            flex-shrink: 0;
+        }
+        
+        /* Services Section */
+        .services {
+            padding: 5rem 0;
+            background: var(--background);
+        }
+        
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+        
+        .section-header h2 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .service-card {
+            background: var(--background);
+            border: 1px solid var(--border-light);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--border);
+        }
+        
+        .service-icon {
+            width: 3rem;
+            height: 3rem;
+            background: var(--background-light);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .service-icon svg {
+            width: 1.75rem;
+            height: 1.75rem;
+            color: var(--primary);
+        }
+        
+        .service-card h3 {
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .service-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* Trust Section */
+        .trust {
+            padding: 5rem 0;
+            background: var(--background-gray);
+        }
+        
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+        
+        .trust-item {
+            text-align: center;
+        }
+        
+        .trust-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .trust-label {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .trust-description {
+            color: var(--text-secondary);
+        }
+        
+        /* Emergency CTA */
+        .emergency-cta {
+            padding: 4rem 0;
+            background: var(--primary);
+            color: white;
+            text-align: center;
+        }
+        
+        .emergency-cta h2 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .emergency-cta p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        
+        .emergency-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-white {
+            background: white;
+            color: var(--primary);
+        }
+        
+        .btn-white:hover {
+            background: var(--background-light);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline-white {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-outline-white:hover {
+            background: white;
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 5rem 0;
+            background: var(--background);
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+        
+        .pricing-card {
+            background: var(--background);
+            border: 2px solid var(--border-light);
+            border-radius: 0.75rem;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .pricing-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--primary);
+            position: relative;
+        }
+        
+        .pricing-badge {
+            position: absolute;
+            top: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .pricing-card h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .pricing-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .pricing-period {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        
+        .pricing-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 5rem 0;
+            background: var(--background-gray);
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-md);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .testimonial-stars {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+        }
+        
+        .testimonial-stars svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: #fbbf24;
+            fill: currentColor;
+        }
+        
+        .testimonial-text {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            font-style: italic;
+            text-align: center;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .testimonial-author-avatar {
+            width: 3rem;
+            height: 3rem;
+            background: var(--background-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+        
+        .testimonial-author-info {
+            text-align: left;
+        }
+        
+        .testimonial-author-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .testimonial-author-role {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Contact Section */
+        .contact {
+            padding: 5rem 0;
+            background: var(--background);
+        }
+        
+        .contact-grid {
+            display: grid;
+            gap: 4rem;
+            margin-top: 4rem;
+        }
+        
+        .contact-info {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .contact-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: var(--background-light);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .contact-icon svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .contact-details h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .contact-details p {
+            color: var(--text-secondary);
+        }
+        
+        .contact-details a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .contact-details a:hover {
+            color: var(--primary-dark);
+        }
+        
+        .contact-form {
+            background: var(--background-gray);
+            padding: 2.5rem;
+            border-radius: 0.75rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+        
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-family: inherit;
+            background: white;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+        
+        .form-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.25rem;
+            padding-right: 3rem;
+            cursor: pointer;
+        }
+        
+        .form-select:hover {
+            border-color: var(--primary);
+        }
+        
+        .form-select option {
+            padding: 0.5rem;
+            background: white;
+            color: var(--text-primary);
+        }
+        
+        .form-select option:hover {
+            background: var(--background-light);
+        }
+        
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1);
+            background: white;
+        }
+        
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+        
+        .footer-grid {
+            display: grid;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-brand h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .footer-bottom-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-bottom-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-bottom-links a:hover {
+            color: white;
+        }
+        
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .hidden { display: none !important; }
+        
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .nav {
+                display: flex;
+            }
+            
+            .header-cta {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.75rem;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 2fr 1fr 1fr 1fr;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+            
+            h2 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .hero {
+                padding: 5rem 0 4rem;
+                min-height: 100vh;
+            }
+            
+            .hero-content h1 {
+                font-size: 1.875rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .hero-content .subtitle {
+                font-size: 0.975rem;
+                margin-bottom: 1.25rem;
+            }
+            
+            .hero-buttons {
+                gap: 0.75rem;
+                margin-bottom: 1.25rem;
+            }
+            
+            .hero-features {
+                gap: 1rem;
+                margin-top: 1rem;
+            }
+            
+            .hero-feature-item {
+                font-size: 0.75rem;
+            }
+            
+            .hero-feature-item svg {
+                width: 1rem;
+                height: 1rem;
+            }
+            
+            .btn {
+                padding: 0.625rem 1.25rem;
+                font-size: 0.95rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .emergency-buttons {
+                flex-direction: column;
+                width: 100%;
+                padding: 0 1rem;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">Dynamic HVAC Pros</a>
+                
+                <nav class="nav">
+                    <a href="#services">Services</a>
+                    <a href="#about">About</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#testimonials">Reviews</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+                
+                <div class="header-cta">
+                    <a href="tel:6025629665" class="phone-link">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
+                        6025629665
+                    </a>
+                </div>
+                
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <a href="#" class="logo">Dynamic HVAC Pros</a>
+            <button class="mobile-menu-close" onclick="toggleMobileMenu()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="mobile-menu-nav">
+            <a href="#services" onclick="toggleMobileMenu()">Services</a>
+            <a href="#about" onclick="toggleMobileMenu()">About</a>
+            <a href="#pricing" onclick="toggleMobileMenu()">Pricing</a>
+            <a href="#testimonials" onclick="toggleMobileMenu()">Reviews</a>
+            <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
+        </nav>
+        <div class="mobile-menu-cta">
+            <a href="tel:6025629665" class="mobile-menu-phone">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                </svg>
+                Call 6025629665
+            </a>
+        </div>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <h1>Professional HVAC Services in <span class="accent">Phoenix</span></h1>
+                    <p class="subtitle">24/7 Emergency Service • Licensed & Insured • 5 Star Rated</p>
+                    
+                    <div class="hero-buttons">
+                        <a href="tel:6025629665" class="btn btn-primary">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                            </svg>
+                            Call 6025629665
+                        </a>
+                        <a href="#contact" class="btn btn-secondary">
+                            Get Free Quote
+                        </a>
+                    </div>
+                    
+                    <div class="hero-features">
+                        <div class="hero-feature-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span>60-Min Response</span>
+                        </div>
+                        <div class="hero-feature-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span>Licensed & Insured</span>
+                        </div>
+                        <div class="hero-feature-item">
+                            <svg fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span>5 Stars</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our HVAC Services</h2>
+                <p>Comprehensive heating, cooling, and air quality solutions for your home or business</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3>AC Repair & Installation</h3>
+                    <p>Expert air conditioning repair, maintenance, and new system installation with energy-efficient options.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+                        </svg>
+                    </div>
+                    <h3>Heating Services</h3>
+                    <p>Furnace repair, boiler service, heat pump installation, and comprehensive heating maintenance.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3>24/7 Emergency Service</h3>
+                    <p>Round-the-clock emergency HVAC service with rapid response times when you need us most.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        </svg>
+                    </div>
+                    <h3>Preventive Maintenance</h3>
+                    <p>Regular maintenance plans to extend equipment life, improve efficiency, and prevent breakdowns.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/>
+                        </svg>
+                    </div>
+                    <h3>Indoor Air Quality</h3>
+                    <p>Air purification, humidity control, ventilation improvements, and duct cleaning services.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3>Smart Thermostat Setup</h3>
+                    <p>Installation and configuration of smart thermostats for optimal comfort and energy savings.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Trust Section -->
+    <section class="trust" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose Dynamic HVAC Pros</h2>
+                <p>Dynamic HVAC Pros provides professional services in Phoenix. Contact us at 6025629665 for quality service.</p>
+            </div>
+            
+            <div class="trust-grid">
+                <div class="trust-item">
+                    <div class="trust-number">10+</div>
+                    <div class="trust-label">Years of Experience</div>
+                    <div class="trust-description">Serving Phoenix with excellence</div>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-number">21+</div>
+                    <div class="trust-label">Happy Customers</div>
+                    <div class="trust-description">Trusted by your neighbors</div>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-number">24/7</div>
+                    <div class="trust-label">Emergency Service</div>
+                    <div class="trust-description">Always available when needed</div>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-number">100%</div>
+                    <div class="trust-label">Satisfaction Guarantee</div>
+                    <div class="trust-description">Your comfort is our priority</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Emergency CTA -->
+    <section class="emergency-cta">
+        <div class="container">
+            <h2>Need Emergency HVAC Service?</h2>
+            <p>Our certified technicians are ready to help 24 hours a day, 7 days a week</p>
+            
+            <div class="emergency-buttons">
+                <a href="tel:6025629665" class="btn btn-white">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                    </svg>
+                    Call 6025629665
+                </a>
+                <a href="#contact" class="btn btn-outline-white">
+                    Schedule Service
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Transparent Pricing</h2>
+                <p>No hidden fees, no surprises - just honest, upfront pricing</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div>
+                        <h3>Diagnostic Service</h3>
+                        <div class="pricing-amount">$89</div>
+                        <div class="pricing-period">One-time fee</div>
+                        <ul class="pricing-features">
+                            <li>Complete system inspection</li>
+                            <li>Problem diagnosis</li>
+                            <li>Written estimate</li>
+                            <li>Fee waived with repair</li>
+                        </ul>
+                    </div>
+                    <a href="#contact" class="btn btn-secondary" style="width: 100%;">Schedule Now</a>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Most Popular</div>
+                    <div>
+                        <h3>Maintenance Plan</h3>
+                        <div class="pricing-amount">$19</div>
+                        <div class="pricing-period">Per month</div>
+                        <ul class="pricing-features">
+                            <li>Bi-annual tune-ups</li>
+                            <li>Priority emergency service</li>
+                            <li>15% repair discount</li>
+                            <li>No overtime charges</li>
+                            <li>Extended warranties</li>
+                        </ul>
+                    </div>
+                    <a href="#contact" class="btn btn-primary" style="width: 100%;">Get Started</a>
+                </div>
+                
+                <div class="pricing-card">
+                    <div>
+                        <h3>Emergency Service</h3>
+                        <div class="pricing-amount">$149</div>
+                        <div class="pricing-period">After-hours fee</div>
+                        <ul class="pricing-features">
+                            <li>24/7 availability</li>
+                            <li>60-minute response</li>
+                            <li>Nights & weekends</li>
+                            <li>Holiday service</li>
+                        </ul>
+                    </div>
+                    <a href="tel:6025629665" class="btn btn-secondary" style="width: 100%;">Call Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>What Our Customers Say</h2>
+                <p>Real reviews from satisfied customers in Phoenix</p>
+            </div>
+            
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                
+                <p class="testimonial-text">
+                    "Highly recommend Dynamic HVAC Pros! They made our real estate journey smooth and successful."
+                </p>
+                
+                <div class="testimonial-author">
+                    <div class="testimonial-author-avatar"></div>
+                    <div class="testimonial-author-info">
+                        <div class="testimonial-author-name">Jennifer & Alex Brown</div>
+                        <div class="testimonial-author-role">Verified Customer</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center" style="margin-top: 2rem;">
+                <a href="https://g.page/dynamic-hvac-pros-phoenix/review" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+                    Read All 21 Reviews
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Get in Touch</h2>
+                <p>Ready to schedule service or have questions? We're here to help.</p>
+            </div>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3 style="margin-bottom: 2rem;">Contact Information</h3>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Phone</h4>
+                            <p><a href="tel:6025629665">6025629665</a></p>
+                            <p>24/7 Emergency Service</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p><a href="mailto:eben@eyebytes.com">eben@eyebytes.com</a></p>
+                            <p>We respond within 24 hours</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Service Area</h4>
+                            <p>36617 N 15th Ave, Phoenix, AZ 85086, USA</p>
+                            <p>Serving all of Phoenix and surrounding areas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Business Hours</h4>
+                            <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
+                            <p>Emergency Service: 24/7</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <h3 style="margin-bottom: 2rem;">Request Service</h3>
+                    
+                    <form action="https://formspree.io/f/dynamic-hvac-pros-contact" method="POST">
+                        <div class="form-grid">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="name">Name *</label>
+                                    <input type="text" id="name" name="name" class="form-input" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="phone">Phone *</label>
+                                    <input type="tel" id="phone" name="phone" class="form-input" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="email">Email</label>
+                                <input type="email" id="email" name="email" class="form-input">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="service">Service Type *</label>
+                                <div class="select-wrapper">
+                                    <select id="service" name="service" class="form-select" required>
+                                        <option value="" disabled selected>Select a service</option>
+                                        <option value="ac-repair">AC Repair</option>
+                                        <option value="heating-repair">Heating Repair</option>
+                                        <option value="maintenance">Maintenance</option>
+                                        <option value="installation">New Installation</option>
+                                        <option value="emergency">Emergency Service</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="message">Message</label>
+                                <textarea id="message" name="message" class="form-textarea" rows="4"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                Submit Request
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>Dynamic HVAC Pros</h3>
+                    <p>Professional HVAC services in Phoenix with 24/7 emergency support. Licensed, insured, and committed to your comfort.</p>
+                    <div style="margin-top: 1.5rem;">
+                        <p style="color: white; font-weight: 600;"></p>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#testimonials">Reviews</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">AC Repair</a></li>
+                        <li><a href="#">Heating Service</a></li>
+                        <li><a href="#">Emergency HVAC</a></li>
+                        <li><a href="#">Maintenance Plans</a></li>
+                        <li><a href="#">Air Quality</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Service Areas</h4>
+                    <ul class="footer-links">
+                        <li>Downtown Phoenix</li>
+                        <li>North Phoenix</li>
+                        <li>South Phoenix</li>
+                        <li>East Phoenix</li>
+                        <li>West Phoenix</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Dynamic HVAC Pros. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="https://dynamic-hvac-pros.com/privacy-policy">Privacy Policy</a>
+                    <a href="https://dynamic-hvac-pros.com/terms-policy">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+        
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offset = 80;
+                    const targetPosition = target.getBoundingClientRect().top + window.scrollY - offset;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>]
