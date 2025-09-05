@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aj's auto spa - Premium Mobile Car Detailing | Fern Park</title>
+    <meta name="description" content="Aj's auto spa offers professional mobile car detailing in Fern Park. 5 star rated service. Call 3214471830 for a free quote.">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --white: #FFFFFF;
+            --graphite: #41424C;
+            --red: #E63946;
+            --red-dark: #A61E1E;
+            --silver: #F1F3F5;
+            --charcoal: #2D2D2D;
+            --gray: #A8A8A8;
+            --champagne: #F7EDE2;
+            --platinum: #E5E5E5;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+            --radius: 8px;
+            --radius-lg: 12px;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--charcoal);
+            background-color: var(--white);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--charcoal);
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 1.75rem;
+        }
+        
+        p {
+            color: var(--gray);
+            line-height: 1.7;
+        }
+        
+        .accent {
+            color: var(--red);
+        }
+        
+        /* Header */
+        .header {
+            background: var(--white);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--charcoal);
+            text-decoration: none;
+        }
+        
+        .nav {
+            display: none;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav a {
+            color: var(--charcoal);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav a:hover {
+            color: var(--red);
+        }
+        
+        .header-cta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .btn-primary {
+            background: var(--red);
+            color: white;
+            border-color: var(--red);
+        }
+        
+        .btn-primary:hover {
+            background: var(--red-dark);
+            border-color: var(--red-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--graphite);
+            border-color: var(--platinum);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+        
+        .btn-ghost {
+            background: transparent;
+            color: var(--graphite);
+            border-color: transparent;
+        }
+        
+        .btn-ghost:hover {
+            background: var(--silver);
+        }
+        
+        .mobile-menu-btn {
+            display: block;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .mobile-menu-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--white);
+            z-index: 999;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 20px;
+            border-bottom: 1px solid var(--platinum);
+        }
+        
+        .mobile-menu-nav {
+            padding: 2rem 20px;
+        }
+        
+        .mobile-menu-nav a {
+            display: block;
+            padding: 1rem 0;
+            color: var(--charcoal);
+            text-decoration: none;
+            font-size: 1.125rem;
+            font-weight: 500;
+            border-bottom: 1px solid var(--platinum);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 7rem 0 6rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: var(--charcoal);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://i.ibb.co/R4BysLPR/Gen4-A-clean-high-quality-photo-for-a-car-detailing-website-Close-up-of-a-shiny-blac-a-2-33429549.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(4px);
+            opacity: 0.2;
+            z-index: 0;
+            transform: translateZ(0);
+            will-change: transform;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.4));
+            z-index: 1;
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-content h1 {
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        
+        .hero-content h1 .accent {
+            color: var(--red);
+        }
+        
+        .hero-content p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            justify-content: center;
+        }
+        
+        .hero-trust {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            color: white;
+        }
+        
+        .trust-item strong {
+            color: var(--red);
+            font-size: 1.25rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+        
+        /* Services Section */
+        .services {
+            padding: 5rem 0;
+            background: var(--white);
+        }
+        
+        .section-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .service-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--red);
+        }
+        
+        .service-image {
+            height: 200px;
+            background: var(--silver);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+        }
+        
+        .service-content {
+            padding: 1.5rem;
+        }
+        
+        .service-content h3 {
+            margin-bottom: 0.75rem;
+        }
+        
+        .service-price {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--red);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+        }
+        
+        /* Before/After Section */
+        .gallery {
+            padding: 5rem 0;
+            background: var(--silver);
+        }
+        
+        .gallery-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: var(--white);
+            border: 2px solid var(--platinum);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .tab.active {
+            background: var(--red);
+            color: white;
+            border-color: var(--red);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .before-after-item {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+        
+        .before-after-container {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+        }
+        
+        .before-image, .after-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .before-image {
+            background: var(--gray);
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+        
+        .after-image {
+            background: var(--red);
+            background-size: cover;
+            background-position: center;
+            color: white;
+            clip-path: inset(0 0 0 50%);
+        }
+        
+        .slider {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background: white;
+            cursor: ew-resize;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .before-after-label {
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        /* Process Section */
+        .process {
+            padding: 5rem 0;
+            background: var(--white);
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 20px;
+            bottom: 20px;
+            width: 2px;
+            background: var(--platinum);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            align-items: center;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content:first-child {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content:last-child {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .timeline-content {
+            padding: 1.5rem;
+            background: var(--silver);
+            border-radius: var(--radius-lg);
+        }
+        
+        .timeline-number {
+            width: 50px;
+            height: 50px;
+            background: var(--red);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            z-index: 1;
+            position: relative;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            padding: 5rem 0;
+            background: var(--silver);
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .pricing-card.featured {
+            background: var(--red);
+            color: white;
+            transform: scale(1.05);
+            border: 2px solid var(--red);
+        }
+        
+        .pricing-card.featured p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .pricing-card.featured .pricing-features li {
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .pricing-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--graphite);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .pricing-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--red);
+            margin-bottom: 0.5rem;
+        }
+        
+        .pricing-card.featured .pricing-price {
+            color: white;
+        }
+        
+        .pricing-card.featured .btn-primary {
+            background: white;
+            color: var(--red);
+            border-color: white;
+        }
+        
+        .pricing-card.featured .btn-primary:hover {
+            background: var(--silver);
+            border-color: var(--silver);
+        }
+        
+        .pricing-period {
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .pricing-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--platinum);
+        }
+        
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 5rem 0;
+            background: var(--white);
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .testimonial-card {
+            background: var(--silver);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+        }
+        
+        .stars {
+            color: var(--red);
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-text {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: var(--charcoal);
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--red);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        
+        .author-info h4 {
+            margin-bottom: 0.25rem;
+        }
+        
+        .author-info p {
+            font-size: 0.875rem;
+        }
+        
+        /* Contact Section */
+        .contact {
+            padding: 5rem 0;
+            background: var(--silver);
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+        
+        .contact-info h3 {
+            margin-bottom: 2rem;
+        }
+        
+        .contact-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--red);
+            color: white;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .contact-form {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--platinum);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            color: var(--charcoal);
+            font-family: inherit;
+        }
+        
+        .form-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A8A8A8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.25rem;
+            padding-right: 2.5rem;
+            cursor: pointer;
+        }
+        
+        .form-select:hover {
+            border-color: var(--gray);
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E63946' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+        }
+        
+        .form-select:focus {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E63946' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        }
+        
+        .form-select option {
+            padding: 0.5rem;
+            background: white;
+            color: var(--charcoal);
+        }
+        
+        .form-select option:hover {
+            background: var(--silver);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--charcoal);
+            color: white;
+            padding: 4rem 0 2rem;
+            border-top: 4px solid var(--red);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: white;
+            font-size: 1.125rem;
+        }
+        
+        .footer-section p, .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        
+        .footer-section a:hover {
+            color: var(--red);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.875rem;
+        }
+        
+        /* Responsive */
+        @media (min-width: 768px) {
+            .nav {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.75rem;
+            }
+            
+            .hero {
+                min-height: 100vh;
+                padding: 6rem 0 3rem;
+                background-attachment: scroll;
+            }
+            
+            .hero-content {
+                padding: 0 1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .timeline::before {
+                left: 30px;
+                transform: none;
+            }
+            
+            .timeline-item {
+                grid-template-columns: auto 1fr;
+                gap: 1.5rem;
+            }
+            
+            .timeline-item:nth-child(even) .timeline-content:first-child,
+            .timeline-item:nth-child(odd) .timeline-content:last-child {
+                display: none;
+            }
+            
+            .timeline-item:nth-child(even) .timeline-content:last-child,
+            .timeline-item:nth-child(odd) .timeline-content:first-child {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            
+            .timeline-number {
+                position: relative;
+                left: 0;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">Aj's auto spa</a>
+                
+                <nav class="nav">
+                    <a href="#services">Services</a>
+                    <a href="#gallery">Gallery</a>
+                    <a href="#process">Process</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#testimonials">Reviews</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+                
+                <div class="header-cta">
+                    <a href="tel:3214471830" class="btn btn-primary">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
+                        3214471830
+                    </a>
+                    
+                    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <a href="#" class="logo">Aj's auto spa</a>
+            <button class="btn btn-ghost" onclick="toggleMobileMenu()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="mobile-menu-nav">
+            <a href="#services" onclick="toggleMobileMenu()">Services</a>
+            <a href="#gallery" onclick="toggleMobileMenu()">Gallery</a>
+            <a href="#process" onclick="toggleMobileMenu()">Process</a>
+            <a href="#pricing" onclick="toggleMobileMenu()">Pricing</a>
+            <a href="#testimonials" onclick="toggleMobileMenu()">Reviews</a>
+            <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
+        </nav>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Mobile Car Detailing <span class="accent">Fern Park</span></h1>
+                <p>Professional detailing service that comes to you. Save time while we make your car shine.</p>
+                
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn btn-primary">Book Service</a>
+                    <a href="#pricing" class="btn btn-secondary">View Pricing</a>
+                </div>
+                
+                <div class="hero-trust">
+                    <div class="trust-item">
+                        <strong>5</strong>
+                        <span>Star Rating</span>
+                    </div>
+                    <div class="trust-item">
+                        <strong>40+</strong>
+                        <span>Happy Customers</span>
+                    </div>
+                    <div class="trust-item">
+                        <strong>20+</strong>
+                        <span>Years Experience</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our <span class="accent">Services</span></h2>
+                <p>Complete car care solutions delivered to your location</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-price">From $99</div>
+                    <div class="service-image" style="background-image: url('https://i.ibb.co/Rp8xFs40/ch.png'); background-size: cover; background-position: center;"></div>
+                    <div class="service-content">
+                        <h3>Exterior Detailing</h3>
+                        <p>Hand wash, clay bar, polish, and wax. Your car's paint will look brand new.</p>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-price">From $89</div>
+                    <div class="service-image" style="background-image: url('https://i.ibb.co/9HP78tDF/Gen4-A-professional-photo-for-a-car-detailing-website-Close-up-of-a-microfiber-cloth-a-2-41204399.png'); background-size: cover; background-position: center;"></div>
+                    <div class="service-content">
+                        <h3>Interior Detailing</h3>
+                        <p>Deep clean seats, carpets, dashboard. Remove stains and eliminate odors.</p>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-price">From $149</div>
+                    <div class="service-image" style="background-image: url('https://i.ibb.co/ksxnBQzD/Gen4-A-close-up-photo-for-a-car-detailing-website-Glossy-black-car-hood-with-ceramic-a-2-28736346.png'); background-size: cover; background-position: center;"></div>
+                    <div class="service-content">
+                        <h3>Complete Detail</h3>
+                        <p>Interior and exterior transformation. The ultimate car care package.</p>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-price">From $299</div>
+                    <div class="service-image" style="background-image: url('https://i.ibb.co/CRz85m3/Gen4-A-high-quality-before-and-after-comparison-image-of-a-car-Left-side-dirty-and-du-a-2-26660259.png'); background-size: cover; background-position: center;"></div>
+                    <div class="service-content">
+                        <h3>Ceramic Coating</h3>
+                        <p>Long-lasting paint protection with hydrophobic properties.</p>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-price">From $79</div>
+                    <div class="service-image" style="background-image: url('https://i.ibb.co/prxnKw1b/Gen4-A-clear-before-and-after-close-up-of-a-car-headlight-Left-side-foggy-and-yellowe-a-2-34476038.png'); background-size: cover; background-position: center;"></div>
+                    <div class="service-content">
+                        <h3>Headlight Restoration</h3>
+                        <p>Restore cloudy headlights to crystal clear condition.</p>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-price">Quote</div>
+                    <div class="service-image" style="background-image: url('https://i.ibb.co/4ZJDz9nk/Gen4-A-professional-photo-for-a-car-detailing-website-A-lineup-of-multiple-clean-whit-a-2-26269682.png'); background-size: cover; background-position: center;"></div>
+                    <div class="service-content">
+                        <h3>Fleet Services</h3>
+                        <p>Regular maintenance for business vehicles. Volume discounts available.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Before/After Gallery -->
+    <section class="gallery" id="gallery">
+        <div class="container">
+            <div class="section-header">
+                <h2>Before & <span class="accent">After</span></h2>
+                <p>See the transformations we deliver</p>
+            </div>
+            
+            <div class="gallery-tabs">
+                <button class="tab active">All</button>
+                <button class="tab">Exterior</button>
+                <button class="tab">Interior</button>
+                <button class="tab">Wheels</button>
+            </div>
+            
+            <div class="gallery-grid">
+                <div class="before-after-item">
+                    <div class="before-after-container">
+                        <div class="before-image" style="background-image: url('https://i.ibb.co/5hWs5Xgh/Gen4-Before-and-after-comparison-image-of-a-car-hood-Left-side-dull-paint-with-swirl-a-2-328187569.png');"></div>
+                        <div class="after-image" style="background-image: url('https://i.ibb.co/5hWs5Xgh/Gen4-Before-and-after-comparison-image-of-a-car-hood-Left-side-dull-paint-with-swirl-a-2-328187569.png');"></div>
+                        <div class="slider">
+                            <div class="slider-button">⟷</div>
+                        </div>
+                    </div>
+                    <div class="before-after-label">Paint Correction & Polish</div>
+                </div>
+                
+                <div class="before-after-item">
+                    <div class="before-after-container">
+                        <div class="before-image" style="background-image: url('https://i.ibb.co/KcPFGjqD/Gen4-Before-and-after-comparison-image-of-a-car-interior-Left-side-dirty-seat-with-s-a-2-352106781.png');"></div>
+                        <div class="after-image" style="background-image: url('https://i.ibb.co/KcPFGjqD/Gen4-Before-and-after-comparison-image-of-a-car-interior-Left-side-dirty-seat-with-s-a-2-352106781.png');"></div>
+                        <div class="slider">
+                            <div class="slider-button">⟷</div>
+                        </div>
+                    </div>
+                    <div class="before-after-label">Interior Deep Clean</div>
+                </div>
+                
+                <div class="before-after-item">
+                    <div class="before-after-container">
+                        <div class="before-image" style="background-image: url('https://i.ibb.co/5XqgRVW2/Gen4-Before-and-after-comparison-image-of-a-car-headlight-Left-side-cloudy-yellowed-a-2-126919272.png');"></div>
+                        <div class="after-image" style="background-image: url('https://i.ibb.co/5XqgRVW2/Gen4-Before-and-after-comparison-image-of-a-car-headlight-Left-side-cloudy-yellowed-a-2-126919272.png');"></div>
+                        <div class="slider">
+                            <div class="slider-button">⟷</div>
+                        </div>
+                    </div>
+                    <div class="before-after-label">Headlight Restoration</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Process Section -->
+    <section class="process" id="process">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It <span class="accent">Works</span></h2>
+                <p>Simple steps to a spotless car</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Book Online</h3>
+                        <p>Choose your service package and preferred time. We'll confirm within minutes.</p>
+                    </div>
+                    <div class="timeline-number">1</div>
+                    <div class="timeline-content"></div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content"></div>
+                    <div class="timeline-number">2</div>
+                    <div class="timeline-content">
+                        <h3>We Come to You</h3>
+                        <p>Our mobile unit arrives fully equipped. All we need is access to water and electricity.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Detailing Service</h3>
+                        <p>Relax while our professionals work. Average service time is 2-3 hours.</p>
+                    </div>
+                    <div class="timeline-number">3</div>
+                    <div class="timeline-content"></div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content"></div>
+                    <div class="timeline-number">4</div>
+                    <div class="timeline-content">
+                        <h3>Quality Check</h3>
+                        <p>We walk you through the completed work. Pay only when you're 100% satisfied.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simple <span class="accent">Pricing</span></h2>
+                <p>Transparent pricing with no hidden fees</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3 class="pricing-name">Essential</h3>
+                    <div class="pricing-price">$99</div>
+                    <p class="pricing-period">Sedan pricing</p>
+                    <ul class="pricing-features">
+                        <li>Exterior wash & dry</li>
+                        <li>Tire & wheel cleaning</li>
+                        <li>Interior vacuum</li>
+                        <li>Window cleaning</li>
+                        <li>Dashboard wipe</li>
+                        <li>2 hour service</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-secondary" style="width: 100%;">Book Now</a>
+                </div>
+                
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">MOST POPULAR</div>
+                    <h3 class="pricing-name">Premium</h3>
+                    <div class="pricing-price">$199</div>
+                    <p class="pricing-period">Sedan pricing</p>
+                    <ul class="pricing-features">
+                        <li>Everything in Essential</li>
+                        <li>Clay bar treatment</li>
+                        <li>Polish & wax</li>
+                        <li>Leather conditioning</li>
+                        <li>Carpet shampoo</li>
+                        <li>Engine bay cleaning</li>
+                        <li>3 hour service</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary" style="width: 100%;">Book Now</a>
+                </div>
+                
+                <div class="pricing-card">
+                    <h3 class="pricing-name">Ultimate</h3>
+                    <div class="pricing-price">$399</div>
+                    <p class="pricing-period">Sedan pricing</p>
+                    <ul class="pricing-features">
+                        <li>Everything in Premium</li>
+                        <li>Paint correction</li>
+                        <li>Ceramic coating</li>
+                        <li>Headlight restoration</li>
+                        <li>Odor elimination</li>
+                        <li>6 month warranty</li>
+                        <li>4-5 hour service</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-secondary" style="width: 100%;">Book Now</a>
+                </div>
+            </div>
+            
+            <p style="text-align: center; margin-top: 2rem; color: var(--gray);">
+                *SUVs +$30 | Trucks +$50 | Vans +$70
+            </p>
+        </div>
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>Customer <span class="accent">Reviews</span></h2>
+                <p>What our clients say about us</p>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-text">"Working with Aj's auto spa was fantastic. They know the Fern Park market inside and out."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">JD</div>
+                        <div class="author-info">
+                            <h4>Jennifer & Alex Wilson</h4>
+                            <p>BMW Owner</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-text">"Incredible service! They came to my office and my car looks brand new. Will definitely use again."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SM</div>
+                        <div class="author-info">
+                            <h4>Sarah Miller</h4>
+                            <p>Tesla Owner</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p class="testimonial-text">"Best detailing service in Fern Park. Professional, punctual, and the results speak for themselves."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MJ</div>
+                        <div class="author-info">
+                            <h4>Mike Johnson</h4>
+                            <p>Mercedes Owner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="https://g.page/aj-s-auto-spa-fern-park/review" target="_blank" class="btn btn-secondary">
+                    Read All 40 Reviews
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Book Your <span class="accent">Service</span></h2>
+                <p>Get a free quote or schedule your appointment</p>
+            </div>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Get in Touch</h3>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4>Phone</h4>
+                            <p><a href="tel:3214471830" style="color: var(--red); text-decoration: none;">3214471830</a></p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4>Email</h4>
+                            <p><a href="mailto:ajsautospafl@gmail.com" style="color: var(--red); text-decoration: none;">ajsautospafl@gmail.com</a></p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4>Service Area</h4>
+                            <p>8000 S US Hwy 17 92, Fern Park, FL 32730, USA</p>
+                            <p>We come to you in Fern Park</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4>Hours</h4>
+                            <p>Mon-Sat: 8AM-6PM</p>
+                            <p>Sunday: 10AM-4PM</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <form action="https://formspree.io/f/aj-s-auto-spa-contact" method="POST">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Name *</label>
+                                <input type="text" class="form-input" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone *</label>
+                                <input type="tel" class="form-input" name="phone" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" name="email">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Type *</label>
+                                <select class="form-select" name="vehicle" required>
+                                    <option value="">Select...</option>
+                                    <option value="sedan">Sedan</option>
+                                    <option value="suv">SUV</option>
+                                    <option value="truck">Truck</option>
+                                    <option value="van">Van</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Service *</label>
+                                <select class="form-select" name="service" required>
+                                    <option value="">Select...</option>
+                                    <option value="essential">Essential - $99+</option>
+                                    <option value="premium">Premium - $199+</option>
+                                    <option value="ultimate">Ultimate - $399+</option>
+                                    <option value="custom">Custom Quote</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Service Location *</label>
+                            <input type="text" class="form-input" name="location" placeholder="Your address in Fern Park" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-textarea" name="message" placeholder="Any special requests?"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 1.125rem; padding: 1rem 2rem;">Send Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Aj's auto spa</h4>
+                    <p>Aj's auto spa provides professional services in Fern Park. Contact us at 3214471830 for quality service.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="#services">Exterior Detailing</a></li>
+                        <li><a href="#services">Interior Detailing</a></li>
+                        <li><a href="#services">Ceramic Coating</a></li>
+                        <li><a href="#services">Fleet Services</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#process">How It Works</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#testimonials">Reviews</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Service Area</h4>
+                    <p>Fern Park and surrounding areas</p>
+                    <p style="margin-top: 1rem;">
+                        <a href="tel:3214471830" style="color: var(--red);">3214471830</a>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Aj's auto spa. All rights reserved. | 
+                <a href="https://aj-s-auto-spa.com/privacy-policy" style="color: inherit;">Privacy</a> | 
+                <a href="https://aj-s-auto-spa.com/terms-policy" style="color: inherit;">Terms</a></p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+        
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Before/After Slider
+        document.querySelectorAll('.slider').forEach(slider => {
+            let isDown = false;
+            const container = slider.parentElement;
+            const afterImage = container.querySelector('.after-image');
+            
+            function updateSlider(x) {
+                const rect = container.getBoundingClientRect();
+                const percent = ((x - rect.left) / rect.width) * 100;
+                const clamped = Math.max(0, Math.min(100, percent));
+                
+                slider.style.left = clamped + '%';
+                afterImage.style.clipPath = `inset(0 0 0 ${clamped}%)`;
+            }
+            
+            slider.addEventListener('mousedown', () => isDown = true);
+            
+            document.addEventListener('mouseup', () => isDown = false);
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                updateSlider(e.clientX);
+            });
+            
+            // Touch events for mobile
+            slider.addEventListener('touchstart', () => isDown = true);
+            
+            document.addEventListener('touchend', () => isDown = false);
+            
+            document.addEventListener('touchmove', (e) => {
+                if (!isDown) return;
+                updateSlider(e.touches[0].clientX);
+            });
+        });
+        
+        // Gallery tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
