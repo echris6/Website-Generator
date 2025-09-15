@@ -1,0 +1,1607 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the aircoman - Professionele Airco & Klimaatbeheersing in 5046 AA Tilburg</title>
+    <meta name="description" content="the aircoman biedt betrouwbare airco en klimaatdiensten in 5046 AA Tilburg. Met meer dan 23 jaar ervaring. Bel 0135436666 vandaag nog.">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .hero-wrapper {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 80%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            padding: 24px 0;
+            position: relative;
+            z-index: 100;
+        }
+        
+        nav {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo svg {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+            justify-content: center;
+        }
+        
+        .nav-menu a {
+            color: rgba(255, 255, 255, 0.95);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            letter-spacing: 0.2px;
+        }
+        
+        .nav-menu a:hover {
+            color: white;
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #fbbf24;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-contact {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            justify-content: flex-end;
+        }
+        
+        .phone-number {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .phone-number:hover {
+            opacity: 0.9;
+        }
+        
+        .phone-number svg {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .contact-btn {
+            background: #fde047;
+            color: #0f172a;
+            padding: 11px 28px;
+            border-radius: 28px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            letter-spacing: 0.3px;
+        }
+        
+        .contact-btn:hover {
+            background: #facc15;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.25);
+        }
+        
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            padding: 120px 0 100px;
+            min-height: calc(100vh - 100px);
+        }
+        
+        .hero-left {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .hero-left h1 {
+            font-size: 54px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.15;
+            margin-bottom: 28px;
+            letter-spacing: -1px;
+        }
+        
+        .hero-left p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.92);
+            line-height: 1.7;
+            margin-bottom: 36px;
+            max-width: 520px;
+            font-weight: 400;
+        }
+        
+        .cta-button {
+            background: #fde047;
+            color: #0f172a;
+            padding: 15px 36px;
+            border-radius: 32px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(253, 224, 71, 0.3);
+            letter-spacing: 0.3px;
+        }
+        
+        .cta-button:hover {
+            background: #facc15;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.35);
+        }
+        
+        .social-proof {
+            margin-top: 52px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .customer-photos {
+            display: flex;
+            position: relative;
+        }
+        
+        .customer-photo {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 3px solid white;
+            background: linear-gradient(135deg, #e5e7eb, #f3f4f6);
+            margin-left: -12px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b7280;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .customer-photo:first-child {
+            margin-left: 0;
+        }
+        
+        .rating-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .stars {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .stars svg {
+            width: 18px;
+            height: 18px;
+            fill: #fbbf24;
+        }
+        
+        .rating-text {
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+        
+        .hero-right {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .image-container {
+            width: 100%;
+            max-width: 480px;
+            height: 480px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(251, 191, 36, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .image-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .placeholder-icon svg {
+            width: 100px;
+            height: 100px;
+            opacity: 0.9;
+            margin-bottom: 24px;
+            fill: white;
+        }
+        
+        .placeholder-text {
+            font-size: 18px;
+            font-weight: 600;
+            opacity: 0.95;
+            max-width: 280px;
+            line-height: 1.5;
+            letter-spacing: 0.2px;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        .mobile-menu-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        @media (max-width: 1024px) {
+            .hero-left h1 {
+                font-size: 44px;
+            }
+            
+            .hero-content {
+                gap: 60px;
+                padding: 60px 0 80px;
+            }
+            
+            .image-container {
+                max-width: 420px;
+                height: 420px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                display: flex;
+                justify-content: space-between;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .nav-contact {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 40px 0 60px;
+            }
+            
+            .hero-left h1 {
+                font-size: 36px;
+                margin-bottom: 20px;
+            }
+            
+            .hero-left p {
+                font-size: 16px;
+                margin: 0 auto 28px;
+            }
+            
+            .social-proof {
+                justify-content: center;
+                margin-top: 40px;
+            }
+            
+            .image-container {
+                max-width: 360px;
+                height: 360px;
+                margin: 0 auto;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-left h1 {
+                font-size: 28px;
+            }
+            
+            .hero-left p {
+                font-size: 15px;
+            }
+            
+            .image-container {
+                max-width: 300px;
+                height: 300px;
+            }
+            
+            .placeholder-icon svg {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .placeholder-text {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-wrapper">
+        <div class="container">
+            <header>
+                <nav>
+                    <a href="#" class="logo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="2" x2="12" y2="22"/>
+                            <line x1="12" y1="8" x2="12" y2="16"/>
+                            <line x1="16" y1="4" x2="8" y2="20"/>
+                            <line x1="8" y1="4" x2="16" y2="20"/>
+                            <line x1="20" y1="8" x2="4" y2="16"/>
+                            <line x1="4" y1="8" x2="20" y2="16"/>
+                            <line x1="22" y1="12" x2="2" y2="12"/>
+                            <line x1="16" y1="12" x2="8" y2="12"/>
+                        </svg>
+                        <span>the aircoman</span>
+                    </a>
+                    
+                    <ul class="nav-menu">
+                        <li><a href="#home1">Startpagina 1</a></li>
+                        <li><a href="#home2">Startpagina 2</a></li>
+                        <li><a href="#about">Over Ons</a></li>
+                        <li><a href="#services">Diensten</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                    </ul>
+                    
+                    <div class="nav-contact">
+                        <a href="tel:0135436666" class="phone-number">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                            0135436666
+                        </a>
+                        <a href="#contact" class="contact-btn">Contact</a>
+                    </div>
+                    
+                    <button class="mobile-menu-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                </nav>
+            </header>
+            
+            <div class="hero-content">
+                <div class="hero-left">
+                    <h1>Uw vertrouwde airco oplossingen in 5046 AA Tilburg</h1>
+                    <p>Met meer dan 23 jaar ervaring hebben wij een reputatie opgebouwd voor het leveren van eersteklas airconditioningoplossingen op maat voor uw behoeften.</p>
+                    <a href="#services" class="cta-button">Ontdek onze diensten</a>
+                    
+                    <div class="social-proof">
+                        <div class="customer-photos">
+                            <div class="customer-photo">JD</div>
+                            <div class="customer-photo">AS</div>
+                            <div class="customer-photo">MK</div>
+                        </div>
+                        <div class="rating-info">
+                            <div class="stars">
+                                <svg viewBox="0 0 24 24">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                                <svg viewBox="0 0 24 24">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                                <svg viewBox="0 0 24 24">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                                <svg viewBox="0 0 24 24">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                                <svg viewBox="0 0 24 24">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                </svg>
+                            </div>
+                            <span class="rating-text">Van meer dan 2000 beoordelingen</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hero-right">
+                    <div class="image-container">
+                        <img src="https://i.ibb.co/nq9SHMJp/Generated-Image-September-12-2025-1-01-PM.png" alt="Professional HVAC Technician" style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px; object-position: 45% center;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- About Us Section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image">
+                    <div class="image-wrapper">
+                        <img src="https://i.ibb.co/nNjr3VrW/Generated-Image-September-12-2025-1-14-PM.png" alt="HVAC Technician Working" style="width: 120%; height: 120%; object-fit: cover; transform: scale(1.1) translateY(-12%); object-position: center;">
+                        <div class="image-overlay">
+                            <a href="#learn-more" class="learn-more-link">
+                                Meer over ons
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-content">
+                    <h2>Airco oplossingen op maat voor uw behoeften</h2>
+                    <p>Ons team van erkende en ervaren HVAC-technici is toegewijd aan het bieden van snelle, professionele en vriendelijke service, zodat uw airconditioningsysteem altijd in optimale staat is.</p>
+                    
+                    <ul class="features-list">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span>Ervaren en gecertificeerde HVAC-technici</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span>Hoogwaardige apparatuur en onderdelen</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span>Klanttevredenheidsgarantie</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Services Section -->
+    <section class="services-section">
+        <div class="container">
+            <div class="services-header">
+                <h2>Onze diensten</h2>
+                <p>Wij bieden een uitgebreid scala aan HVAC-diensten die zijn ontworpen om aan al uw airconditioning- en verwarmingsbehoeften te voldoen.</p>
+            </div>
+            
+            <div class="services-grid">
+                <!-- AC Installation -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="8" width="16" height="8" rx="1"/>
+                            <path d="M8 8V7a1 1 0 011-1h6a1 1 0 011 1v1"/>
+                            <path d="M8 12h8M10 12v2M14 12v2"/>
+                        </svg>
+                    </div>
+                    <h3>Airco Installatie</h3>
+                    <p>Professionele installatie van nieuwe airconditioningsystemen voor woningen en bedrijven.</p>
+                </div>
+                
+                <!-- AC Repair -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 6V4M12 20v-2M20 12h2M2 12h2M17.66 6.34l1.41-1.41M4.93 19.07l1.41-1.41M17.66 17.66l1.41 1.41M4.93 4.93l1.41 1.41"/>
+                            <circle cx="12" cy="12" r="4"/>
+                        </svg>
+                    </div>
+                    <h3>Airco Reparatie</h3>
+                    <p>Snelle en betrouwbare reparatieservices voor alle soorten airconditioningunits.</p>
+                </div>
+                
+                <!-- Duct Cleaning -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12h4l3 9 4-18 3 9h4"/>
+                        </svg>
+                    </div>
+                    <h3>Kanaalreiniging</h3>
+                    <p>Grondige reiniging van luchtkanalen om de luchtkwaliteit en systeemefficiëntie te verbeteren.</p>
+                </div>
+                
+                <!-- HVAC Maintenance -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="3"/>
+                            <line x1="12" y1="7" x2="12" y2="9"/>
+                            <line x1="17" y1="12" x2="15" y2="12"/>
+                            <line x1="12" y1="15" x2="12" y2="17"/>
+                            <line x1="9" y1="12" x2="7" y2="12"/>
+                        </svg>
+                    </div>
+                    <h3>HVAC Onderhoud</h3>
+                    <p>Regelmatige onderhoudsservices om uw HVAC-systeem efficiënt te laten werken.</p>
+                </div>
+                
+                <!-- Indoor Air Quality -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="2"/>
+                            <path d="M12 2v8M12 14v8M2 12h8M14 12h8"/>
+                        </svg>
+                    </div>
+                    <h3>Binnenlucht Kwaliteit</h3>
+                    <p>Oplossingen om de luchtkwaliteit in uw huis te verbeteren met filters en luchtzuiveraars.</p>
+                </div>
+                
+                <!-- Emergency Service -->
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                    </div>
+                    <h3>Spoeddienst</h3>
+                    <p>24/7 spoed-HVAC reparatieservices voor urgente verwarmings- en koelproblemen.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="faq-grid">
+                <div class="faq-content">
+                    <h2>Uw vragen, beantwoord</h2>
+                    <p>Antwoorden op de meest gestelde vragen van onze klanten. Als u de informatie die u zoekt niet vindt, neem gerust contact met ons op.</p>
+                    <a href="#contact" class="contact-button">Neem Contact Op</a>
+                </div>
+                
+                <div class="faq-accordion">
+                    <div class="faq-item active">
+                        <div class="faq-question" onclick="toggleFAQ(0)">
+                            <span>Zijn uw HVAC-technici erkend en verzekerd?</span>
+                            <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Ja, al onze HVAC-technici zijn volledig erkend, verzekerd en hebben uitgebreide training ondergaan om ervoor te zorgen dat zij service van de hoogste kwaliteit leveren.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(1)">
+                            <span>Bieden jullie gratis schattingen aan?</span>
+                            <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Ja, wij bieden gratis, vrijblijvende schattingen voor alle HVAC-installatie- en grote reparatieprojecten. Neem contact met ons op om uw consultatie in te plannen.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(2)">
+                            <span>Welke betaalmethoden accepteren jullie?</span>
+                            <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Wij accepteren contant geld, cheques en alle grote creditcards waaronder Visa, MasterCard, American Express en Discover. Betaling is verschuldigd na voltooiing van de service.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(3)">
+                            <span>Bieden jullie financieringsopties aan?</span>
+                            <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Ja, wij bieden flexibele financieringsopties voor nieuwe HVAC-systeeminstallaties en grote reparaties. Wij werken samen met vertrouwde kredietverstrekkers om concurrerende tarieven en voorwaarden te bieden die passen bij uw budget.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="testimonials-header">
+                <h2>Wat onze klanten zeggen</h2>
+                <p>Onze klanten staan centraal in alles wat wij doen. Wij luisteren naar uw behoeften en passen onze diensten daarop aan.</p>
+            </div>
+            
+            <div class="testimonials-wrapper">
+                <button class="testimonial-nav testimonial-nav-left" onclick="scrollTestimonials('left')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                
+                <div class="testimonials-grid">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <p class="review-text">We zijn onder de indruk van het uitstekende werk van the aircoman bij onze airco-installatie. Hun grondigheid en expertise overtroffen onze verwachtingen.</p>
+                    <div class="customer-info">
+                        <div class="customer-photo">MR</div>
+                        <div class="customer-details">
+                            <h4>Michael Rodriguez</h4>
+                            <span>Beoordeling op Facebook</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor" opacity="0.3">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <p class="review-text">Het team van the aircoman is betrouwbaar en hoffelijk, lost onze HVAC-problemen snel op met nauwgezette aandacht voor detail.</p>
+                    <div class="customer-info">
+                        <div class="customer-photo">SM</div>
+                        <div class="customer-details">
+                            <h4>Sarah Martinez</h4>
+                            <span>Beoordeling op Trustpilot</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <p class="review-text">De snelle respons en deskundige behandeling van onze spoed airco-reparatie door the aircoman heeft de dag gered. Beveel hun professionele service ten zeerste aan!</p>
+                    <div class="customer-info">
+                        <div class="customer-photo">DT</div>
+                        <div class="customer-details">
+                            <h4>David Thompson</h4>
+                            <span>Beoordeling op Google</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+                <button class="testimonial-nav testimonial-nav-right" onclick="scrollTestimonials('right')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Snel airco service nodig?</h2>
+                <a href="tel:0135436666" class="cta-phone-button">Bel Ons 0135436666</a>
+            </div>
+        </div>
+    </section>
+    
+    
+    <style>
+        .cta-section {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+            padding: 60px 0;
+        }
+        
+        .cta-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .cta-content h2 {
+            font-size: 42px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+        
+        .cta-phone-button {
+            background: #fde047;
+            color: #0f172a;
+            padding: 16px 36px;
+            border-radius: 32px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .cta-phone-button:hover {
+            background: #facc15;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(253, 224, 71, 0.4);
+        }
+        
+        
+        @media (max-width: 768px) {
+            .cta-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+            }
+            
+            .cta-content h2 {
+                font-size: 32px;
+            }
+            
+            .footer-grid {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .cta-section {
+                padding: 40px 0;
+            }
+            
+            .cta-content h2 {
+                font-size: 24px;
+            }
+            
+            .cta-phone-button {
+                font-size: 16px;
+                padding: 14px 28px;
+            }
+            
+            .footer {
+                padding: 60px 0 30px;
+            }
+        }
+    </style>
+    
+    <style>
+        .testimonials-section {
+            background: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 100px 0;
+        }
+        
+        .testimonials-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        
+        .testimonials-header h2 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+        
+        .testimonials-header p {
+            font-size: 16px;
+            color: #64748b;
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .testimonials-wrapper {
+            position: relative;
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .testimonial-nav {
+            background: white;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .testimonial-nav:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .testimonial-nav svg {
+            width: 20px;
+            height: 20px;
+            color: #64748b;
+        }
+        
+        .testimonial-nav:hover svg {
+            color: #3b82f6;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        
+        .stars {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .stars svg {
+            width: 20px;
+            height: 20px;
+            color: #fbbf24;
+        }
+        
+        .review-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #475569;
+            flex-grow: 1;
+        }
+        
+        .customer-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-top: 8px;
+            border-top: 1px solid #f1f5f9;
+        }
+        
+        .customer-photo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .customer-details h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+        
+        .customer-details span {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        
+        @media (max-width: 1024px) {
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .testimonials-section {
+                padding: 60px 0;
+            }
+            
+            .testimonials-header h2 {
+                font-size: 36px;
+            }
+            
+            .testimonials-wrapper {
+                gap: 16px;
+            }
+            
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .testimonial-card {
+                padding: 24px;
+            }
+            
+            .testimonial-nav {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .testimonial-nav svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .testimonials-header h2 {
+                font-size: 28px;
+            }
+            
+            .testimonials-header p {
+                font-size: 15px;
+            }
+            
+            .review-text {
+                font-size: 14px;
+            }
+        }
+    </style>
+    
+    <script>
+        function toggleFAQ(index) {
+            const faqItems = document.querySelectorAll('.faq-item');
+            const clickedItem = faqItems[index];
+            const isActive = clickedItem.classList.contains('active');
+            
+            // Close all items
+            faqItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Open clicked item if it wasn't active
+            if (!isActive) {
+                clickedItem.classList.add('active');
+            }
+        }
+        
+        function scrollTestimonials(direction) {
+            const grid = document.querySelector('.testimonials-grid');
+            const scrollAmount = 400;
+            
+            if (direction === 'left') {
+                grid.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                grid.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        }
+    </script>
+    
+    <style>
+        .faq-section {
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 100px 0;
+        }
+        
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 100px;
+            align-items: start;
+        }
+        
+        .faq-content h2 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+        
+        .faq-content p {
+            font-size: 16px;
+            color: #64748b;
+            line-height: 1.7;
+            margin-bottom: 36px;
+        }
+        
+        .contact-button {
+            display: inline-block;
+            background: #fde047;
+            color: #0f172a;
+            padding: 14px 32px;
+            border-radius: 28px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.2px;
+        }
+        
+        .contact-button:hover {
+            background: #facc15;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(253, 224, 71, 0.4);
+        }
+        
+        .faq-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .faq-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item:hover {
+            border-color: #cbd5e1;
+        }
+        
+        .faq-question {
+            padding: 24px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+        
+        .faq-question:hover {
+            background: #f8fafc;
+        }
+        
+        .faq-question span {
+            font-size: 16px;
+            font-weight: 500;
+            color: #0f172a;
+            letter-spacing: -0.2px;
+            flex: 1;
+            padding-right: 20px;
+        }
+        
+        .faq-arrow {
+            width: 20px;
+            height: 20px;
+            color: #64748b;
+            transition: transform 0.3s ease, color 0.3s ease;
+            flex-shrink: 0;
+        }
+        
+        .faq-item.active .faq-arrow {
+            transform: rotate(0deg);
+            color: #3b82f6;
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+        }
+        
+        .faq-answer p {
+            padding: 0 28px 24px;
+            font-size: 15px;
+            color: #64748b;
+            line-height: 1.7;
+        }
+        
+        @media (max-width: 1024px) {
+            .faq-grid {
+                grid-template-columns: 350px 1fr;
+                gap: 60px;
+            }
+            
+            .faq-content h2 {
+                font-size: 40px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .faq-section {
+                padding: 60px 0;
+            }
+            
+            .faq-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+            
+            .faq-content h2 {
+                font-size: 32px;
+            }
+            
+            .faq-content {
+                text-align: center;
+            }
+            
+            .faq-question {
+                padding: 20px;
+            }
+            
+            .faq-question span {
+                font-size: 15px;
+            }
+            
+            .faq-answer p {
+                padding: 0 20px 20px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .faq-content h2 {
+                font-size: 28px;
+            }
+            
+            .faq-content p {
+                font-size: 15px;
+            }
+        }
+    </style>
+    
+    <style>
+        .services-section {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 100px 0;
+        }
+        
+        .services-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        
+        .services-header h2 {
+            font-size: 42px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+        
+        .services-header p {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .service-card {
+            background: rgba(30, 58, 138, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px 28px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .service-card:hover {
+            background: rgba(30, 58, 138, 0.55);
+            transform: translateY(-6px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .service-icon {
+            width: 42px;
+            height: 42px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .service-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: white;
+            opacity: 0.9;
+        }
+        
+        .service-card h3 {
+            font-size: 18px;
+            font-weight: 500;
+            color: white;
+            margin-bottom: 14px;
+            letter-spacing: 0;
+        }
+        
+        .service-card p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.7;
+            font-weight: 400;
+        }
+        
+        @media (max-width: 1024px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .services-section {
+                padding: 60px 0;
+            }
+            
+            .services-header h2 {
+                font-size: 36px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .service-card {
+                padding: 24px 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .services-header h2 {
+                font-size: 28px;
+            }
+            
+            .services-header p {
+                font-size: 14px;
+            }
+        }
+        
+        .about-section {
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 80px 0;
+        }
+        
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+        
+        .about-image {
+            position: relative;
+        }
+        
+        .image-wrapper {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #1a1a1a;
+            aspect-ratio: 4/3;
+        }
+        
+        .image-placeholder-about {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #64748b;
+            gap: 16px;
+        }
+        
+        .image-placeholder-about svg {
+            width: 80px;
+            height: 80px;
+            opacity: 0.3;
+        }
+        
+        .image-placeholder-about p {
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+        
+        .image-overlay {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            z-index: 10;
+        }
+        
+        .learn-more-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: gap 0.3s ease;
+        }
+        
+        .learn-more-link:hover {
+            gap: 12px;
+        }
+        
+        .learn-more-link svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .about-content h2 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+        
+        .about-content p {
+            font-size: 16px;
+            color: #64748b;
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+        
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            color: #334155;
+            font-weight: 500;
+        }
+        
+        .features-list svg {
+            width: 20px;
+            height: 20px;
+            stroke: #3b82f6;
+            flex-shrink: 0;
+        }
+        
+        @media (max-width: 1024px) {
+            .about-grid {
+                gap: 60px;
+            }
+            
+            .about-content h2 {
+                font-size: 36px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .about-section {
+                padding: 60px 0;
+            }
+            
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .about-content h2 {
+                font-size: 30px;
+            }
+            
+            .about-content p {
+                font-size: 15px;
+            }
+            
+            .features-list li {
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .about-section {
+                padding: 40px 0;
+            }
+            
+            .about-content h2 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .image-overlay {
+                bottom: 16px;
+                left: 16px;
+            }
+            
+            .learn-more-link {
+                font-size: 14px;
+            }
+        }
+    </style>
+</body>
+</html>
+
