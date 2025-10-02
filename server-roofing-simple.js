@@ -113,18 +113,18 @@ app.post('/generate-video', async (req, res) => {
     console.log('🎥 Starting TRUE 60 FPS 1080p video recording...');
 
     const videoPath = path.join(videosDir, filename);
-    // EXTENDED DURATION: 22 seconds with 2-second homepage pause
-    const totalDuration = 22000; // 22 seconds total
+    // EXTENDED DURATION: 25 seconds with 2-second homepage pause
+    const totalDuration = 25000; // 25 seconds total
     const fps = 60; // TRUE 60 FPS for smooth cinema quality
-    const totalFrames = 1320; // 22 seconds * 60 FPS = 1320 frames
+    const totalFrames = 1500; // 25 seconds * 60 FPS = 1500 frames
     const pauseFrames = 120; // 2 seconds * 60 FPS = 120 frames for homepage
-    const scrollFrames = 1200; // 20 seconds * 60 FPS = 1200 frames for scrolling
+    const scrollFrames = 1380; // 23 seconds * 60 FPS = 1380 frames for scrolling
     const frameInterval = 1000 / 60; // Exactly 16.67ms per frame for TRUE 60 FPS
 
     console.log(`🎬 Recording ${totalFrames} frames at TRUE ${fps} FPS (1080p Cinema Quality)`);
     console.log(`⏱️ Total Duration: ${totalDuration/1000} seconds`);
     console.log(`⏸️ Homepage Pause: 2 seconds (${pauseFrames} frames)`);
-    console.log(`📜 Scroll Duration: 20 seconds (${scrollFrames} frames)`);
+    console.log(`📜 Scroll Duration: 23 seconds (${scrollFrames} frames)`);
 
     // Get page height for scrolling
     const pageHeight = await page.evaluate(() => document.body.scrollHeight);
@@ -274,11 +274,11 @@ app.post('/generate-video', async (req, res) => {
         file_name: filename,
         file_size: stats.size,
         file_size_readable: `${fileSizeMB} MB`,
-        duration: '22 seconds',
+        duration: '25 seconds',
         fps: 'TRUE 60 FPS',
         quality: 'Full HD 1080p60',
         homepage_pause: '2 seconds',
-        scroll_duration: '20 seconds',
+        scroll_duration: '23 seconds',
         business_name: business_name
       });
     } else {
@@ -319,5 +319,5 @@ app.listen(PORT, () => {
   console.log('🎬 Business Video Server running on port', PORT);
   console.log('📍 Health check: http://localhost:3030/health');
   console.log('🎬 Video generation: POST http://localhost:3030/generate-video');
-  console.log('📜 22 seconds total (2s pause + 20s scroll) - Extended for full page!');
+  console.log('📜 25 seconds total (2s pause + 23s scroll) - Extended for full page!');
 });
