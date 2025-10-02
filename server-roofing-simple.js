@@ -144,12 +144,10 @@ app.post('/generate-video', async (req, res) => {
     console.log(`📐 Scroll increment: ${scrollIncrement.toFixed(3)}px per frame`);
 
     // Capture frames with 2-second homepage pause then smooth scrolling until bottom
-    let capturedFrames = [];
     let frame = 0;
     let reachedBottom = false;
 
     while (frame < maxFrames && !reachedBottom) {
-      const progress = frame / totalFrames;
       let scrollY = 0;
 
       if (frame < pauseFrames) {
