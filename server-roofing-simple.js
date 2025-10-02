@@ -113,15 +113,18 @@ app.post('/generate-video', async (req, res) => {
     console.log('🎥 Starting TRUE 60 FPS 1080p video recording...');
 
     const videoPath = path.join(videosDir, filename);
-    // DYNAMIC DURATION: Stop when reaching bottom of page
+    // EXTENDED DURATION: 22 seconds with 2-second homepage pause
+    const totalDuration = 22000; // 22 seconds total
     const fps = 60; // TRUE 60 FPS for smooth cinema quality
+    const totalFrames = 1320; // 22 seconds * 60 FPS = 1320 frames
     const pauseFrames = 120; // 2 seconds * 60 FPS = 120 frames for homepage
-    const scrollSpeed = 600; // pixels per second (smooth, readable scroll)
+    const scrollFrames = 1200; // 20 seconds * 60 FPS = 1200 frames for scrolling
     const frameInterval = 1000 / 60; // Exactly 16.67ms per frame for TRUE 60 FPS
 
-    console.log(`🎬 Recording at TRUE ${fps} FPS (1080p Cinema Quality)`);
+    console.log(`🎬 Recording ${totalFrames} frames at TRUE ${fps} FPS (1080p Cinema Quality)`);
+    console.log(`⏱️ Total Duration: ${totalDuration/1000} seconds`);
     console.log(`⏸️ Homepage Pause: 2 seconds (${pauseFrames} frames)`);
-    console.log(`📜 Scroll Speed: ${scrollSpeed}px/second (will stop at bottom)`);
+    console.log(`📜 Scroll Duration: 20 seconds (${scrollFrames} frames)`);
 
     // Get page height for scrolling
     const pageHeight = await page.evaluate(() => document.body.scrollHeight);
@@ -129,25 +132,17 @@ app.post('/generate-video', async (req, res) => {
     const maxScroll = Math.max(0, pageHeight - viewportHeight);
 
     console.log(`📏 Page height: ${pageHeight}px, Max scroll: ${maxScroll}px`);
-
-    // Calculate dynamic duration based on scroll speed
-    const scrollDuration = Math.ceil(maxScroll / scrollSpeed); // seconds needed to scroll
-    const scrollFrames = scrollDuration * fps;
-    const maxFrames = pauseFrames + scrollFrames;
-
-    console.log(`⏱️ Estimated scroll time: ${scrollDuration}s for ${maxScroll}px`);
-    console.log(`🎬 Max frames: ${maxFrames} (${pauseFrames} pause + ${scrollFrames} scroll)`);
+    console.log(`🎬 Starting frame capture: ${totalFrames} frames at ${fps} FPS`);
+    console.log(`⏱️ Estimated capture time: ${totalFrames/fps} seconds`);
     const captureStartTime = Date.now();
 
-    // Calculate scroll increment for smooth motion
-    const scrollIncrement = scrollSpeed / fps; // pixels per frame
+    // Calculate scroll increment for smooth motion AFTER the pause
+    const scrollIncrement = maxScroll / scrollFrames; // Divide by scroll frames only
     console.log(`📐 Scroll increment: ${scrollIncrement.toFixed(3)}px per frame`);
 
-    // Capture frames with 2-second homepage pause then smooth scrolling until bottom
-    let frame = 0;
-    let reachedBottom = false;
-
-    while (frame < maxFrames && !reachedBottom) {
+    // Capture frames with 2-second homepage pause then smooth scrolling
+    for (let frame = 0; frame < totalFrames; frame++) {
+      const progress = frame / totalFrames;
       let scrollY = 0;
 
       if (frame < pauseFrames) {
@@ -160,16 +155,9 @@ app.post('/generate-video', async (req, res) => {
           });
         });
       } else {
-        // SMOOTH SCROLLING: Scroll until bottom is reached
-        const scrollFrame = frame - pauseFrames;
+        // SMOOTH SCROLLING: Frames 120-1319 (20 seconds) scroll smoothly
+        const scrollFrame = frame - pauseFrames; // 0-1199
         scrollY = Math.min(scrollFrame * scrollIncrement, maxScroll);
-
-        // Check if we've reached the bottom
-        if (scrollY >= maxScroll) {
-          scrollY = maxScroll;
-          reachedBottom = true;
-        }
-
         await page.evaluate(scrollY => {
           window.scrollTo({
             top: scrollY,
@@ -178,7 +166,7 @@ app.post('/generate-video', async (req, res) => {
         }, scrollY);
       }
 
-      // Precise timing for 60fps (account for screenshot time)
+      // Precise timing for 60fps
       const frameStart = Date.now();
 
       // Take screenshot and save to disk
@@ -197,21 +185,16 @@ app.post('/generate-video', async (req, res) => {
         await new Promise(resolve => setTimeout(resolve, waitTime));
       }
 
-      // Log progress every 60 frames (1 second) for better visibility
+      // Log progress every 60 frames (1 second)
       if (frame % 60 === 0 && frame > 0) {
         const elapsedSeconds = (Date.now() - captureStartTime) / 1000;
+        const progressPercent = (progress * 100).toFixed(1);
         const currentScrollPercent = ((scrollY / maxScroll) * 100).toFixed(1);
         const fps_actual = (frame / elapsedSeconds).toFixed(1);
         const status = frame < pauseFrames ? '⏸️ PAUSE' : '📜 SCROLL';
-        console.log(`📹 Frame ${frame} - ${elapsedSeconds.toFixed(1)}s - ${status} - Scroll: ${currentScrollPercent}% - FPS: ${fps_actual}`);
+        console.log(`📹 Frame ${frame}/${totalFrames} (${progressPercent}%) - ${elapsedSeconds.toFixed(1)}s - ${status} - Scroll: ${currentScrollPercent}% - FPS: ${fps_actual}`);
       }
-
-      frame++;
     }
-
-    const totalFrames = frame;
-    const actualDuration = (totalFrames / fps).toFixed(1);
-    console.log(`✅ Captured ${totalFrames} frames in ${actualDuration}s (reached bottom: ${reachedBottom})`);
 
     console.log('✅ Screen recording completed');
     console.log(`📁 Converting ${totalFrames} frames to MP4...`);
@@ -229,23 +212,23 @@ app.post('/generate-video', async (req, res) => {
       const command = ffmpeg()
         .input(framePattern)
         .inputOptions([
-          '-framerate', '60',  // Explicit 60 FPS input
+          '-framerate', '60',
           '-pattern_type', 'sequence'
         ])
         .videoCodec('libx264')
         .outputOptions([
           '-pix_fmt', 'yuv420p',
-          '-crf', '17',  // High quality for 1080p60
-          '-preset', 'slower',  // Better quality for TRUE 60 FPS
+          '-crf', '17',
+          '-preset', 'slower',
           '-movflags', '+faststart',
-          '-r', '60',  // Force exact 60 FPS output
-          '-g', '120',  // GOP size: keyframe every 2 seconds (120 frames)
-          '-keyint_min', '60',  // Minimum keyframe interval (1 second)
-          '-bf', '2',  // B-frames for better compression
-          '-profile:v', 'high',  // High profile for 1080p60
-          '-level', '4.2',  // Level 4.2 supports 1080p60
-          '-tune', 'film',  // Optimize for high-motion content
-          '-x264-params', 'ref=4:bframes=3:b-adapt=2'  // Advanced x264 settings for quality
+          '-r', '60',
+          '-g', '120',
+          '-keyint_min', '60',
+          '-bf', '2',
+          '-profile:v', 'high',
+          '-level', '4.2',
+          '-tune', 'film',
+          '-x264-params', 'ref=4:bframes=3:b-adapt=2'
         ])
         .output(videoPath)
         .on('start', (commandLine) => {
@@ -291,13 +274,11 @@ app.post('/generate-video', async (req, res) => {
         file_name: filename,
         file_size: stats.size,
         file_size_readable: `${fileSizeMB} MB`,
-        duration: `${actualDuration} seconds`,
+        duration: '22 seconds',
         fps: 'TRUE 60 FPS',
         quality: 'Full HD 1080p60',
         homepage_pause: '2 seconds',
-        scroll_duration: `${(actualDuration - 2).toFixed(1)} seconds`,
-        page_height: `${pageHeight}px`,
-        reached_bottom: reachedBottom,
+        scroll_duration: '20 seconds',
         business_name: business_name
       });
     } else {
@@ -338,5 +319,5 @@ app.listen(PORT, () => {
   console.log('🎬 Business Video Server running on port', PORT);
   console.log('📍 Health check: http://localhost:3030/health');
   console.log('🎬 Video generation: POST http://localhost:3030/generate-video');
-  console.log('⚡ DYNAMIC - Stops automatically when reaching bottom of page!');
+  console.log('📜 22 seconds total (2s pause + 20s scroll) - Extended for full page!');
 });
