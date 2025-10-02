@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dogs Beauty Care - Professionele Huisdierenverzorging in 3769 CE Soesterberg</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            color: #2D2D2D;
+        }
+
+        .testimonial-quote {
+            font-family: Georgia, serif;
+            font-style: italic;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .masonry-grid {
+            column-count: 3;
+            column-gap: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .masonry-grid {
+                column-count: 2;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .masonry-grid {
+                column-count: 1;
+            }
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial {
+            display: none;
+        }
+
+        .testimonial.active {
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#F5F5F0]">
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/95 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-[#8B7355] rounded-lg flex items-center justify-center">
+                        <span class="text-white text-xl font-bold">{{BUSINESS_INITIALS}}</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-[#2D2D2D]">Dogs Beauty Care</h1>
+                        <p class="text-xs text-[#8B7355]">Professionele Huisdierenverzorging</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex items-center gap-8">
+                    <a href="#home" class="text-[#2D2D2D] hover:text-[#2C5F6F] transition-colors font-medium">Home</a>
+                    <a href="#services" class="text-[#2D2D2D] hover:text-[#2C5F6F] transition-colors font-medium">Diensten</a>
+                    <a href="#gallery" class="text-[#2D2D2D] hover:text-[#2C5F6F] transition-colors font-medium">Galerij</a>
+                    <a href="#about" class="text-[#2D2D2D] hover:text-[#2C5F6F] transition-colors font-medium">Over Ons</a>
+                    <a href="#reviews" class="text-[#2D2D2D] hover:text-[#2C5F6F] transition-colors font-medium">Recensies</a>
+                    <a href="#contact" class="text-[#2D2D2D] hover:text-[#2C5F6F] transition-colors font-medium">Contact</a>
+                    <a href="tel:0616910722" class="text-[#2C5F6F] font-semibold flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                        </svg>
+                        0616910722
+                    </a>
+                    <a href="#contact" class="bg-[#2C5F6F] hover:bg-[#234d5a] text-white px-6 py-2 rounded-md transition-colors">
+                        Afspraak Maken
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="lg:hidden">
+                    <svg id="menu-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                    <svg id="menu-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="lg:hidden pb-4 space-y-2 hidden">
+                <a href="#home" class="block w-full text-left px-4 py-2 text-[#2D2D2D] hover:bg-[#F5F5F0] rounded">Home</a>
+                <a href="#services" class="block w-full text-left px-4 py-2 text-[#2D2D2D] hover:bg-[#F5F5F0] rounded">Diensten</a>
+                <a href="#gallery" class="block w-full text-left px-4 py-2 text-[#2D2D2D] hover:bg-[#F5F5F0] rounded">Galerij</a>
+                <a href="#about" class="block w-full text-left px-4 py-2 text-[#2D2D2D] hover:bg-[#F5F5F0] rounded">Over Ons</a>
+                <a href="#reviews" class="block w-full text-left px-4 py-2 text-[#2D2D2D] hover:bg-[#F5F5F0] rounded">Recensies</a>
+                <a href="#contact" class="block w-full text-left px-4 py-2 text-[#2D2D2D] hover:bg-[#F5F5F0] rounded">Contact</a>
+                <a href="tel:0616910722" class="block px-4 py-2 text-[#2C5F6F] font-semibold">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                    </svg>
+                    0616910722
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center mt-20">
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?w=1920'); background-position: center;">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/30"></div>
+        </div>
+
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 fade-in">
+                Vakkundige Verzorging voor Uw Trouwe Vriend
+            </h1>
+            <p class="text-xl sm:text-2xl text-white/90 mb-8 fade-in">
+                8 Jaar Liefdevolle, Professionele Huisdierenverzorging in 3769 CE Soesterberg
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12 fade-in">
+                <a href="#services" class="bg-[#2C5F6F] hover:bg-[#234d5a] text-white text-lg px-8 py-6 rounded-md transition-colors">
+                    Bekijk Onze Diensten
+                </a>
+                <a href="tel:0616910722" class="bg-white hover:bg-white/90 text-[#2C5F6F] border-2 border-white text-lg px-8 py-6 font-semibold rounded-md transition-colors">
+                    Bel 0616910722
+                </a>
+            </div>
+            <div class="flex flex-wrap justify-center gap-6 text-white text-sm sm:text-base">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span>Gelicentieerd & Verzekerd</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span>17+ Tevreden Huisdieren</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span>Milieuvriendelijke Producten</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl sm:text-5xl font-bold text-[#2D2D2D] mb-4">Onze Verzorgingsdiensten</h2>
+                <p class="text-lg text-[#2D2D2D]/70 max-w-2xl mx-auto">
+                    Professionele verzorging afgestemd op de unieke behoeften van uw hond
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="border border-[#D4C5B9] rounded-lg hover-lift bg-white p-6">
+                    <div class="w-16 h-16 bg-[#2C5F6F]/10 rounded-full flex items-center justify-center mb-4">
+                        <div class="w-8 h-8 bg-[#2C5F6F] rounded-full"></div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-[#2D2D2D] mb-3">Compleet Verzorgingspakket</h3>
+                    <p class="text-[#2D2D2D]/70 mb-4 leading-relaxed">Volledig bad, knipbeurt, nagels knippen, oren schoonmaken en afwerkingsspray. Perfect voor het onderhouden van de vacht en gezondheid van uw hond.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-[#2C5F6F]">Vanaf €45</span>
+                    </div>
+                </div>
+
+                <div class="border border-[#D4C5B9] rounded-lg hover-lift bg-white p-6">
+                    <div class="w-16 h-16 bg-[#2C5F6F]/10 rounded-full flex items-center justify-center mb-4">
+                        <div class="w-8 h-8 bg-[#2C5F6F] rounded-full"></div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-[#2D2D2D] mb-3">Bad & Borstel Service</h3>
+                    <p class="text-[#2D2D2D]/70 mb-4 leading-relaxed">Diep reinigend bad met premium shampoo, grondig borstelen, nagels knippen. Ideaal om uw hond fris te houden tussen de volledige verzorging door.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-[#2C5F6F]">Vanaf €30</span>
+                    </div>
+                </div>
+
+                <div class="border border-[#D4C5B9] rounded-lg hover-lift bg-white p-6">
+                    <div class="w-16 h-16 bg-[#2C5F6F]/10 rounded-full flex items-center justify-center mb-4">
+                        <div class="w-8 h-8 bg-[#2C5F6F] rounded-full"></div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-[#2D2D2D] mb-3">Eerste Trimbeurt Puppy</h3>
+                    <p class="text-[#2D2D2D]/70 mb-4 leading-relaxed">Zachte introductie tot verzorging met geduld en zorg. Inclusief lichte trim, bad en nagelzorg met extra aandacht.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-[#2C5F6F]">Vanaf €35</span>
+                    </div>
+                </div>
+
+                <div class="border border-[#D4C5B9] rounded-lg hover-lift bg-white p-6">
+                    <div class="w-16 h-16 bg-[#2C5F6F]/10 rounded-full flex items-center justify-center mb-4">
+                        <div class="w-8 h-8 bg-[#2C5F6F] rounded-full"></div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-[#2D2D2D] mb-3">Anti-Verhaaringsbehandeling</h3>
+                    <p class="text-[#2D2D2D]/70 mb-4 leading-relaxed">Gespecialiseerde behandeling om verharing te verminderen met professionele hulpmiddelen. Inclusief grondig borstelen en conditionerende behandeling.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-[#2C5F6F]">Vanaf €40</span>
+                    </div>
+                </div>
+
+                <div class="border border-[#D4C5B9] rounded-lg hover-lift bg-white p-6">
+                    <div class="w-16 h-16 bg-[#2C5F6F]/10 rounded-full flex items-center justify-center mb-4">
+                        <div class="w-8 h-8 bg-[#2C5F6F] rounded-full"></div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-[#2D2D2D] mb-3">Nagels Knippen & Pootenverzorging</h3>
+                    <p class="text-[#2D2D2D]/70 mb-4 leading-relaxed">Nauwkeurig nagels knippen en voetbalkussen hydraterende behandeling. Snelle service, geen afspraak nodig voor bestaande klanten.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-[#2C5F6F]">Vanaf €15</span>
+                    </div>
+                </div>
+
+                <div class="border border-[#D4C5B9] rounded-lg hover-lift bg-white p-6">
+                    <div class="w-16 h-16 bg-[#2C5F6F]/10 rounded-full flex items-center justify-center mb-4">
+                        <div class="w-8 h-8 bg-[#2C5F6F] rounded-full"></div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-[#2D2D2D] mb-3">Speciale Gelegenheid Styling</h3>
+                    <p class="text-[#2D2D2D]/70 mb-4 leading-relaxed">Premium verzorging met rasstandaard knipbeurten of creatieve styling. Perfect voor shows, foto's of speciale vieringen.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-[#2C5F6F]">Vanaf €65</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 px-4 bg-[#F5F5F0]">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl sm:text-5xl font-bold text-[#2D2D2D] mb-4">Recente Verzorgingsresultaten</h2>
+                <p class="text-lg text-[#2D2D2D]/70">
+                    Transformaties waar we trots op zijn
+                </p>
+            </div>
+
+            <div class="masonry-grid">
+                <div class="masonry-item group cursor-pointer">
+                    <div class="relative overflow-hidden rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=500" alt="Max - Golden Retriever verzorgingsresultaat" class="w-full h-auto transition-transform duration-300 group-hover:scale-110" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                            <div class="p-4 text-white">
+                                <p class="font-semibold">Max - Golden Retriever</p>
+                                <p class="text-sm">Volledige Verzorging</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="masonry-item group cursor-pointer">
+                    <div class="relative overflow-hidden rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=500" alt="Charlie - Labrador verzorgingsresultaat" class="w-full h-auto transition-transform duration-300 group-hover:scale-110" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                            <div class="p-4 text-white">
+                                <p class="font-semibold">Charlie - Labrador</p>
+                                <p class="text-sm">Volledige Verzorging</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="masonry-item group cursor-pointer">
+                    <div class="relative overflow-hidden rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1568572933382-74d440642117?w=500" alt="Rocky - Duitse Herder verzorgingsresultaat" class="w-full h-auto transition-transform duration-300 group-hover:scale-110" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                            <div class="p-4 text-white">
+                                <p class="font-semibold">Rocky - Duitse Herder</p>
+                                <p class="text-sm">Volledige Verzorging</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="masonry-item group cursor-pointer">
+                    <div class="relative overflow-hidden rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=500" alt="Sophie - Cocker Spaniel verzorgingsresultaat" class="w-full h-auto transition-transform duration-300 group-hover:scale-110" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                            <div class="p-4 text-white">
+                                <p class="font-semibold">Sophie - Cocker Spaniel</p>
+                                <p class="text-sm">Volledige Verzorging</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="masonry-item group cursor-pointer">
+                    <div class="relative overflow-hidden rounded-lg">
+                        <img src="https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=500" alt="Cooper - Beagle verzorgingsresultaat" class="w-full h-auto transition-transform duration-300 group-hover:scale-110" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                            <div class="p-4 text-white">
+                                <p class="font-semibold">Cooper - Beagle</p>
+                                <p class="text-sm">Volledige Verzorging</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <button class="bg-[#8B7355] hover:bg-[#6d5a42] text-white px-8 py-6 text-lg rounded-md transition-colors">
+                    Bekijk Volledige Portfolio
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="py-20 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="order-2 lg:order-1">
+                    <img src="https://images.unsplash.com/photo-1548681528-6a5c45b66b42?w=800&q=80" alt="Professionele hondenverzorging bij Dogs Beauty Care" class="rounded-2xl shadow-2xl w-full">
+                </div>
+                <div class="order-1 lg:order-2">
+                    <h2 class="text-4xl sm:text-5xl font-bold text-[#2D2D2D] mb-6">
+                        Waarom Huisdiereigenaren in 3769 CE Soesterberg Dogs Beauty Care Vertrouwen
+                    </h2>
+
+                    <div class="space-y-6 mb-8">
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 bg-[#2C5F6F]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-[#2C5F6F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-[#2D2D2D] mb-2">Gecertificeerd & Ervaren</h3>
+                                <p class="text-[#2D2D2D]/70">8 jaar dienstverlening in 3769 CE Soesterberg met professionele certificering</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 bg-[#2C5F6F]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-[#2C5F6F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-[#2D2D2D] mb-2">Zachte Behandeling</h3>
+                                <p class="text-[#2D2D2D]/70">Stressvrije verzorging met geduld en begrip voor het temperament van elke hond</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 bg-[#2C5F6F]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-[#2C5F6F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-[#2D2D2D] mb-2">Premium Producten</h3>
+                                <p class="text-[#2D2D2D]/70">Milieuvriendelijke, hypoallergene shampoos en conditioners die veilig zijn voor gevoelige huid</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#contact" class="inline-block bg-[#2C5F6F] hover:bg-[#234d5a] text-white px-8 py-6 text-lg rounded-md transition-colors">
+                        Boek Vandaag de Afspraak voor Uw Hond
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 px-4 bg-gradient-to-b from-[#F5F5F0] to-white">
+        <div class="max-w-4xl mx-auto text-center">
+            <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&q=80" alt="Dogs Beauty Care Team" class="w-48 h-48 rounded-full mx-auto mb-8 shadow-xl object-cover">
+
+            <h2 class="text-4xl font-bold text-[#2D2D2D] mb-6">Over Dogs Beauty Care</h2>
+
+            <div class="space-y-4 text-lg text-[#2D2D2D]/80 leading-relaxed">
+                <p>
+                    Bij Dogs Beauty Care zorgen we al meer dan 8 jaar met liefde voor honderden honden hier in 3769 CE Soesterberg. Ons team heeft professionele verzorgingscertificering en blijft doorleren in rasspecifieke styling en diergedrag.
+                </p>
+
+                <p>
+                    Bij Dogs Beauty Care krijgt elke hond persoonlijke aandacht in een rustige, veilige omgeving. We werken met het unieke temperament van elk huisdier en gebruiken alleen premium, milieuvriendelijke producten die zacht zijn voor huid en vacht. Of het nu de eerste verzorgingsbeurt van uw puppy is of een oudere hond die extra zorg nodig heeft, we behandelen elk huisdier alsof het ons eigen is.
+                </p>
+
+                <p class="font-semibold text-[#8B7355]">
+                    We kijken ernaar uit u en uw harige familielid te ontmoeten.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="reviews" class="py-20 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl sm:text-5xl font-bold text-[#2D2D2D] mb-4">Wat Huisdiereigenaren Zeggen</h2>
+                <p class="text-lg text-[#2D2D2D]/70">
+                    Vertrouwd door de 3769 CE Soesterberg gemeenschap
+                </p>
+            </div>
+
+            <div class="relative max-w-4xl mx-auto">
+                <div class="border border-[#D4C5B9] bg-[#F5F5F0]/50 rounded-lg p-8 sm:p-12">
+                    <div class="testimonial active">
+                        <div class="flex justify-center mb-4">
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </div>
+
+                        <p class="testimonial-quote text-xl sm:text-2xl text-[#2D2D2D] mb-6 text-center leading-relaxed">
+                            "Het team van Dogs Beauty Care is absoluut geweldig met mijn angstige terriër. Ze nemen hun tijd en haasten zich nooit. Max lijkt nu zelfs blij om op bezoek te komen! De verzorgingsresultaten zijn altijd perfect, en ik waardeer hoe ze alles wat ze doen uitleggen."
+                        </p>
+
+                        <div class="flex items-center justify-center gap-4">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop" alt="Sarah de Vries" class="w-16 h-16 rounded-full object-cover">
+                            <div class="text-left">
+                                <p class="font-semibold text-[#2D2D2D]">Sarah de Vries</p>
+                                <p class="text-[#2D2D2D]/70">& Max</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial">
+                        <div class="flex justify-center mb-4">
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </div>
+
+                        <p class="testimonial-quote text-xl sm:text-2xl text-[#2D2D2D] mb-6 text-center leading-relaxed">
+                            "Professioneel, zorgzaam en redelijk geprijsd. Mijn golden retriever ziet er na elk bezoek prachtig uit. Het team houdt duidelijk van wat ze doen, en dat is te zien aan de kwaliteit van hun werk. Zeer aan te bevelen voor iedereen in 3769 CE Soesterberg."
+                        </p>
+
+                        <div class="flex items-center justify-center gap-4">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop" alt="Mark Jansen" class="w-16 h-16 rounded-full object-cover">
+                            <div class="text-left">
+                                <p class="font-semibold text-[#2D2D2D]">Mark Jansen</p>
+                                <p class="text-[#2D2D2D]/70">& Luna</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial">
+                        <div class="flex justify-center mb-4">
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg class="w-6 h-6 fill-[#F59E0B] text-[#F59E0B]" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </div>
+
+                        <p class="testimonial-quote text-xl sm:text-2xl text-[#2D2D2D] mb-6 text-center leading-relaxed">
+                            "We komen al drie jaar bij Dogs Beauty Care. Het team weet precies hoe Bella haar verzorging graag heeft. De salon is altijd brandschoon, en ik voel me volledig op mijn gemak om mijn hond in de zorg van Dogs Beauty Care achter te laten. Beste verzorger in 3769 CE Soesterberg!"
+                        </p>
+
+                        <div class="flex items-center justify-center gap-4">
+                            <img src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=150&h=150&fit=crop" alt="Lisa Vermeer" class="w-16 h-16 rounded-full object-cover">
+                            <div class="text-left">
+                                <p class="font-semibold text-[#2D2D2D]">Lisa Vermeer</p>
+                                <p class="text-[#2D2D2D]/70">& Bella</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-4 mt-8">
+                    <button id="prev-testimonial" class="border border-[#D4C5B9] rounded-md p-3 hover:bg-gray-50 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <button id="next-testimonial" class="border border-[#D4C5B9] rounded-md p-3 hover:bg-gray-50 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="py-20 px-4 bg-[#F5F5F0]">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl sm:text-5xl font-bold text-[#2D2D2D] mb-4">Transparante Prijzen</h2>
+                <p class="text-lg text-[#2D2D2D]/70 max-w-3xl mx-auto">
+                    Alle prijzen zijn inclusief premium producten en persoonlijke zorg. De uiteindelijke prijs is afhankelijk van ras, grootte en vachtconditie.
+                </p>
+            </div>
+
+            <div class="border border-[#D4C5B9] rounded-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-[#8B7355] text-white">
+                            <tr>
+                                <th class="text-left p-4 font-semibold">Service</th>
+                                <th class="text-center p-4 font-semibold">Kleine Honden</th>
+                                <th class="text-center p-4 font-semibold">Middelgrote Honden</th>
+                                <th class="text-center p-4 font-semibold">Grote Honden</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white">
+                            <tr class="border-b border-[#D4C5B9]">
+                                <td class="p-4 font-medium">Compleet Verzorgingspakket</td>
+                                <td class="text-center p-4">€45-55</td>
+                                <td class="text-center p-4">€60-75</td>
+                                <td class="text-center p-4">€80-100</td>
+                            </tr>
+                            <tr class="border-b border-[#D4C5B9]">
+                                <td class="p-4 font-medium">Bad & Borstel Service</td>
+                                <td class="text-center p-4">€30-35</td>
+                                <td class="text-center p-4">€40-50</td>
+                                <td class="text-center p-4">€55-70</td>
+                            </tr>
+                            <tr class="border-b border-[#D4C5B9]">
+                                <td class="p-4 font-medium">Anti-Verhaaringsbehandeling</td>
+                                <td class="text-center p-4">€40-45</td>
+                                <td class="text-center p-4">€50-60</td>
+                                <td class="text-center p-4">€65-80</td>
+                            </tr>
+                            <tr class="border-b border-[#D4C5B9]">
+                                <td class="p-4 font-medium">Speciale Gelegenheid Styling</td>
+                                <td class="text-center p-4">€65-75</td>
+                                <td class="text-center p-4">€80-95</td>
+                                <td class="text-center p-4">€100-130</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium">Nagels Knippen & Pootenverzorging</td>
+                                <td class="text-center p-4" colspan="3">€15 (alle maten)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <p class="text-center text-sm text-[#2D2D2D]/70 mt-6 max-w-3xl mx-auto">
+                Extra kosten kunnen van toepassing zijn voor verstrikte vachten of gedragsproblemen. Alle offertes worden verstrekt voordat de service begint.
+            </p>
+
+            <div class="text-center mt-8">
+                <a href="#contact" class="inline-block bg-[#2C5F6F] hover:bg-[#234d5a] text-white px-8 py-6 text-lg rounded-md transition-colors">
+                    Vraag Offerte op Maat Aan
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl sm:text-5xl font-bold text-[#2D2D2D] mb-4">Boek Uw Afspraak</h2>
+                <p class="text-lg text-[#2D2D2D]/70">
+                    We bevestigen uw afspraak binnen 24 uur
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="border border-[#D4C5B9] rounded-lg p-8">
+                    <form id="contact-form" action="https://formspree.io/f/dogs-beauty-care-contact" method="POST" class="space-y-6">
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-[#2D2D2D] mb-2">Uw Naam</label>
+                                <input type="text" name="name" required class="w-full px-4 py-2 border border-[#D4C5B9] rounded-md focus:outline-none focus:ring-2 focus:ring-[#2C5F6F]">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-[#2D2D2D] mb-2">Telefoon</label>
+                                <input type="tel" name="phone" required class="w-full px-4 py-2 border border-[#D4C5B9] rounded-md focus:outline-none focus:ring-2 focus:ring-[#2C5F6F]">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-[#2D2D2D] mb-2">E-mail</label>
+                            <input type="email" name="email" required class="w-full px-4 py-2 border border-[#D4C5B9] rounded-md focus:outline-none focus:ring-2 focus:ring-[#2C5F6F]">
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-[#2D2D2D] mb-2">Naam Huisdier</label>
+                                <input type="text" name="pet_name" required class="w-full px-4 py-2 border border-[#D4C5B9] rounded-md focus:outline-none focus:ring-2 focus:ring-[#2C5F6F]">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-[#2D2D2D] mb-2">Ras Huisdier</label>
+                                <input type="text" name="pet_breed" required class="w-full px-4 py-2 border border-[#D4C5B9] rounded-md focus:outline-none focus:ring-2 focus:ring-[#2C5F6F]">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-[#2D2D2D] mb-2">Gewenste Datum</label>
+                            <input type="date" name="preferred_date" required class="w-full px-4 py-2 border border-[#D4C5B9] rounded-md focus:outline-none focus:ring-2 focus:ring-[#2C5F6F]">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-[#2D2D2D] mb-2">Bericht</label>
+                            <textarea name="message" rows="4" class="w-full px-4 py-2 border border-[#D4C5B9] rounded-md focus:outline-none focus:ring-2 focus:ring-[#2C5F6F]" placeholder="Vertel ons over de verzorgingsbehoeften van uw huisdier..."></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-[#2C5F6F] hover:bg-[#234d5a] text-white py-6 text-lg rounded-md transition-colors">
+                            Afspraak Aanvragen
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="space-y-6">
+                    <div class="border border-[#D4C5B9] rounded-lg p-8">
+                        <h3 class="text-2xl font-bold text-[#2D2D2D] mb-6">Bezoek Ons</h3>
+
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-4">
+                                <svg class="w-6 h-6 text-[#2C5F6F] flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                                <div>
+                                    <p class="font-medium text-[#2D2D2D]">Stemerdingweg 12b, 3769 CE Soesterberg, Netherlands</p>
+                                    <p class="text-[#2D2D2D]/70">3769 CE Soesterberg</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4">
+                                <svg class="w-6 h-6 text-[#2C5F6F] flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                </svg>
+                                <div>
+                                    <a href="tel:0616910722" class="font-medium text-[#2C5F6F] hover:underline">
+                                        0616910722
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4">
+                                <svg class="w-6 h-6 text-[#2C5F6F] flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                                <div>
+                                    <a href="mailto:info@dogsbeautycare.nl" class="font-medium text-[#2C5F6F] hover:underline">
+                                        info@dogsbeautycare.nl
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4">
+                                <svg class="w-6 h-6 text-[#2C5F6F] flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <div>
+                                    <p class="font-medium text-[#2D2D2D]">Openingstijden</p>
+                                    <p class="text-[#2D2D2D]/70">Maandag-Vrijdag: 9:00-18:00</p>
+                                    <p class="text-[#2D2D2D]/70">Zaterdag: 10:00-16:00</p>
+                                    <p class="text-[#2D2D2D]/70">Zondag: Gesloten</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="{{google_maps_url}}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full mt-6 bg-[#8B7355] hover:bg-[#6d5a42] text-white py-3 rounded-md transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            Routebeschrijving
+                        </a>
+                    </div>
+
+                    <div class="rounded-xl overflow-hidden shadow-lg h-64">
+                        <iframe
+                            src="{{google_maps_embed}}"
+                            width="100%"
+                            height="100%"
+                            style="border: 0;"
+                            allowfullscreen
+                            loading="lazy"
+                            title="Dogs Beauty Care Locatie"
+                        ></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#2D2D2D] text-white py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+                <!-- Business Info -->
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-[#8B7355] rounded-lg flex items-center justify-center">
+                            <span class="text-white text-xl font-bold">{{BUSINESS_INITIALS}}</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Dogs Beauty Care</h3>
+                            <p class="text-sm text-white/70">Professionele Huisdierenverzorging in 3769 CE Soesterberg</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 mt-6">
+                        <a href="{{social_instagram}}" class="w-10 h-10 bg-white/10 hover:bg-[#8B7355] rounded-lg flex items-center justify-center transition-colors">
+                            <span class="text-sm font-bold">IG</span>
+                        </a>
+                        <a href="{{social_facebook}}" class="w-10 h-10 bg-white/10 hover:bg-[#8B7355] rounded-lg flex items-center justify-center transition-colors">
+                            <span class="text-sm font-bold">FB</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Snelle Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#services" class="text-white/70 hover:text-white transition-colors">Diensten</a></li>
+                        <li><a href="#gallery" class="text-white/70 hover:text-white transition-colors">Galerij</a></li>
+                        <li><a href="#about" class="text-white/70 hover:text-white transition-colors">Over Ons</a></li>
+                        <li><a href="#reviews" class="text-white/70 hover:text-white transition-colors">Recensies</a></li>
+                        <li><a href="#contact" class="text-white/70 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Verzorgingstips & Speciale Aanbiedingen</h4>
+                    <p class="text-white/70 text-sm mb-4">Schrijf u in voor onze nieuwsbrief voor verzorgingstips en exclusieve deals</p>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="Uw e-mail" class="flex-1 px-4 py-2 bg-white/10 border border-white/20 text-white placeholder:text-white/50 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2C5F6F]">
+                        <button class="bg-[#2C5F6F] hover:bg-[#234d5a] text-white px-6 py-2 rounded-md transition-colors">
+                            Inschrijven
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-8">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-white/60">
+                    <p>© 2025 Dogs Beauty Care. Alle rechten voorbehouden.</p>
+                    <p>Met trots 3769 CE Soesterberg dienend sinds {{FOUNDING_YEAR}}</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuOpen = document.getElementById('menu-open');
+        const menuClose = document.getElementById('menu-close');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            menuOpen.classList.toggle('hidden');
+            menuClose.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking a link
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuOpen.classList.remove('hidden');
+                menuClose.classList.add('hidden');
+            });
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-md');
+                navbar.classList.remove('bg-white/95');
+                navbar.classList.add('bg-white');
+            } else {
+                navbar.classList.remove('shadow-md');
+                navbar.classList.remove('bg-white');
+                navbar.classList.add('bg-white/95');
+            }
+        });
+
+        // Testimonial carousel
+        const testimonials = document.querySelectorAll('.testimonial');
+        let currentTestimonial = 0;
+
+        document.getElementById('next-testimonial').addEventListener('click', () => {
+            testimonials[currentTestimonial].classList.remove('active');
+            currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+            testimonials[currentTestimonial].classList.add('active');
+        });
+
+        document.getElementById('prev-testimonial').addEventListener('click', () => {
+            testimonials[currentTestimonial].classList.remove('active');
+            currentTestimonial = (currentTestimonial - 1 + testimonials.length) % testimonials.length;
+            testimonials[currentTestimonial].classList.add('active');
+        });
+
+        // Form submission
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Bedankt voor uw afspraakverzoek! We nemen binnen 24 uur contact met u op voor bevestiging.');
+            e.target.reset();
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
