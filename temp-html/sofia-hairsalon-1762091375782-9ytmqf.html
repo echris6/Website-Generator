@@ -1,0 +1,2370 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sofia Hairsalon - Premium Haarsalon in 1072 ET Amsterdam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=DM+Sans:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #B76E79;
+      --secondary: #2D3748;
+      --accent: #FAF5F1;
+      --text: #1A202C;
+      --highlight: #D4AF37;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text);
+      background: white;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 600;
+    }
+    
+    .serif {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+    
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      transition: all 0.4s;
+      padding: 1.5rem 0;
+    }
+
+    nav.scrolled {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1rem 0;
+    }
+
+    .nav-container {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-size: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      cursor: pointer;
+      transition: opacity 0.3s;
+      background: none;
+      border: none;
+      color: white;
+    }
+
+    nav.scrolled .nav-logo {
+      color: var(--secondary);
+    }
+
+    .nav-logo:hover {
+      opacity: 0.7;
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      .nav-links {
+        display: flex;
+      }
+      .mobile-book-btn {
+        display: none;
+      }
+    }
+
+    .nav-link {
+      background: none;
+      border: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.3s;
+      color: white;
+    }
+
+    nav.scrolled .nav-link {
+      color: #374151;
+    }
+
+    .nav-link:hover {
+      opacity: 0.7;
+    }
+
+    .nav-phone {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      color: white;
+      transition: opacity 0.3s;
+    }
+
+    nav.scrolled .nav-phone {
+      color: #374151;
+    }
+
+    .nav-phone:hover {
+      opacity: 0.7;
+    }
+
+    .book-btn {
+      padding: 0.625rem 1.5rem;
+      background: var(--primary);
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .book-btn:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      transform: scale(1.05);
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=2069');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      color: white;
+      padding: 0 1.5rem;
+      max-width: 56rem;
+      margin: 0 auto;
+    }
+
+    .hero-subtitle {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      opacity: 0.9;
+      color: var(--highlight);
+    }
+
+    .hero-title {
+      font-size: 3rem;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    @media (min-width: 768px) {
+      .hero-title {
+        font-size: 3.75rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .hero-title {
+        font-size: 4.5rem;
+      }
+    }
+
+    .hero-description {
+      font-size: 1.25rem;
+      margin-bottom: 2.5rem;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+
+    @media (min-width: 768px) {
+      .hero-description {
+        font-size: 1.5rem;
+      }
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    @media (min-width: 640px) {
+      .hero-buttons {
+        flex-direction: row;
+      }
+    }
+
+    .hero-btn-primary {
+      padding: 1rem 2rem;
+      background: var(--primary);
+      color: white;
+      font-weight: 500;
+      border: none;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .hero-btn-primary:hover {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      transform: scale(1.05);
+    }
+
+    .hero-btn-secondary {
+      padding: 1rem 2rem;
+      background: transparent;
+      color: white;
+      font-weight: 500;
+      border: 2px solid white;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .hero-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateX(-50%) translateY(0);
+      }
+      50% {
+        transform: translateX(-50%) translateY(-10px);
+      }
+    }
+
+    /* Sections */
+    .section {
+      padding: 6rem 1.5rem;
+    }
+
+    .section-accent {
+      background: var(--accent);
+    }
+
+    .section-white {
+      background: white;
+    }
+
+    .container {
+      max-width: 80rem;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-title {
+      font-size: 2.25rem;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .section-title {
+        font-size: 3rem;
+      }
+    }
+
+    .section-description {
+      font-size: 1.125rem;
+      color: #4B5563;
+      max-width: 48rem;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Services Grid */
+    .services-grid {
+      display: grid;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .service-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 0.375rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
+    }
+
+    .service-card:hover {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      transform: translateY(-4px);
+    }
+
+    .service-title {
+      font-size: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+    }
+
+    .service-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+    }
+
+    .service-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary);
+    }
+
+    .service-description {
+      color: #4B5563;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .service-perfect {
+      padding-top: 1rem;
+      border-top: 1px solid #E5E7EB;
+      font-size: 0.875rem;
+      color: #6B7280;
+    }
+
+    .service-perfect span {
+      font-weight: 500;
+    }
+
+    /* Additional Services */
+    .additional-services {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: white;
+      border-radius: 0.375rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .additional-title {
+      font-size: 1.25rem;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .additional-grid {
+      display: grid;
+      gap: 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    @media (min-width: 768px) {
+      .additional-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .additional-item-name {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .additional-item-price {
+      color: #4B5563;
+    }
+
+    .additional-note {
+      font-size: 0.75rem;
+      color: #6B7280;
+      margin-top: 1.5rem;
+    }
+
+    /* Gallery Section */
+    .gallery-container {
+      max-width: 56rem;
+      margin: 0 auto;
+    }
+
+    .slider-wrapper {
+      position: relative;
+      aspect-ratio: 4/3;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .slider-before {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slider-after-wrapper {
+      position: absolute;
+      inset: 0;
+    }
+
+    .slider-after {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slider-input {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      transform: translateY(-50%);
+      opacity: 0;
+      cursor: ew-resize;
+      z-index: 10;
+    }
+
+    .slider-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: white;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      pointer-events: none;
+    }
+
+    .slider-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 3rem;
+      height: 3rem;
+      border-radius: 9999px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      pointer-events: none;
+    }
+
+    .slider-label {
+      position: absolute;
+      top: 1rem;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .slider-label-before {
+      left: 1rem;
+    }
+
+    .slider-label-after {
+      right: 1rem;
+    }
+
+    .slider-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3rem;
+      height: 3rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      z-index: 20;
+    }
+
+    .slider-nav:hover {
+      background: white;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .slider-nav-prev {
+      left: 1rem;
+    }
+
+    .slider-nav-next {
+      right: 1rem;
+    }
+
+    .gallery-caption {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .gallery-caption-title {
+      font-size: 1.25rem;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .gallery-caption-tag {
+      display: inline-block;
+      padding: 0.25rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      background: var(--accent);
+      color: var(--primary);
+    }
+
+    .gallery-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .gallery-dot {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 9999px;
+      background: var(--secondary);
+      border: none;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: all 0.3s;
+    }
+
+    .gallery-dot:hover {
+      opacity: 0.75;
+    }
+
+    .gallery-dot.active {
+      width: 2rem;
+      background: var(--primary);
+      opacity: 1;
+    }
+
+    .instagram-cta {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .instagram-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border: 2px solid var(--secondary);
+      color: var(--secondary);
+      font-weight: 500;
+      border-radius: 0.25rem;
+      background: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .instagram-btn:hover {
+      background: #F9FAFB;
+    }
+
+    /* Team Section */
+    .team-grid {
+      display: grid;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .team-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .team-card {
+      background: white;
+      border-radius: 0.375rem;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
+    }
+
+    .team-card:hover {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      transform: translateY(-8px);
+    }
+
+    .team-image-wrapper {
+      aspect-ratio: 3/4;
+      overflow: hidden;
+    }
+
+    .team-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .team-card:hover .team-image {
+      transform: scale(1.1);
+    }
+
+    .team-info {
+      padding: 1.5rem;
+    }
+
+    .team-name {
+      font-size: 1.25rem;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .team-title {
+      font-size: 0.875rem;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .team-experience {
+      font-size: 0.75rem;
+      color: #6B7280;
+      margin-bottom: 1rem;
+    }
+
+    .team-specialties {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .team-specialty {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      background: var(--accent);
+      color: var(--text);
+    }
+
+    .team-bio {
+      font-size: 0.875rem;
+      color: #4B5563;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .team-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1rem;
+      border-top: 1px solid #E5E7EB;
+    }
+
+    .team-instagram {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--primary);
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+
+    .team-instagram:hover {
+      opacity: 0.7;
+    }
+
+    .team-book-btn {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--secondary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .team-book-btn:hover {
+      opacity: 0.7;
+    }
+
+    /* Booking Section */
+    .booking-grid {
+      display: grid;
+      gap: 3rem;
+    }
+
+    @media (min-width: 1024px) {
+      .booking-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .booking-form-wrapper {
+      background: white;
+      padding: 2rem;
+      border-radius: 0.375rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #D1D5DB;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      background: white;
+      transition: all 0.3s;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(183, 110, 121, 0.1);
+    }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23B76E79' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 3rem;
+      cursor: pointer;
+    }
+
+    .form-select:hover {
+      border-color: var(--primary);
+    }
+
+    .form-select option {
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .form-row {
+      display: grid;
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .form-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 1.5rem;
+      background: var(--primary);
+      color: white;
+      font-weight: 500;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .submit-btn:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .form-note {
+      font-size: 0.75rem;
+      color: #6B7280;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .success-message {
+      text-align: center;
+      padding: 3rem 0;
+    }
+
+    .success-icon {
+      width: 4rem;
+      height: 4rem;
+      border-radius: 9999px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+
+    .success-title {
+      font-size: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .success-text {
+      color: #4B5563;
+    }
+
+    .booking-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .info-card {
+      padding: 1.5rem;
+      border-radius: 0.375rem;
+      background: var(--accent);
+    }
+
+    .info-title {
+      font-size: 1.25rem;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+    }
+
+    .info-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      color: #4B5563;
+    }
+
+    .info-list-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .info-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--primary);
+      flex-shrink: 0;
+      margin-top: 0.125rem;
+    }
+
+    .policy-item {
+      margin-bottom: 0.75rem;
+    }
+
+    .policy-label {
+      font-weight: 500;
+      color: var(--secondary);
+    }
+
+    /* Testimonials */
+    .testimonial-wrapper {
+      max-width: 56rem;
+      margin: 0 auto;
+    }
+
+    .testimonial-card {
+      background: white;
+      padding: 3rem;
+      border-radius: 0.375rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .testimonial-stars {
+      display: flex;
+      justify-content: center;
+      gap: 0.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .star {
+      width: 1.25rem;
+      height: 1.25rem;
+      fill: var(--highlight);
+      color: var(--highlight);
+    }
+
+    .testimonial-text {
+      font-size: 1.25rem;
+      line-height: 1.6;
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      color: var(--secondary);
+      margin-bottom: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .testimonial-text {
+        font-size: 1.5rem;
+      }
+    }
+
+    .testimonial-author {
+      text-align: center;
+    }
+
+    .testimonial-name {
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .testimonial-service {
+      font-size: 0.875rem;
+      color: #4B5563;
+    }
+
+    .testimonial-source {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .testimonial-source-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      fill: var(--primary);
+    }
+
+    .testimonial-source-text {
+      font-size: 0.875rem;
+      color: #6B7280;
+    }
+
+    .testimonial-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3rem;
+      height: 3rem;
+      border-radius: 9999px;
+      background: white;
+      border: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .testimonial-nav:hover {
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .testimonial-nav-prev {
+      left: 1rem;
+    }
+
+    .testimonial-nav-next {
+      right: 1rem;
+    }
+
+    .testimonial-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    .testimonial-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      background: var(--primary);
+      border: none;
+      cursor: pointer;
+      opacity: 0.5;
+      transition: all 0.3s;
+    }
+
+    .testimonial-dot:hover {
+      opacity: 0.75;
+    }
+
+    .testimonial-dot.active {
+      width: 2rem;
+      opacity: 1;
+    }
+
+    /* Contact Section */
+    .contact-grid {
+      display: grid;
+      gap: 3rem;
+    }
+
+    @media (min-width: 1024px) {
+      .contact-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .contact-card {
+      padding: 1.5rem;
+      border-radius: 0.375rem;
+      background: var(--accent);
+    }
+
+    .contact-title {
+      font-size: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-details {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .contact-icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: var(--primary);
+      flex-shrink: 0;
+      margin-top: 0.25rem;
+    }
+
+    .contact-label {
+      font-weight: 500;
+      color: var(--secondary);
+      margin-bottom: 0.25rem;
+    }
+
+    .contact-link {
+      color: #4B5563;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .contact-link:hover {
+      color: #111827;
+    }
+
+    .contact-text {
+      color: #4B5563;
+    }
+
+    .contact-hours {
+      color: #4B5563;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .contact-hours-note {
+      font-size: 0.875rem;
+      color: #6B7280;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    .location-title {
+      font-size: 1.25rem;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+    }
+
+    .location-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      color: #4B5563;
+    }
+
+    .location-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .location-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--primary);
+      flex-shrink: 0;
+      margin-top: 0.125rem;
+    }
+
+    .map-container {
+      height: 37.5rem;
+      border-radius: 0.375rem;
+      overflow: hidden;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .map-container iframe {
+      border: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* FAQ Section */
+    .faq-container {
+      max-width: 56rem;
+      margin: 0 auto;
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .faq-item {
+      background: white;
+      border-radius: 0.375rem;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
+    }
+
+    .faq-item:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem;
+      text-align: left;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .faq-question-text {
+      font-weight: 600;
+      color: var(--secondary);
+      padding-right: 2rem;
+    }
+
+    .faq-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--primary);
+      flex-shrink: 0;
+      transition: transform 0.3s;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 24rem;
+    }
+
+    .faq-answer-text {
+      padding: 0 1.5rem 1.5rem;
+      color: #4B5563;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    footer {
+      padding: 4rem 1.5rem;
+      background: var(--accent);
+    }
+
+    .footer-grid {
+      display: grid;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    @media (min-width: 768px) {
+      .footer-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .footer-brand-title {
+      font-size: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-tagline {
+      font-size: 0.875rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .footer-description {
+      font-size: 0.875rem;
+      color: #4B5563;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .footer-social-link {
+      color: var(--primary);
+      transition: opacity 0.3s;
+    }
+
+    .footer-social-link:hover {
+      opacity: 0.7;
+    }
+
+    .footer-section-title {
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .footer-link {
+      background: none;
+      border: none;
+      font-size: 0.875rem;
+      color: #4B5563;
+      cursor: pointer;
+      transition: color 0.3s;
+      text-align: left;
+      padding: 0;
+    }
+
+    .footer-link:hover {
+      color: #111827;
+    }
+
+    .footer-contact-item {
+      font-size: 0.875rem;
+      color: #4B5563;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-contact-link {
+      color: #4B5563;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-contact-link:hover {
+      color: #111827;
+    }
+
+    .footer-hours-title {
+      font-weight: 500;
+      color: #374151;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-bottom {
+      padding-top: 2rem;
+      border-top: 1px solid #D1D5DB;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #4B5563;
+    }
+
+    @media (min-width: 768px) {
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <button class="nav-logo" onclick="scrollToSection('hero')">
+        Sofia Hairsalon
+      </button>
+
+      <div class="nav-links">
+        <button class="nav-link" onclick="scrollToSection('services')">Diensten</button>
+        <button class="nav-link" onclick="scrollToSection('team')">Stylisten</button>
+        <button class="nav-link" onclick="scrollToSection('gallery')">Galerij</button>
+        <button class="nav-link" onclick="scrollToSection('testimonials')">Reviews</button>
+        <button class="nav-link" onclick="scrollToSection('contact')">Contact</button>
+        
+        <a href="tel:+31204567890" class="nav-phone">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          +31 20 363 6272
+        </a>
+        
+        <button class="book-btn" onclick="scrollToSection('booking')">
+          Online Boeken
+        </button>
+      </div>
+
+      <button class="book-btn mobile-book-btn" onclick="scrollToSection('booking')">
+        Book
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    
+    <div class="hero-content">
+      <p class="hero-subtitle">Premium Haarsalon in 1072 ET Amsterdam</p>
+      
+      <h1 class="hero-title">
+        Transformeer Uw Look met<br />Kunst en Expertise
+      </h1>
+      
+      <p class="hero-description">
+        25 Jaar Excellentie in Kleur, Knip en Styling
+      </p>
+
+      <div class="hero-buttons">
+        <button class="hero-btn-primary" onclick="scrollToSection('services')">
+          Bekijk Diensten
+        </button>
+        <button class="hero-btn-secondary" onclick="scrollToSection('team')">
+          Ontmoet Ons Team
+        </button>
+      </div>
+    </div>
+
+    <button class="scroll-indicator" onclick="scrollToSection('services')">
+      <svg width="32" height="32" fill="none" stroke="rgba(255,255,255,0.7)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+    </button>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="section section-accent">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Onze Kenmerkende Diensten</h2>
+        <p class="section-description">
+          Van precisie knipbeurten tot verbluffende kleurtransformaties, ons expert team levert uitzonderlijke resultaten op maat voor u.
+        </p>
+      </div>
+
+      <div class="services-grid" id="servicesGrid"></div>
+
+      <div class="additional-services">
+        <h3 class="additional-title">Extra Diensten</h3>
+        <div class="additional-grid">
+          <div>
+            <p class="additional-item-name">Toner Opfrissen</p>
+            <p class="additional-item-price">€25</p>
+          </div>
+          <div>
+            <p class="additional-item-name">Alleen Föhnen</p>
+            <p class="additional-item-price">€35</p>
+          </div>
+          <div>
+            <p class="additional-item-name">Behandeling Extra</p>
+            <p class="additional-item-price">€20-45</p>
+          </div>
+          <div>
+            <p class="additional-item-name">Olaplex Extra</p>
+            <p class="additional-item-price">€15</p>
+          </div>
+        </div>
+        <p class="additional-note">
+          *Prijzen kunnen variëren op basis van haarlengte, dichtheid en complexiteit. Op maat gemaakte offertes verstrekt tijdens consultatie. Alle prijzen zijn inclusief BTW.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="gallery" class="section section-white">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Haar Transformaties</h2>
+        <p class="section-description">
+          Echte klanten, echte resultaten van ons getalenteerde team
+        </p>
+      </div>
+
+      <div class="gallery-container">
+        <div class="slider-wrapper">
+          <img id="sliderBefore" src="" alt="Before transformation" class="slider-before">
+          
+          <div id="sliderAfterWrapper" class="slider-after-wrapper">
+            <img id="sliderAfter" src="" alt="After transformation" class="slider-after">
+          </div>
+
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value="50"
+            id="sliderInput"
+            class="slider-input"
+          >
+
+          <div id="sliderLine" class="slider-line">
+            <div class="slider-handle">
+              <svg width="16" height="16" fill="none" stroke="white" viewBox="0 0 24 24" style="position: absolute; left: 8px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+              <svg width="16" height="16" fill="none" stroke="white" viewBox="0 0 24 24" style="position: absolute; right: 8px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+          <div class="slider-label slider-label-before">Voor</div>
+          <div class="slider-label slider-label-after">Na</div>
+
+          <button class="slider-nav slider-nav-prev" onclick="prevSlide()">
+            <svg width="24" height="24" fill="none" stroke="var(--secondary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button class="slider-nav slider-nav-next" onclick="nextSlide()">
+            <svg width="24" height="24" fill="none" stroke="var(--secondary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+
+        <div class="gallery-caption">
+          <p class="gallery-caption-title" id="galleryCaption"></p>
+          <span class="gallery-caption-tag" id="galleryService"></span>
+        </div>
+
+        <div class="gallery-dots" id="galleryDots"></div>
+
+        <!-- Social media portfolio link kan hier worden toegevoegd -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section id="team" class="section section-accent">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Onze Expert Stylisten</h2>
+        <p class="section-description">
+          Ons team van gecertificeerde professionals brengt jarenlange gespecialiseerde training en continue educatie om de nieuwste technieken en trends te leveren.
+        </p>
+      </div>
+
+      <div class="team-grid" id="teamGrid"></div>
+    </div>
+  </section>
+
+  <!-- Booking Section -->
+  <section id="booking" class="section section-white">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Boek Uw Transformatie</h2>
+        <p class="section-description">
+          Reserveer uw afspraak online - we bevestigen binnen 4 uur
+        </p>
+      </div>
+
+      <div class="booking-grid">
+        <div class="booking-form-wrapper" id="bookingFormWrapper"></div>
+
+        <div class="booking-info">
+          <div class="info-card">
+            <h3 class="info-title">Eerste Bezoek?</h3>
+            <ul class="info-list">
+              <li class="info-list-item">
+                <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>Kom alstublieft 10 minuten vroeger aan om een korte consultatie te voltooien</span>
+              </li>
+              <li class="info-list-item">
+                <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                <span>We bieden gratis consultatie voor elke service</span>
+              </li>
+              <li class="info-list-item">
+                <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span>Parkeren beschikbaar in de buurt</span>
+              </li>
+              <li class="info-list-item">
+                <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                <span>Verfrissingen aangeboden tijdens uw service</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="info-card">
+            <h3 class="info-title">Boekingsbeleid</h3>
+            <ul class="info-list">
+              <li class="policy-item">
+                <span class="policy-label">Annulering:</span> 24 uur van tevoren vereist
+              </li>
+              <li class="policy-item">
+                <span class="policy-label">Te laat komen:</span> Kan leiden tot verkorte servicetijd
+              </li>
+              <li class="policy-item">
+                <span class="policy-label">Betaling:</span> Kaart en contant geaccepteerd
+              </li>
+              <li class="policy-item">
+                <span class="policy-label">Consultaties:</span> Altijd gratis
+              </li>
+            </ul>
+          </div>
+
+          <div class="info-card">
+            <h3 class="info-title">Wat Te Verwachten</h3>
+            <ul class="info-list">
+              <li>• Premium koffie, thee en verfrissingen</li>
+              <li>• Gratis WiFi</li>
+              <li>• Geselecteerde tijdschriften</li>
+              <li>• Professionele producten winkel</li>
+              <li>• Ontspannen, elegante sfeer</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="section section-accent">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Klanten Ervaringen</h2>
+        <p class="section-description">
+          Echte reviews van echte klanten
+        </p>
+      </div>
+
+      <div class="testimonial-wrapper">
+        <div class="testimonial-card">
+          <button class="testimonial-nav testimonial-nav-prev" onclick="prevTestimonial()">
+            <svg width="20" height="20" fill="none" stroke="var(--primary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button class="testimonial-nav testimonial-nav-next" onclick="nextTestimonial()">
+            <svg width="20" height="20" fill="none" stroke="var(--primary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+
+          <div class="testimonial-stars" id="testimonialStars"></div>
+
+          <blockquote class="testimonial-text" id="testimonialText"></blockquote>
+
+          <div class="testimonial-author">
+            <p class="testimonial-name" id="testimonialName"></p>
+            <p class="testimonial-service" id="testimonialService"></p>
+            <div class="testimonial-source">
+              <svg class="testimonial-source-icon" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.441 16.892c-2.102.144-6.784.144-8.883 0-2.276-.156-2.541-1.27-2.558-4.892.017-3.629.285-4.736 2.558-4.892 2.099-.144 6.782-.144 8.883 0 2.277.156 2.541 1.27 2.559 4.892-.018 3.629-.285 4.736-2.559 4.892zm-6.441-7.234l4.917 2.338-4.917 2.346v-4.684z"/></svg>
+              <span class="testimonial-source-text">Google Reviews</span>
+            </div>
+          </div>
+
+          <div class="testimonial-dots" id="testimonialDots"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section section-white">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Bezoek Onze Salon</h2>
+        <p class="section-description">
+          Gelegen in het hart van 1072 ET Amsterdam
+        </p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-info">
+          <div class="contact-card">
+            <h3 class="contact-title">Contactinformatie</h3>
+            
+            <div class="contact-details">
+              <div class="contact-item">
+                <svg class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <div>
+                  <p class="contact-label">Adres</p>
+                  <p class="contact-text">
+                    Ceintuurbaan 47 H, 1072 ET Amsterdam, Netherlands<br>
+                    1072 ET Amsterdam
+                  </p>
+                </div>
+              </div>
+
+              <div class="contact-item">
+                <svg class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                <div>
+                  <p class="contact-label">Telefoon</p>
+                  <a href="tel:+31204567890" class="contact-link" style="font-size: 1.125rem;">
+                    +31 20 363 6272
+                  </a>
+                </div>
+              </div>
+
+              <div class="contact-item">
+                <svg class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                <div>
+                  <p class="contact-label">Email</p>
+                  <a href="mailto:contact@business.com" class="contact-link">
+                    contact@business.com
+                  </a>
+                </div>
+              </div>
+
+              <div class="contact-item">
+                <svg class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <div>
+                  <p class="contact-label">Openingstijden</p>
+                  <div class="contact-hours">
+                    <p>Dinsdag - Vrijdag: 9:00 - 20:00</p>
+                    <p>Zaterdag: 9:00 - 18:00</p>
+                    <p>Zondag - Maandag: Gesloten</p>
+                    <p class="contact-hours-note">
+                      We zijn gesloten op zondag en maandag voor stylist opleiding en zelfzorg
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-card">
+            <h3 class="location-title">Makkelijk Te Vinden</h3>
+            <ul class="location-list">
+              <li class="location-item">
+                <svg class="location-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span>Gemakkelijk te vinden in 1072 ET Amsterdam</span>
+              </li>
+              <li class="location-item">
+                <svg class="location-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                <span>Openbaar vervoer bereikbaar</span>
+              </li>
+              <li class="location-item">
+                <svg class="location-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>Parkeren beschikbaar in de buurt</span>
+              </li>
+              <li class="location-item">
+                <svg class="location-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <span>Fietsenparkeren beschikbaar</span>
+              </li>
+              <li class="location-item">
+                <svg class="location-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>Gemakkelijk bereikbare locatie</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="map-container">
+          <!-- Google Maps embed - bijwerken met bedrijfslocatie -->
+          <div style="background: #f5f5f5; display: flex; align-items: center; justify-content: center; height: 100%; border-radius: 0.375rem;">
+            <p style="color: #6b7280; text-align: center;">Kaartweergave van Ceintuurbaan 47 H, 1072 ET Amsterdam, Netherlands, 1072 ET Amsterdam</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section section-accent">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Veelgestelde Vragen</h2>
+        <p class="section-description">
+          Alles wat u moet weten over onze diensten
+        </p>
+      </div>
+
+      <div class="faq-container">
+        <div class="faq-list" id="faqList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h3 class="footer-brand-title">Sofia Hairsalon</h3>
+          <p class="footer-tagline">Waar Kunst Haar Ontmoet</p>
+          <p class="footer-description">
+            1072 ET Amsterdam's bestemming voor precisie knipbeurten, expert kleur en gepersonaliseerde stijl sinds {{FOUNDING_YEAR}}
+          </p>
+          <!-- Social media links kunnen hier worden toegevoegd -->
+        </div>
+
+        <div>
+          <h4 class="footer-section-title">Snelle Links</h4>
+          <ul class="footer-links">
+            <li><button class="footer-link" onclick="scrollToSection('services')">Diensten</button></li>
+            <li><button class="footer-link" onclick="scrollToSection('team')">Ons Team</button></li>
+            <li><button class="footer-link" onclick="scrollToSection('gallery')">Galerij</button></li>
+            <li><button class="footer-link" onclick="scrollToSection('testimonials')">Reviews</button></li>
+            <li><button class="footer-link" onclick="scrollToSection('booking')">Online Boeken</button></li>
+            <li><button class="footer-link" onclick="scrollToSection('contact')">Contact</button></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-section-title">Contact</h4>
+          <div class="footer-contact-item">
+            Ceintuurbaan 47 H, 1072 ET Amsterdam, Netherlands<br>1072 ET Amsterdam
+          </div>
+          <div class="footer-contact-item">
+            <a href="tel:+31204567890" class="footer-contact-link">
+              +31 20 363 6272
+            </a>
+          </div>
+          <div class="footer-contact-item">
+            <a href="mailto:contact@business.com" class="footer-contact-link">
+              contact@business.com
+            </a>
+          </div>
+          <div class="footer-contact-item">
+            <p class="footer-hours-title">Openingstijden:</p>
+            <p>Di-Vr: 9:00-20:00</p>
+            <p>Zaterdag: 9:00-18:00</p>
+            <p>Zo-Ma: Gesloten</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2025 Sofia Hairsalon. Alle rechten voorbehouden.</p>
+        <p>Met trots 1072 ET Amsterdam bedienend sinds {{FOUNDING_YEAR}}</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Navigation scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Smooth scroll
+    function scrollToSection(sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // Services data
+    const services = [
+      {
+        name: "Precisie Knipbeurt & Styling",
+        duration: "45-60 minuten",
+        price: "€55",
+        description: "Expert consultatie gevolgd door precisie knippen afgestemd op uw gezichtsvorm, haartextuur en levensstijl. Inclusief wassen, knippen, föhnen en styling advies.",
+        perfectFor: "Alle haartypes die op zoek zijn naar een persoonlijke knipbeurt"
+      },
+      {
+        name: "Kleurtransformatie",
+        duration: "2-3 uur",
+        price: "€95",
+        description: "Volledige kleurservice inclusief consultatie, applicatie, toneren en afwerking. We gebruiken premium kleurlijnen voor levendige, langdurige resultaten met minimale schade.",
+        perfectFor: "Grijs bedekken, toon veranderen of kleur opfrissen"
+      },
+      {
+        name: "Balayage & Highlights",
+        duration: "2.5-4 uur",
+        price: "€140",
+        description: "Handgeschilderde highlight techniek voor natuurlijke, zongezoende dimensie. Op maat gemaakte plaatsing voor onderhoudsarme, uitgroei-vriendelijke resultaten.",
+        perfectFor: "Natuurlijk ogende helderheid en dimensie"
+      },
+      {
+        name: "Hair Extensions",
+        duration: "3-4 uur",
+        price: "€350",
+        description: "Premium menselijk haar extensions aangebracht met technieken die passen bij uw haar. Inclusief consultatie, kleur matching, applicatie, knipbeurt en styling.",
+        perfectFor: "Lengte, volume of tijdelijke kleur"
+      },
+      {
+        name: "Bruids & Speciale Gelegenheden",
+        duration: "1.5-2 uur",
+        price: "€85",
+        description: "Elegante opsteken, romantische golven of strakke styles voor uw speciale dag. Inclusief proef sessie en on-location service beschikbaar.",
+        perfectFor: "Bruiloften, gala's, fotoshoots"
+      },
+      {
+        name: "Haarbehandelingen & Verzorging",
+        duration: "30-45 minuten",
+        price: "€35",
+        description: "Intensieve behandelingen inclusief Olaplex, keratine smoothing, diepe conditionering en hoofdhuidtherapie. Herstel gezondheid en glans aan beschadigd haar.",
+        perfectFor: "Beschadigd, droog of chemisch behandeld haar"
+      }
+    ];
+
+    // Render services
+    const servicesGrid = document.getElementById('servicesGrid');
+    services.forEach(service => {
+      const card = document.createElement('div');
+      card.className = 'service-card';
+      card.innerHTML = `
+        <h3 class="service-title">${service.name}</h3>
+        <div class="service-meta">
+          <div class="service-meta-item">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            ${service.duration}
+          </div>
+          <div class="service-meta-item">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Starting from ${service.price}
+          </div>
+        </div>
+        <p class="service-description">${service.description}</p>
+        <div class="service-perfect">
+          <span>Perfect for:</span> ${service.perfectFor}
+        </div>
+      `;
+      servicesGrid.appendChild(card);
+    });
+
+    // Gallery data
+    const transformations = [
+      {
+        before: "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=800",
+        after: "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?q=80&w=800",
+        caption: "Balayage door Sophie",
+        service: "Balayage"
+      },
+      {
+        before: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?q=80&w=800",
+        after: "https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?q=80&w=800",
+        caption: "Kleuren Correctie door Sophie",
+        service: "Kleurtransformatie"
+      },
+      {
+        before: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=800",
+        after: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=800",
+        caption: "Precisie Knipbeurt door Maria",
+        service: "Knipbeurt"
+      },
+      {
+        before: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800",
+        after: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=800",
+        caption: "Bruidsstyling door Lisa",
+        service: "Speciale Gelegenheid"
+      }
+    ];
+
+    let currentSlideIndex = 0;
+    let sliderPosition = 50;
+
+    function updateGallery() {
+      const current = transformations[currentSlideIndex];
+      document.getElementById('sliderBefore').src = current.before;
+      document.getElementById('sliderAfter').src = current.after;
+      document.getElementById('galleryCaption').textContent = current.caption;
+      document.getElementById('galleryService').textContent = current.service;
+      updateSliderPosition(50);
+      updateGalleryDots();
+    }
+
+    function updateSliderPosition(value) {
+      sliderPosition = value;
+      const wrapper = document.getElementById('sliderAfterWrapper');
+      const line = document.getElementById('sliderLine');
+      wrapper.style.clipPath = `polygon(${value}% 0, 100% 0, 100% 100%, ${value}% 100%)`;
+      line.style.left = `${value}%`;
+    }
+
+    function nextSlide() {
+      currentSlideIndex = (currentSlideIndex + 1) % transformations.length;
+      updateGallery();
+    }
+
+    function prevSlide() {
+      currentSlideIndex = (currentSlideIndex - 1 + transformations.length) % transformations.length;
+      updateGallery();
+    }
+
+    function updateGalleryDots() {
+      const dotsContainer = document.getElementById('galleryDots');
+      dotsContainer.innerHTML = '';
+      transformations.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.className = 'gallery-dot' + (index === currentSlideIndex ? ' active' : '');
+        dot.onclick = () => {
+          currentSlideIndex = index;
+          updateGallery();
+        };
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    // Slider input
+    document.getElementById('sliderInput').addEventListener('input', (e) => {
+      updateSliderPosition(Number(e.target.value));
+    });
+
+    // Initialize gallery
+    updateGallery();
+
+    // Team data
+    const team = [
+      {
+        name: "Sophie Dubois",
+        title: "Eigenaar & Meester Kleurist",
+        experience: "25 jaar ervaring",
+        specialties: ["Balayage", "Kleuren Correctie", "Blonden"],
+        bio: "Na training in Parijs, heb ik Sofia Hairsalon geopend om een ruimte te creëren waar technische excellentie persoonlijke service ontmoet. Mijn passie is het creëren van natuurlijke, dimensionale kleur.",
+        image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=600"
+      },
+      {
+        name: "Maria Janssen",
+        title: "Senior Stylist",
+        experience: "12 jaar ervaring",
+        specialties: ["Precisie Knipbeurten", "Krullend Haar", "Extensions"],
+        bio: "Ik geloof dat elke knipbeurt moet werken met uw natuurlijke textuur en levensstijl. Mijn aanpak combineert klassieke technieken met moderne styling voor moeiteloze, draagbare resultaten.",
+        image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600"
+      },
+      {
+        name: "Lisa van der Berg",
+        title: "Stylist & Kleurist",
+        experience: "8 jaar ervaring",
+        specialties: ["Redactionele Styles", "Fashion Kleur", "Opsteken"],
+        bio: "Ik hou ervan om creatieve grenzen te verleggen terwijl ik het haar gezond houd. Of het nu een gedurfde fashion kleur is of een elegant opsteekkapsel, ik focus op het zelfvertrouwen van elke klant.",
+        image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=600"
+      },
+      {
+        name: "Emma de Vries",
+        title: "Junior Stylist",
+        experience: "4 jaar ervaring",
+        specialties: ["Blowouts", "Herenknipbeurten", "Haargezondheid"],
+        bio: "Ik ben toegewijd aan voortdurende opleiding en het perfectioneren van mijn vak. Ik specialiseer me in gezonde haarpraktijken en het helpen van klanten hun stijl tussen bezoeken door te behouden.",
+        image: "https://images.unsplash.com/photo-1598550476439-6847785fcea6?q=80&w=600"
+      }
+    ];
+
+    // Render team
+    const teamGrid = document.getElementById('teamGrid');
+    team.forEach(member => {
+      const card = document.createElement('div');
+      card.className = 'team-card';
+      card.innerHTML = `
+        <div class="team-image-wrapper">
+          <img src="${member.image}" alt="${member.name}" class="team-image">
+        </div>
+        <div class="team-info">
+          <h3 class="team-name">${member.name}</h3>
+          <p class="team-title">${member.title}</p>
+          <p class="team-experience">${member.experience}</p>
+          <div class="team-specialties">
+            ${member.specialties.map(s => `<span class="team-specialty">${s}</span>`).join('')}
+          </div>
+          <p class="team-bio">${member.bio}</p>
+          <div class="team-footer">
+            <button class="team-book-btn" onclick="scrollToSection('booking')">Afspraak Maken →</button>
+          </div>
+        </div>
+      `;
+      teamGrid.appendChild(card);
+    });
+
+    // Booking form
+    let formSubmitted = false;
+    let formData = {
+      service: "",
+      stylist: "",
+      date: "",
+      time: "",
+      name: "",
+      email: "",
+      phone: "",
+      notes: ""
+    };
+
+    function renderBookingForm() {
+      const wrapper = document.getElementById('bookingFormWrapper');
+      
+      if (formSubmitted) {
+        wrapper.innerHTML = `
+          <div class="success-message">
+            <div class="success-icon">
+              <svg width="32" height="32" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <h3 class="success-title">Aanvraag Ontvangen!</h3>
+            <p class="success-text">We bevestigen uw afspraak binnen 4 uur tijdens kantooruren.</p>
+          </div>
+        `;
+      } else {
+        const minDate = new Date().toISOString().split('T')[0];
+        wrapper.innerHTML = `
+          <form id="bookingForm">
+            <div class="form-group">
+              <label class="form-label">Selecteer Dienst *</label>
+              <select class="form-select" name="service" required>
+                <option value="">Kies een dienst</option>
+                <option value="haircut">Precisie Knipbeurt & Styling</option>
+                <option value="color">Kleurtransformatie</option>
+                <option value="balayage">Balayage & Highlights</option>
+                <option value="extensions">Hair Extensions</option>
+                <option value="bridal">Bruids & Speciale Gelegenheden</option>
+                <option value="treatment">Haarbehandelingen & Verzorging</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Voorkeur Stylist</label>
+              <select class="form-select" name="stylist">
+                <option value="">Geen voorkeur</option>
+                <option value="sophie">Sophie Dubois</option>
+                <option value="maria">Maria Janssen</option>
+                <option value="lisa">Lisa van der Berg</option>
+                <option value="emma">Emma de Vries</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Voorkeur Datum *</label>
+                <input type="date" class="form-input" name="date" min="${minDate}" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Voorkeur Tijd *</label>
+                <select class="form-select" name="time" required>
+                  <option value="">Selecteer tijd</option>
+                  <option value="09:00">9:00</option>
+                  <option value="10:00">10:00</option>
+                  <option value="11:00">11:00</option>
+                  <option value="12:00">12:00</option>
+                  <option value="13:00">13:00</option>
+                  <option value="14:00">14:00</option>
+                  <option value="15:00">15:00</option>
+                  <option value="16:00">16:00</option>
+                  <option value="17:00">17:00</option>
+                  <option value="18:00">18:00</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Uw Naam *</label>
+              <input type="text" class="form-input" name="name" placeholder="Volledige naam" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email *</label>
+              <input type="email" class="form-input" name="email" placeholder="uw@email.nl" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Telefoonnummer *</label>
+              <input type="tel" class="form-input" name="phone" placeholder="+31 20 123 4567" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Speciale Verzoeken of Consultatie Opmerkingen</label>
+              <textarea class="form-textarea" name="notes" placeholder="Vertel ons over uw haardoelen, eventuele zorgen of speciale wensen..." style="height: 6rem;"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+              Afspraak Aanvragen
+            </button>
+
+            <p class="form-note">
+              We bevestigen uw boeking binnen 4 uur tijdens kantooruren
+            </p>
+          </form>
+        `;
+
+        document.getElementById('bookingForm').addEventListener('submit', handleBookingSubmit);
+      }
+    }
+
+    async function handleBookingSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      btn.textContent = 'Aanvraag Wordt Verzonden...';
+      btn.disabled = true;
+
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      formSubmitted = true;
+      renderBookingForm();
+
+      setTimeout(() => {
+        formSubmitted = false;
+        renderBookingForm();
+      }, 5000);
+    }
+
+    renderBookingForm();
+
+    // Testimonials data
+    const testimonials = [
+      {
+        text: "Sophie is een absolute tovenaar met kleur. Ik kwam binnen met jaren van slechte box verf, en zij transformeerde mijn haar tot het mooiste, natuurlijk uitziende blond. De salon is elegant en comfortabel, en het hele team is professioneel en gastvrij. Elke euro waard.",
+        author: "Anna Bakker",
+        service: "Kleuren Correctie & Balayage",
+        rating: 5
+      },
+      {
+        text: "Ik kom nu al drie jaar naar Sofia Hairsalon en ik ga nergens anders heen. Maria begrijpt precies wat ik wil en levert altijd. Mijn knipbeurten groeien mooi uit en ik krijg elke keer complimenten. De sfeer is ontspannend en de koffie is geweldig!",
+        author: "Mark Jansen",
+        service: "Herenknipbeurt",
+        rating: 5
+      },
+      {
+        text: "Beste balayage die ik ooit heb gehad. Lisa luisterde aandachtig naar wat ik wilde - natuurlijke, onderhoudsarme dimensie - en leverde precies dat. Zes maanden later ziet het er nog steeds ongelofelijk uit. De kwaliteit van het werk en producten die ze gebruiken is echt merkbaar.",
+        author: "Sarah de Vries",
+        service: "Balayage",
+        rating: 5
+      },
+      {
+        text: "Ik had mijn bruiloft haar hier gedaan en het was perfectie. Sophie en haar team deden mijn proef en de echte dag, en ik voelde me absoluut prachtig. Ze waren kalm, professioneel en creëerden precies de romantische, elegante stijl waar ik van droomde. Kan het niet genoeg aanbevelen voor speciale gelegenheden.",
+        author: "Emma Vermeer",
+        service: "Bruidsstyling",
+        rating: 5
+      }
+    ];
+
+    let currentTestimonialIndex = 0;
+
+    function updateTestimonial() {
+      const current = testimonials[currentTestimonialIndex];
+      
+      const starsContainer = document.getElementById('testimonialStars');
+      starsContainer.innerHTML = '';
+      for (let i = 0; i < current.rating; i++) {
+        starsContainer.innerHTML += '<svg class="star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
+      }
+
+      document.getElementById('testimonialText').textContent = `"${current.text}"`;
+      document.getElementById('testimonialName').textContent = current.author;
+      document.getElementById('testimonialService').textContent = current.service;
+      updateTestimonialDots();
+    }
+
+    function nextTestimonial() {
+      currentTestimonialIndex = (currentTestimonialIndex + 1) % testimonials.length;
+      updateTestimonial();
+    }
+
+    function prevTestimonial() {
+      currentTestimonialIndex = (currentTestimonialIndex - 1 + testimonials.length) % testimonials.length;
+      updateTestimonial();
+    }
+
+    function updateTestimonialDots() {
+      const dotsContainer = document.getElementById('testimonialDots');
+      dotsContainer.innerHTML = '';
+      testimonials.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.className = 'testimonial-dot' + (index === currentTestimonialIndex ? ' active' : '');
+        dot.onclick = () => {
+          currentTestimonialIndex = index;
+          updateTestimonial();
+        };
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    updateTestimonial();
+
+    // FAQ data
+    const faqs = [
+      {
+        question: "Hoe moet ik me voorbereiden op mijn kleur afspraak?",
+        answer: "Kom met schoon, droog haar (de avond ervoor gewassen is ideaal). Vermijd het gebruik van zware styling producten. Breng foto's mee van kleuren waar u van houdt als u die heeft. We bespreken alles tijdens uw consultatie."
+      },
+      {
+        question: "Doen jullie consultaties voor nieuwe klanten?",
+        answer: "Ja, elke service begint met een grondige consultatie zonder extra kosten. Voor grote transformaties raden we aan om een aparte 15 minuten consultatie afspraak te boeken voor uw service."
+      },
+      {
+        question: "Welke kleur merken gebruiken jullie?",
+        answer: "We gebruiken premium professionele lijnen inclusief Wella Professionals, Olaplex en Kevin Murphy. We selecteren producten op basis van de behoeften van uw haar en gewenste resultaten."
+      },
+      {
+        question: "Kan ik elke keer dezelfde stylist boeken?",
+        answer: "Absoluut. We moedigen het opbouwen van een relatie met uw stylist aan. U kunt uw voorkeur stylist aanvragen bij het boeken, en we doen ons best om uw schema te accommoderen."
+      },
+      {
+        question: "Bieden jullie hair extensions aan?",
+        answer: "Ja, we bieden tape-in, keratine bond en clip-in extensions aan met 100% menselijk haar. Consultaties voor extensions zijn gratis en duren meestal 15-20 minuten."
+      },
+      {
+        question: "Wat is jullie annuleringsbeleid?",
+        answer: "We vereisen 24 uur van tevoren voor annuleringen of omboeken. Late annuleringen kunnen een 50% service fee met zich meebrengen."
+      },
+      {
+        question: "Werken jullie met krullend of gestructureerd haar?",
+        answer: "Ja, Maria specialiseert zich in krullend en gestructureerd haar. We zijn getraind in kniptechnieken specifiek voor krulpatronen en werken met producten ontworpen voor de gezondheid van krullend haar."
+      },
+      {
+        question: "Kan ik foto's meebrengen van styles die ik leuk vind?",
+        answer: "Alstublieft wel! Foto's helpen ons uw visie te begrijpen. We bespreken wat haalbaar is met uw haartype en hoe we trends kunnen aanpassen om bij u te passen."
+      },
+      {
+        question: "Verkopen jullie haarproducten?",
+        answer: "Ja, we hebben professionele lijnen inclusief Kevin Murphy, Olaplex en Wella. We bevelen alleen producten aan die we persoonlijk gebruiken en vertrouwen."
+      },
+      {
+        question: "Is er parkeren in de buurt?",
+        answer: "Straatparkeren is beschikbaar in de buurt. We hebben ook fietsenparkeren direct buiten de salon voor uw gemak."
+      }
+    ];
+
+    // Render FAQs
+    const faqList = document.getElementById('faqList');
+    faqs.forEach((faq, index) => {
+      const item = document.createElement('div');
+      item.className = 'faq-item';
+      item.innerHTML = `
+        <button class="faq-question" onclick="toggleFAQ(${index})">
+          <span class="faq-question-text">${faq.question}</span>
+          <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-text">${faq.answer}</div>
+        </div>
+      `;
+      faqList.appendChild(item);
+    });
+
+    function toggleFAQ(index) {
+      const items = document.querySelectorAll('.faq-item');
+      items[index].classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
