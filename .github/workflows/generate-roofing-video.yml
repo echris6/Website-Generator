@@ -685,56 +685,85 @@ jobs:
             echo "has_video=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Commit and push video to repository
+      - name: Upload video to Supabase Storage
         if: steps.check_videos.outputs.has_video == 'true'
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: |
-          echo "=== Committing Video to Repository ==="
+          echo "=== Uploading Video to Supabase Storage ==="
 
-          # Get the HTML filename to create matching video name
+          # Get HTML filename
           HTML_FILENAME="${{ steps.business_data.outputs.html_filename }}"
 
           if [ -n "$HTML_FILENAME" ]; then
-            # Extract base filename without extension
-            BASE_FILENAME="${HTML_FILENAME%.html}"
-
             # Find the most recent MP4 file
             VIDEO_FILE=$(ls -t videos/*.mp4 2>/dev/null | head -1)
 
             if [ -n "$VIDEO_FILE" ]; then
-              # Rename to match HTML filename
-              mv "$VIDEO_FILE" "videos/${BASE_FILENAME}.mp4"
-              echo "✅ Renamed video to: videos/${BASE_FILENAME}.mp4"
+              echo "📁 Found video: $VIDEO_FILE"
 
-              # Configure git
-              git config user.name "github-actions[bot]"
-              git config user.email "github-actions[bot]@users.noreply.github.com"
+              # Extract base filename for consistent naming
+              BASE_FILENAME="${HTML_FILENAME%.html}"
+              VIDEO_FILENAME="${BASE_FILENAME}.mp4"
 
-              # Add and commit the video
-              git add videos/
+              echo "📺 Uploading as: $VIDEO_FILENAME"
 
-              if git diff --staged --quiet; then
-                echo "⚠️ No changes to commit"
+              # Upload to Supabase Storage
+              UPLOAD_RESPONSE=$(curl -X POST \
+                "${SUPABASE_URL}/storage/v1/object/business-videos/${VIDEO_FILENAME}" \
+                -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
+                -H "Content-Type: video/mp4" \
+                -H "x-upsert: true" \
+                --data-binary "@${VIDEO_FILE}" \
+                --write-out "\n%{http_code}" \
+                --silent)
+
+              HTTP_CODE=$(echo "$UPLOAD_RESPONSE" | tail -n1)
+
+              if [ "$HTTP_CODE" -eq 200 ] || [ "$HTTP_CODE" -eq 201 ]; then
+                echo "✅ Video uploaded successfully!"
+
+                # Get public URL
+                VIDEO_URL="${SUPABASE_URL}/storage/v1/object/public/business-videos/${VIDEO_FILENAME}"
+                echo "📺 Video URL: $VIDEO_URL"
+
+                # Update database
+                echo "💾 Updating database..."
+                curl -X POST \
+                  "${SUPABASE_URL}/rest/v1/websites" \
+                  -H "apikey: ${SUPABASE_SERVICE_KEY}" \
+                  -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
+                  -H "Content-Type: application/json" \
+                  -H "Prefer: resolution=merge-duplicates" \
+                  -d "{
+                    \"html_filename\": \"${HTML_FILENAME}\",
+                    \"business_name\": \"${{ steps.business_data.outputs.business_name }}\",
+                    \"business_city\": \"${{ steps.business_data.outputs.business_city }}\",
+                    \"business_phone\": \"${{ steps.business_data.outputs.business_phone }}\",
+                    \"business_email\": \"${{ steps.business_data.outputs.business_email }}\",
+                    \"industry\": \"${{ steps.business_data.outputs.industry }}\",
+                    \"html_url\": \"https://echris6.github.io/Website-Generator/temp-html/${HTML_FILENAME}\",
+                    \"video_filename\": \"${VIDEO_FILENAME}\",
+                    \"video_url\": \"${VIDEO_URL}\",
+                    \"video_status\": \"completed\",
+                    \"video_generation_completed_at\": \"$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")\"
+                  }"
+
+                echo "✅ Database updated!"
+                echo "=== Upload Complete ==="
+
               else
-                git commit -m "Add video tour: ${{ steps.business_data.outputs.business_name }}"
-                echo "✅ Video committed successfully"
-
-                # Pull latest changes (in case another workflow pushed)
-                git pull origin main --rebase
-                echo "✅ Synced with remote"
-
-                # Push to repository
-                git push
-                echo "✅ Video pushed to repository"
-                echo "📺 Video URL: https://echris6.github.io/Website-Generator/videos/${BASE_FILENAME}.mp4"
+                echo "❌ Upload failed with status: $HTTP_CODE"
+                echo "$UPLOAD_RESPONSE" | sed '$d'
+                exit 1
               fi
             else
-              echo "⚠️ No video file found to commit"
+              echo "⚠️ No video file found"
             fi
           else
-            echo "⚠️ No HTML filename provided, skipping rename and commit"
+            echo "⚠️ No HTML filename provided"
           fi
-
-          echo "=== Video Commit Complete ==="
 
       - name: Upload video artifact
         if: always() && steps.check_videos.outputs.has_video == 'true'
