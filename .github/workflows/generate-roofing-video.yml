@@ -718,6 +718,10 @@ jobs:
                 git commit -m "Add video tour: ${{ steps.business_data.outputs.business_name }}"
                 echo "✅ Video committed successfully"
 
+                # Pull latest changes (in case another workflow pushed)
+                git pull origin main --rebase
+                echo "✅ Synced with remote"
+
                 # Push to repository
                 git push
                 echo "✅ Video pushed to repository"
