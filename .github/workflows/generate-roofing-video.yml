@@ -682,7 +682,54 @@ jobs:
             echo "❌ No videos directory or empty"
             echo "has_video=false" >> $GITHUB_OUTPUT
           fi
-          
+
+      - name: Commit and push video to repository
+        if: steps.check_videos.outputs.has_video == 'true'
+        run: |
+          echo "=== Committing Video to Repository ==="
+
+          # Get the HTML filename to create matching video name
+          HTML_FILENAME="${{ steps.business_data.outputs.html_filename }}"
+
+          if [ -n "$HTML_FILENAME" ]; then
+            # Extract base filename without extension
+            BASE_FILENAME="${HTML_FILENAME%.html}"
+
+            # Find the most recent MP4 file
+            VIDEO_FILE=$(ls -t videos/*.mp4 2>/dev/null | head -1)
+
+            if [ -n "$VIDEO_FILE" ]; then
+              # Rename to match HTML filename
+              mv "$VIDEO_FILE" "videos/${BASE_FILENAME}.mp4"
+              echo "✅ Renamed video to: videos/${BASE_FILENAME}.mp4"
+
+              # Configure git
+              git config user.name "github-actions[bot]"
+              git config user.email "github-actions[bot]@users.noreply.github.com"
+
+              # Add and commit the video
+              git add videos/
+
+              if git diff --staged --quiet; then
+                echo "⚠️ No changes to commit"
+              else
+                git commit -m "Add video tour: ${{ steps.business_data.outputs.business_name }}"
+                echo "✅ Video committed successfully"
+
+                # Push to repository
+                git push
+                echo "✅ Video pushed to repository"
+                echo "📺 Video URL: https://echris6.github.io/Website-Generator/videos/${BASE_FILENAME}.mp4"
+              fi
+            else
+              echo "⚠️ No video file found to commit"
+            fi
+          else
+            echo "⚠️ No HTML filename provided, skipping rename and commit"
+          fi
+
+          echo "=== Video Commit Complete ==="
+
       - name: Upload video artifact
         if: always() && steps.check_videos.outputs.has_video == 'true'
         uses: actions/upload-artifact@v4
