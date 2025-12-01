@@ -757,10 +757,21 @@ jobs:
                 # Update database
                 echo "💾 Updating database..."
 
-                # Update the existing record using PATCH
+                # Build query - use html_filename if available, otherwise use business_name
                 COMPLETION_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+                if [ -n "$HTML_FILENAME" ]; then
+                  echo "🔍 Looking up record by html_filename: $HTML_FILENAME"
+                  QUERY="html_filename=eq.${HTML_FILENAME}"
+                else
+                  echo "🔍 Looking up record by business_name: $BUSINESS_NAME (most recent)"
+                  # URL encode business name for query
+                  ENCODED_BUSINESS_NAME=$(echo "$BUSINESS_NAME" | jq -sRr @uri)
+                  QUERY="business_name=eq.${ENCODED_BUSINESS_NAME}&order=created_at.desc&limit=1"
+                fi
+
                 UPDATE_RESPONSE=$(curl -s -w "\n%{http_code}" -X PATCH \
-                  "${SUPABASE_URL}/rest/v1/websites?html_filename=eq.${HTML_FILENAME}" \
+                  "${SUPABASE_URL}/rest/v1/websites?${QUERY}" \
                   -H "apikey: ${SUPABASE_SERVICE_KEY}" \
                   -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
                   -H "Content-Type: application/json" \
