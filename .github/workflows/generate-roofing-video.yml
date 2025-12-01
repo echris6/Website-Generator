@@ -63,6 +63,8 @@ jobs:
             ${{ runner.os }}-apt-
 
       - name: Install dependencies
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
         run: |
           echo "📦 Installing dependencies..."
           npm install
@@ -72,6 +74,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ffmpeg
 
+          # Install Chromium (lightweight browser for Puppeteer)
+          echo "🌐 Installing Chromium for Puppeteer..."
+          sudo apt-get install -y chromium-browser
+
           # Install additional system packages for Puppeteer
           sudo apt-get install -y \
             libasound2t64 \
@@ -79,13 +85,17 @@ jobs:
             libgtk-3-0 \
             libx11-xcb1 \
             xvfb
-          
+
+          # Set Chromium path for Puppeteer
+          echo "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser" >> $GITHUB_ENV
+
           # Verify installations
           echo "🔍 Verifying installations..."
           node --version
           npm --version
           ffmpeg -version
-          
+          chromium-browser --version
+
           # Verify critical dependencies
           echo "🔍 Verifying critical dependencies..."
           node -e "console.log('Puppeteer:', require('puppeteer').version || 'installed')"
