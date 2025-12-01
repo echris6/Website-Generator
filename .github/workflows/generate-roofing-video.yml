@@ -747,25 +747,15 @@ jobs:
                 # Update database
                 echo "💾 Updating database..."
 
-                # Prepare JSON payload
-                UPDATE_PAYLOAD=$(cat <<EOF
-{
-  "video_filename": "${VIDEO_FILENAME}",
-  "video_url": "${VIDEO_URL}",
-  "video_status": "completed",
-  "video_generation_completed_at": "$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")"
-}
-EOF
-)
-
                 # Update the existing record using PATCH
+                COMPLETION_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
                 UPDATE_RESPONSE=$(curl -s -w "\n%{http_code}" -X PATCH \
                   "${SUPABASE_URL}/rest/v1/websites?html_filename=eq.${HTML_FILENAME}" \
                   -H "apikey: ${SUPABASE_SERVICE_KEY}" \
                   -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
                   -H "Content-Type: application/json" \
                   -H "Prefer: return=representation" \
-                  -d "${UPDATE_PAYLOAD}")
+                  -d "{\"video_filename\":\"${VIDEO_FILENAME}\",\"video_url\":\"${VIDEO_URL}\",\"video_status\":\"completed\",\"video_generation_completed_at\":\"${COMPLETION_TIME}\"}")
 
                 # Extract HTTP code and response
                 UPDATE_HTTP_CODE=$(echo "$UPDATE_RESPONSE" | tail -n1)
