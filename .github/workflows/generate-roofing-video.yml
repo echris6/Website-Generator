@@ -757,34 +757,58 @@ jobs:
                 # Update database
                 echo "💾 Updating database..."
 
-                # Build query - use html_filename if available, otherwise use business_name
+                # Smart fallback: try html_filename first, then business_name if no match
                 COMPLETION_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+                UPDATE_PAYLOAD="{\"video_filename\":\"${VIDEO_FILENAME}\",\"video_url\":\"${VIDEO_URL}\",\"video_status\":\"completed\",\"video_generation_completed_at\":\"${COMPLETION_TIME}\"}"
 
+                # Try 1: Update by html_filename (if provided)
                 if [ -n "$HTML_FILENAME" ]; then
-                  echo "🔍 Looking up record by html_filename: $HTML_FILENAME"
-                  QUERY="html_filename=eq.${HTML_FILENAME}"
-                else
-                  echo "🔍 Looking up record by business_name: $BUSINESS_NAME (most recent)"
-                  # URL encode business name for query
-                  ENCODED_BUSINESS_NAME=$(echo "$BUSINESS_NAME" | jq -sRr @uri)
-                  QUERY="business_name=eq.${ENCODED_BUSINESS_NAME}&order=created_at.desc&limit=1"
+                  echo "🔍 Attempt 1: Looking up by html_filename: $HTML_FILENAME"
+                  UPDATE_RESPONSE=$(curl -s -w "\n%{http_code}" -X PATCH \
+                    "${SUPABASE_URL}/rest/v1/websites?html_filename=eq.${HTML_FILENAME}" \
+                    -H "apikey: ${SUPABASE_SERVICE_KEY}" \
+                    -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
+                    -H "Content-Type: application/json" \
+                    -H "Prefer: return=representation" \
+                    -d "$UPDATE_PAYLOAD")
+
+                  UPDATE_HTTP_CODE=$(echo "$UPDATE_RESPONSE" | tail -n1)
+                  UPDATE_BODY=$(echo "$UPDATE_RESPONSE" | sed '$d')
+
+                  # Check if response is empty array (no match found)
+                  if [ "$UPDATE_BODY" = "[]" ]; then
+                    echo "⚠️ No record found with html_filename, trying fallback..."
+                    UPDATE_RESPONSE=""  # Clear for fallback attempt
+                  fi
                 fi
 
-                UPDATE_RESPONSE=$(curl -s -w "\n%{http_code}" -X PATCH \
-                  "${SUPABASE_URL}/rest/v1/websites?${QUERY}" \
-                  -H "apikey: ${SUPABASE_SERVICE_KEY}" \
-                  -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
-                  -H "Content-Type: application/json" \
-                  -H "Prefer: return=representation" \
-                  -d "{\"video_filename\":\"${VIDEO_FILENAME}\",\"video_url\":\"${VIDEO_URL}\",\"video_status\":\"completed\",\"video_generation_completed_at\":\"${COMPLETION_TIME}\"}")
+                # Try 2: Fallback to business_name (most recent) if html_filename failed
+                if [ -z "$UPDATE_RESPONSE" ] || [ "$UPDATE_BODY" = "[]" ]; then
+                  echo "🔍 Attempt 2: Looking up by business_name: $BUSINESS_NAME (most recent)"
+                  # URL encode business name for query
+                  ENCODED_BUSINESS_NAME=$(echo "$BUSINESS_NAME" | jq -sRr @uri)
 
-                # Extract HTTP code and response
-                UPDATE_HTTP_CODE=$(echo "$UPDATE_RESPONSE" | tail -n1)
-                UPDATE_BODY=$(echo "$UPDATE_RESPONSE" | sed '$d')
+                  UPDATE_RESPONSE=$(curl -s -w "\n%{http_code}" -X PATCH \
+                    "${SUPABASE_URL}/rest/v1/websites?business_name=eq.${ENCODED_BUSINESS_NAME}&order=created_at.desc&limit=1" \
+                    -H "apikey: ${SUPABASE_SERVICE_KEY}" \
+                    -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
+                    -H "Content-Type: application/json" \
+                    -H "Prefer: return=representation" \
+                    -d "$UPDATE_PAYLOAD")
 
+                  UPDATE_HTTP_CODE=$(echo "$UPDATE_RESPONSE" | tail -n1)
+                  UPDATE_BODY=$(echo "$UPDATE_RESPONSE" | sed '$d')
+                fi
+
+                # Check final result
                 if [ "$UPDATE_HTTP_CODE" -eq 200 ] || [ "$UPDATE_HTTP_CODE" -eq 204 ]; then
-                  echo "✅ Database updated successfully!"
-                  echo "Response: $UPDATE_BODY"
+                  if [ "$UPDATE_BODY" = "[]" ]; then
+                    echo "⚠️ Database update returned empty - no matching record found!"
+                    echo "Response: $UPDATE_BODY"
+                  else
+                    echo "✅ Database updated successfully!"
+                    echo "Response: $UPDATE_BODY"
+                  fi
                 else
                   echo "⚠️ Database update failed with status: $UPDATE_HTTP_CODE"
                   echo "Response: $UPDATE_BODY"
