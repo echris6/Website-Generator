@@ -45,17 +45,33 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-        
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Cache apt packages
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-apt-${{ hashFiles('.github/workflows/generate-roofing-video.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-apt-
+
       - name: Install dependencies
         run: |
           echo "📦 Installing dependencies..."
           npm install
-          
+
           # Install FFmpeg for video processing
           echo "🎥 Installing FFmpeg..."
           sudo apt-get update
           sudo apt-get install -y ffmpeg
-          
+
           # Install additional system packages for Puppeteer
           sudo apt-get install -y \
             libasound2t64 \

@@ -82,7 +82,10 @@ app.post('/generate-video', async (req, res) => {
         '--disable-dev-shm-usage',
         '--disable-gpu',
         '--disable-web-security',
-        '--disable-features=VizDisplayCompositor'
+        '--disable-features=VizDisplayCompositor',
+        '--disable-extensions',
+        '--disable-background-networking',
+        '--enable-features=NetworkService,NetworkServiceInProcess'
       ]
     });
 
@@ -98,7 +101,7 @@ app.post('/generate-video', async (req, res) => {
     // Load the HTML content directly
     console.log(`📄 Loading HTML content directly (${html_content.length} characters)`);
     await page.setContent(html_content, {
-      waitUntil: 'networkidle0',
+      waitUntil: 'networkidle2',
       timeout: 120000
     });
     console.log(`✅ HTML content loaded successfully`);
@@ -166,24 +169,14 @@ app.post('/generate-video', async (req, res) => {
         }, scrollY);
       }
 
-      // Precise timing for 60fps
-      const frameStart = Date.now();
-
       // Take screenshot and save to disk
-      const framePath = path.join(tempDir, `frame_${String(frame).padStart(5, '0')}.png`);
+      const framePath = path.join(tempDir, `frame_${String(frame).padStart(5, '0')}.jpg`);
       await page.screenshot({
-        type: 'png',
+        type: 'jpeg',
+        quality: 95,
         path: framePath,
         fullPage: false
       });
-
-      // Wait for remaining frame time to maintain perfect 60fps
-      const frameEnd = Date.now();
-      const elapsed = frameEnd - frameStart;
-      const waitTime = Math.max(0, frameInterval - elapsed);
-      if (waitTime > 0) {
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-      }
 
       // Log progress every 60 frames (1 second)
       if (frame % 60 === 0 && frame > 0) {
@@ -207,7 +200,7 @@ app.post('/generate-video', async (req, res) => {
     console.log(`🎞️ Starting FFmpeg conversion of ${totalFrames} frames`);
     console.log(`⏰ FFmpeg started at: ${new Date().toISOString()}`);
     await new Promise((resolve, reject) => {
-      const framePattern = path.join(tempDir, 'frame_%05d.png');
+      const framePattern = path.join(tempDir, 'frame_%05d.jpg');
 
       const command = ffmpeg()
         .input(framePattern)
@@ -219,7 +212,7 @@ app.post('/generate-video', async (req, res) => {
         .outputOptions([
           '-pix_fmt', 'yuv420p',
           '-crf', '17',
-          '-preset', 'slower',
+          '-preset', 'fast',
           '-movflags', '+faststart',
           '-r', '60',
           '-g', '120',
