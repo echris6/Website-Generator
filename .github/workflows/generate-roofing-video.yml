@@ -730,27 +730,40 @@ jobs:
 
                 # Update database
                 echo "💾 Updating database..."
-                curl -X POST \
-                  "${SUPABASE_URL}/rest/v1/websites" \
+
+                # Prepare JSON payload
+                UPDATE_PAYLOAD=$(cat <<EOF
+{
+  "video_filename": "${VIDEO_FILENAME}",
+  "video_url": "${VIDEO_URL}",
+  "video_status": "completed",
+  "video_generation_completed_at": "$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")"
+}
+EOF
+)
+
+                # Update the existing record using PATCH
+                UPDATE_RESPONSE=$(curl -s -w "\n%{http_code}" -X PATCH \
+                  "${SUPABASE_URL}/rest/v1/websites?html_filename=eq.${HTML_FILENAME}" \
                   -H "apikey: ${SUPABASE_SERVICE_KEY}" \
                   -H "Authorization: Bearer ${SUPABASE_SERVICE_KEY}" \
                   -H "Content-Type: application/json" \
-                  -H "Prefer: resolution=merge-duplicates" \
-                  -d "{
-                    \"html_filename\": \"${HTML_FILENAME}\",
-                    \"business_name\": \"${{ steps.business_data.outputs.business_name }}\",
-                    \"business_city\": \"${{ steps.business_data.outputs.business_city }}\",
-                    \"business_phone\": \"${{ steps.business_data.outputs.business_phone }}\",
-                    \"business_email\": \"${{ steps.business_data.outputs.business_email }}\",
-                    \"industry\": \"${{ steps.business_data.outputs.industry }}\",
-                    \"html_url\": \"https://echris6.github.io/Website-Generator/temp-html/${HTML_FILENAME}\",
-                    \"video_filename\": \"${VIDEO_FILENAME}\",
-                    \"video_url\": \"${VIDEO_URL}\",
-                    \"video_status\": \"completed\",
-                    \"video_generation_completed_at\": \"$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")\"
-                  }"
+                  -H "Prefer: return=representation" \
+                  -d "${UPDATE_PAYLOAD}")
 
-                echo "✅ Database updated!"
+                # Extract HTTP code and response
+                UPDATE_HTTP_CODE=$(echo "$UPDATE_RESPONSE" | tail -n1)
+                UPDATE_BODY=$(echo "$UPDATE_RESPONSE" | sed '$d')
+
+                if [ "$UPDATE_HTTP_CODE" -eq 200 ] || [ "$UPDATE_HTTP_CODE" -eq 204 ]; then
+                  echo "✅ Database updated successfully!"
+                  echo "Response: $UPDATE_BODY"
+                else
+                  echo "⚠️ Database update failed with status: $UPDATE_HTTP_CODE"
+                  echo "Response: $UPDATE_BODY"
+                  # Don't exit - video is still uploaded successfully
+                fi
+
                 echo "=== Upload Complete ==="
 
               else
