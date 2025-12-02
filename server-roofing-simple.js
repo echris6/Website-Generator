@@ -11,7 +11,7 @@ ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 
-const PORT = 3030;
+const PORT = process.env.PORT || 3030;
 
 // Check FFmpeg availability on startup
 console.log('🔧 FFmpeg path:', ffmpegInstaller.path);
