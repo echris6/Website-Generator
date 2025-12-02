@@ -286,7 +286,7 @@ app.post('/generate-video', async (req, res) => {
           const videoBuffer = fs.readFileSync(videoPath);
 
           const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('videos')
+            .from('business-videos')
             .upload(filename, videoBuffer, {
               contentType: 'video/mp4',
               upsert: true
@@ -299,7 +299,7 @@ app.post('/generate-video', async (req, res) => {
 
             // Get public URL
             const { data: urlData } = supabase.storage
-              .from('videos')
+              .from('business-videos')
               .getPublicUrl(filename);
 
             videoUrl = urlData.publicUrl;
@@ -312,7 +312,7 @@ app.post('/generate-video', async (req, res) => {
               console.log(`🔍 Looking up record by html_filename: ${htmlFilename}`);
 
               const { error: dbError } = await supabase
-                .from('generated_websites')
+                .from('websites')
                 .update({
                   video_url: videoUrl,
                   video_status: 'completed',
