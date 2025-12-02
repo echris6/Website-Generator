@@ -4,9 +4,24 @@ const fs = require('fs');
 const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
+const { createClient } = require('@supabase/supabase-js');
 
 // Set FFmpeg path
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
+
+// Initialize Supabase client
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+let supabase = null;
+
+if (supabaseUrl && supabaseKey) {
+  supabase = createClient(supabaseUrl, supabaseKey);
+  console.log('✅ Supabase client initialized');
+  console.log('📦 Supabase URL:', supabaseUrl);
+} else {
+  console.warn('⚠️  Supabase not configured - videos will not be uploaded to cloud storage');
+  console.warn('   Set SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables to enable uploads');
+}
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
@@ -261,6 +276,64 @@ app.post('/generate-video', async (req, res) => {
       console.log(`📁 File: ${filename}`);
       console.log(`📊 Size: ${fileSizeMB} MB`);
 
+      let videoUrl = null;
+      let uploadSuccess = false;
+
+      // Upload to Supabase Storage if configured
+      if (supabase) {
+        try {
+          console.log('📤 Uploading video to Supabase Storage...');
+          const videoBuffer = fs.readFileSync(videoPath);
+
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('videos')
+            .upload(filename, videoBuffer, {
+              contentType: 'video/mp4',
+              upsert: true
+            });
+
+          if (uploadError) {
+            console.error('❌ Supabase upload failed:', uploadError);
+          } else {
+            console.log('✅ Video uploaded to Supabase:', filename);
+
+            // Get public URL
+            const { data: urlData } = supabase.storage
+              .from('videos')
+              .getPublicUrl(filename);
+
+            videoUrl = urlData.publicUrl;
+            uploadSuccess = true;
+            console.log('🔗 Public URL:', videoUrl);
+
+            // Update database if html_filename is provided
+            const htmlFilename = req.body.html_filename;
+            if (htmlFilename) {
+              console.log(`🔍 Looking up record by html_filename: ${htmlFilename}`);
+
+              const { error: dbError } = await supabase
+                .from('generated_websites')
+                .update({
+                  video_url: videoUrl,
+                  video_status: 'completed',
+                  updated_at: new Date().toISOString()
+                })
+                .eq('html_filename', htmlFilename);
+
+              if (dbError) {
+                console.error('❌ Database update failed:', dbError);
+              } else {
+                console.log('✅ Database updated with video URL');
+              }
+            } else {
+              console.log('ℹ️  No html_filename provided - skipping database update');
+            }
+          }
+        } catch (uploadErr) {
+          console.error('❌ Error during Supabase upload:', uploadErr);
+        }
+      }
+
       res.json({
         success: true,
         message: 'Professional TRUE 60 FPS video generated successfully',
@@ -272,7 +345,9 @@ app.post('/generate-video', async (req, res) => {
         quality: 'Full HD 1080p60',
         homepage_pause: '2 seconds',
         scroll_duration: '23 seconds',
-        business_name: business_name
+        business_name: business_name,
+        video_url: videoUrl,
+        uploaded_to_supabase: uploadSuccess
       });
     } else {
       throw new Error('Video file was not created');
