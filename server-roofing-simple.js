@@ -286,7 +286,7 @@ app.post('/generate-video', async (req, res) => {
           const videoBuffer = fs.readFileSync(videoPath);
 
           const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('business-videos')
+            .from('videos')
             .upload(filename, videoBuffer, {
               contentType: 'video/mp4',
               upsert: true
@@ -299,7 +299,7 @@ app.post('/generate-video', async (req, res) => {
 
             // Get public URL
             const { data: urlData } = supabase.storage
-              .from('business-videos')
+              .from('videos')
               .getPublicUrl(filename);
 
             videoUrl = urlData.publicUrl;
