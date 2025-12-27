@@ -22,5 +22,5 @@ primary_region = "iad"
   timeout = "5s"
 
 [[vm]]
-  size = "shared-cpu-2x"
-  memory = "2gb"
+  size = "performance-8x"
+  memory = "16gb"

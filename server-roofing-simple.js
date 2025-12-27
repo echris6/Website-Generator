@@ -325,8 +325,34 @@ app.post('/generate-video', async (req, res) => {
               } else {
                 console.log('✅ Database updated with video URL');
               }
+
+              // Call the video-complete webhook to activate waiting emails
+              const DASHBOARD_URL = process.env.DASHBOARD_URL || 'https://ai-dashboard-chi.vercel.app';
+              console.log(`🔔 Calling video-complete webhook at ${DASHBOARD_URL}...`);
+              try {
+                const webhookResponse = await fetch(`${DASHBOARD_URL}/api/webhooks/video-complete`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    business_name: business_name,
+                    html_filename: htmlFilename,
+                    video_url: videoUrl,
+                    file_name: filename
+                  })
+                });
+
+                if (webhookResponse.ok) {
+                  const webhookData = await webhookResponse.json();
+                  console.log('✅ Video-complete webhook called successfully:', webhookData);
+                } else {
+                  console.error('⚠️ Video-complete webhook failed:', webhookResponse.status, await webhookResponse.text());
+                }
+              } catch (webhookErr) {
+                console.error('⚠️ Error calling video-complete webhook:', webhookErr.message);
+                // Don't fail the request - webhook is not critical
+              }
             } else {
-              console.log('ℹ️  No html_filename provided - skipping database update');
+              console.log('ℹ️  No html_filename provided - skipping database update and webhook');
             }
           }
         } catch (uploadErr) {
