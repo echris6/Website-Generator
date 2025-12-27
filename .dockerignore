@@ -1,0 +1,7 @@
+node_modules
+videos/
+temp-html/
+*.log
+.git
+.gitignore
+README.md
